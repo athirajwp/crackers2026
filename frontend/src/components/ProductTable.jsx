@@ -204,10 +204,16 @@ export default function ProductTable() {
 
                               {/* Qty selectors */}
                               <td className="py-3.5 px-3 sm:px-4 text-center">
-                                <div className="inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg p-0.5 sm:p-1 select-none">
+                                <div className={`inline-flex items-center rounded-xl p-0.5 sm:p-1 select-none border transition-all duration-200 ${
+                                  qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90 hover:border-crimson-300/60'
+                                }`}>
                                   <button
                                     onClick={() => decreaseQty(prod.id)}
-                                    className="w-6 h-6 sm:w-7 sm:h-7 text-slate-655 hover:text-slate-900 hover:bg-white rounded flex items-center justify-center font-bold text-xs transition-colors shadow-sm"
+                                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
+                                      qty > 0
+                                        ? 'bg-white text-crimson-700 hover:bg-crimson-600 hover:text-white border border-crimson-200/60'
+                                        : 'bg-white text-slate-500 hover:text-crimson-700 hover:bg-crimson-50 border border-slate-200/60'
+                                    }`}
                                   >
                                     <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
                                   </button>
@@ -216,11 +222,13 @@ export default function ProductTable() {
                                     value={qty || ''}
                                     onChange={(e) => updateQty(prod, e.target.value)}
                                     placeholder="0"
-                                    className="w-8 sm:w-12 text-center bg-transparent border-0 text-xs font-black text-slate-800 placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    className={`w-8 sm:w-12 text-center bg-transparent border-0 text-xs font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                      qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
+                                    }`}
                                   />
                                   <button
                                     onClick={() => increaseQty(prod)}
-                                    className="w-6 h-6 sm:w-7 sm:h-7 text-slate-655 hover:text-slate-900 hover:bg-white rounded flex items-center justify-center font-bold text-xs transition-colors shadow-sm"
+                                    className="w-6 h-6 sm:w-7 sm:h-7 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
                                   >
                                     <i className="fa-solid fa-plus text-[8px] sm:text-[9px]"></i>
                                   </button>
@@ -318,25 +326,33 @@ export default function ProductTable() {
                             </div>
 
                             {/* Qty selectors */}
-                            <div className="inline-flex items-center bg-slate-100 border border-slate-200 rounded-lg p-0.5 select-none flex-shrink-0">
+                            <div className={`inline-flex items-center rounded-xl p-0.5 select-none flex-shrink-0 border transition-all duration-200 ${
+                              qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90'
+                            }`}>
                               <button
                                 onClick={() => decreaseQty(prod.id)}
-                                className="w-5 h-5 text-slate-655 hover:text-slate-900 hover:bg-white rounded flex items-center justify-center font-bold text-xs transition-colors shadow-sm"
+                                className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
+                                  qty > 0
+                                    ? 'bg-white text-crimson-700 hover:bg-crimson-600 hover:text-white border border-crimson-200/60'
+                                    : 'bg-white text-slate-500 hover:text-crimson-700 hover:bg-crimson-50 border border-slate-200/60'
+                                }`}
                               >
-                                <i className="fa-solid fa-minus text-[7px]"></i>
+                                <i className="fa-solid fa-minus text-[8px]"></i>
                               </button>
                               <input
                                 type="number"
                                 value={qty || ''}
                                 onChange={(e) => updateQty(prod, e.target.value)}
                                 placeholder="0"
-                                className="w-7 text-center bg-transparent border-0 text-[10px] font-black text-slate-800 placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                className={`w-7 text-center bg-transparent border-0 text-[11px] font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                  qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
+                                }`}
                               />
                               <button
                                 onClick={() => increaseQty(prod)}
-                                className="w-5 h-5 text-slate-655 hover:text-slate-900 hover:bg-white rounded flex items-center justify-center font-bold text-xs transition-colors shadow-sm"
+                                className="w-6 h-6 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
                               >
-                                <i className="fa-solid fa-plus text-[7px]"></i>
+                                <i className="fa-solid fa-plus text-[8px]"></i>
                               </button>
                             </div>
 
@@ -455,27 +471,35 @@ export default function ProductTable() {
 
                               {/* Qty Selector */}
                               <div className="flex items-center justify-between gap-1 pt-0.5">
-                                <div className="inline-flex items-center bg-slate-100/80 border border-slate-200 rounded-lg p-0.5 select-none w-full justify-between">
+                                <div className={`inline-flex items-center rounded-xl p-0.5 select-none w-full justify-between border transition-all duration-200 ${
+                                  qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90'
+                                }`}>
                                   <button
                                     type="button"
                                     onClick={() => decreaseQty(prod.id)}
-                                    className="w-5 h-5 sm:w-6 sm:h-6 text-slate-655 hover:text-slate-900 hover:bg-white rounded flex items-center justify-center font-bold text-xs transition-colors shadow-sm"
+                                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
+                                      qty > 0
+                                        ? 'bg-white text-crimson-700 hover:bg-crimson-600 hover:text-white border border-crimson-200/60'
+                                        : 'bg-white text-slate-500 hover:text-crimson-700 hover:bg-crimson-50 border border-slate-200/60'
+                                    }`}
                                   >
-                                    <i className="fa-solid fa-minus text-[7px] sm:text-[8px]"></i>
+                                    <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
                                   </button>
                                   <input
                                     type="number"
                                     value={qty || ''}
                                     onChange={(e) => updateQty(prod, e.target.value)}
                                     placeholder="0"
-                                    className="w-6 sm:w-8 text-center bg-transparent border-0 text-[10px] sm:text-xs font-black text-slate-800 placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    className={`w-7 sm:w-10 text-center bg-transparent border-0 text-[11px] sm:text-xs font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                      qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
+                                    }`}
                                   />
                                   <button
                                     type="button"
                                     onClick={() => increaseQty(prod)}
-                                    className="w-5 h-5 sm:w-6 sm:h-6 text-slate-655 hover:text-slate-900 hover:bg-white rounded flex items-center justify-center font-bold text-xs transition-colors shadow-sm"
+                                    className="w-6 h-6 sm:w-7 sm:h-7 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
                                   >
-                                    <i className="fa-solid fa-plus text-[7px] sm:text-[8px]"></i>
+                                    <i className="fa-solid fa-plus text-[8px] sm:text-[9px]"></i>
                                   </button>
                                 </div>
                               </div>
