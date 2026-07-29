@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 
 require __DIR__ . '/../vendor/autoload.php';
 $app = require_once __DIR__ . '/../bootstrap/app.php';
+$app->make(\Illuminate\Contracts\Http\Kernel::class)->bootstrap();
 
 echo "<h2>Attaching Images from backend/public/img to Products & Settings...</h2>";
 
