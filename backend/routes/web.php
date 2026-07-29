@@ -24,13 +24,14 @@ use Illuminate\Support\Facades\Route;
 // 1. API Route Group
 Route::get('/clear-cache', function () {
     try {
+        @\Illuminate\Support\Facades\Artisan::call('route:clear');
         $files = glob(storage_path('framework/views/*.php'));
         if ($files) {
             foreach ($files as $file) {
                 @unlink($file);
             }
         }
-        return response("SUCCESS: All compiled Blade view templates cleared!");
+        return response("SUCCESS: All compiled Blade view templates & route caches cleared!");
     } catch (\Exception $e) {
         return response("Cache clear note: " . $e->getMessage());
     }
