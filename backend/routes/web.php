@@ -98,7 +98,7 @@ Route::prefix('api')->group(function () {
     });
 });
 
-Route::get('/attach-all-images', function () {
+Route::get('/api/attach-all-images', function () {
     $imgDir = public_path('img');
     if (!file_exists($imgDir)) {
         return response("Directory backend/public/img does not exist.", 404);
