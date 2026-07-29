@@ -119,11 +119,11 @@ export default function CategoryCarousel() {
                 onClick={() => handleCategoryClick(item.slug)}
                 className="group cursor-pointer flex flex-col items-center justify-between transition-transform duration-500 hover:-translate-y-2"
               >
-                {/* Sleek Box with Rounded Edges */}
-                <div className="relative w-full aspect-[4/3] bg-white rounded-3xl shadow-md group-hover:shadow-xl border-2 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-5 transition-all duration-300 group-hover:scale-105 overflow-hidden">
+                {/* Extra Rounded Box Card */}
+                <div className="relative w-full aspect-[4/3] bg-white rounded-[2.8rem] shadow-md group-hover:shadow-xl border-2 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-5 transition-all duration-300 group-hover:scale-105 overflow-hidden">
                   
                   {/* Card Soft Background Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/20 to-amber-100/30 rounded-3xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/20 to-amber-100/30 rounded-[2.8rem]"></div>
 
                   {/* 3D Product Image / Illustration */}
                   <div className="relative z-10 w-full h-full flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-300">
@@ -143,10 +143,10 @@ export default function CategoryCarousel() {
                   </div>
                 </div>
 
-                {/* Rounded Yellow Category Button */}
+                {/* Extra Rounded Yellow Category Button */}
                 <button
                   type="button"
-                  className="mt-4 w-full max-w-[200px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-2.5 px-4 rounded-2xl text-xs md:text-sm shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wider text-center border border-gold-400"
+                  className="mt-4 w-full max-w-[200px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-2.5 px-4 rounded-full text-xs md:text-sm shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wider text-center border border-gold-400"
                 >
                   {item.name}
                 </button>
