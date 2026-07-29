@@ -26,6 +26,19 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
     require $maintenance;
 }
 
+// Auto-extract vendor.zip if vendor/autoload.php is missing (e.g. after Hostinger Git deployments)
+if (!file_exists(__DIR__ . '/../vendor/autoload.php') && file_exists(__DIR__ . '/../vendor.zip')) {
+    if (class_exists('ZipArchive')) {
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
+        $zip = new ZipArchive;
+        if ($zip->open(__DIR__ . '/../vendor.zip') === TRUE) {
+            $zip->extractTo(__DIR__ . '/../');
+            $zip->close();
+        }
+    }
+}
+
 // Register the Composer autoloader...
 require __DIR__.'/../vendor/autoload.php';
 
