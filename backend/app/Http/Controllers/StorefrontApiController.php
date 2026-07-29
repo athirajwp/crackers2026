@@ -91,8 +91,63 @@ class StorefrontApiController extends Controller
             'twitter_link' => Setting::get('twitter_link', ''),
         ];
 
+        $imgDir = public_path('img');
+        $scannedMap = [];
+        if (file_exists($imgDir)) {
+            foreach (scandir($imgDir) as $f) {
+                if ($f === '.' || $f === '..' || is_dir($imgDir . '/' . $f)) continue;
+                $bName = pathinfo($f, PATHINFO_FILENAME);
+                $cleanBName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', str_replace('colour', 'color', $bName)));
+                $scannedMap[$cleanBName] = 'img/' . $f;
+            }
+        }
+
+        foreach ($categories as $cat) {
+            foreach ($cat->products as $product) {
+                if (empty($product->image)) {
+                    $cleanProdName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', str_replace('colour', 'color', $product->name)));
+                    if (isset($scannedMap[$cleanProdName])) {
+                        $product->image = $scannedMap[$cleanProdName];
+                    } else {
+                        foreach ($scannedMap as $key => $path) {
+                            if ($key === $cleanProdName || str_contains($cleanProdName, $key) || str_contains($key, $cleanProdName)) {
+                                $product->image = $path;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $slider1 = Setting::get('slider_image_1', '');
+        if (empty($slider1) && file_exists(public_path('img/slider img/20631.jpg'))) {
+            $slider1 = 'img/slider img/20631.jpg';
+        }
+
+        $aboutImg1 = Setting::get('aboutus_image_1', '');
+        if (empty($aboutImg1) && file_exists(public_path('img/about us/about_showcase.png'))) {
+            $aboutImg1 = 'img/about us/about_showcase.png';
+        }
+
+        $settings['slider_image_1'] = $slider1;
+        $settings['aboutus_image_1'] = $aboutImg1;
+
+        $galleryDir = public_path('img/gallery');
+        $galleryFiles = [];
+        if (file_exists($galleryDir)) {
+            foreach (scandir($galleryDir) as $gf) {
+                if ($gf === '.' || $gf === '..' || is_dir($galleryDir . '/' . $gf)) continue;
+                $galleryFiles[] = 'img/gallery/' . $gf;
+            }
+        }
+
         for ($i = 1; $i <= 10; $i++) {
-            $settings["gallery_image_{$i}"] = Setting::get("gallery_image_{$i}", '');
+            $val = Setting::get("gallery_image_{$i}", '');
+            if (empty($val) && isset($galleryFiles[$i - 1])) {
+                $val = $galleryFiles[$i - 1];
+            }
+            $settings["gallery_image_{$i}"] = $val;
         }
 
         return response()->json([
