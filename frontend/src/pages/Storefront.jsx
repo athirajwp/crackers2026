@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import HeroSlider from '../components/HeroSlider';
+import CategoryCarousel from '../components/CategoryCarousel';
 import ProductTable from '../components/ProductTable';
 import CartFooter from '../components/CartFooter';
 import CheckoutDrawer from '../components/CheckoutDrawer';
@@ -53,7 +54,10 @@ export default function Storefront() {
       {/* 1. Hero Image Slider Section */}
       <HeroSlider />
 
-      {/* 2. Welcome & Value Proposition Grid */}
+      {/* 2. Shop Our Products 3D Carousel Section */}
+      <CategoryCarousel />
+
+      {/* 3. Welcome & Value Proposition Grid */}
       <section className="container mx-auto px-4 py-8 select-none z-10 relative">
         <div className="bg-[#EFEBE8] border border-[#E2DDD9] rounded-3xl p-6 md:p-8 shadow-sm space-y-8">
 
