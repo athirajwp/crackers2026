@@ -170,7 +170,7 @@ export default function PriceList() {
           {/* Desktop Table (Visible on MD screens and during printing) */}
           <table className="hidden md:table w-full text-left text-xs border-collapse print:table">
             <thead>
-              <tr className="bg-[#E5DFDA]/80 border-b border-[#E2DDD9] text-slate-650 font-extrabold uppercase tracking-wider text-[9px]">
+              <tr className="bg-gradient-to-r from-crimson-700 via-crimson-600 to-crimson-800 border-b border-crimson-900 text-white font-extrabold uppercase tracking-wider text-[9.5px]">
                 <th className="py-3 px-3 sm:px-4 w-12 text-center">S.No</th>
                 <th className="py-3 px-4">Product Details</th>
                 <th className="py-3 px-4 w-32 text-center">Pack / Box size</th>

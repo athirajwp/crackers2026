@@ -70,8 +70,8 @@ export default function ProductTable() {
     <section id="quick-order" className="container mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8 items-start">
       {/* Left: Category sidebar filters (Hidden on Mobile, Sticky on Desktop) */}
       <aside className="hidden lg:block lg:w-64 flex-shrink-0 lg:sticky lg:top-24 space-y-4 select-none">
-        <div className="border border-[#E2DDD9] p-4 rounded-2xl shadow-sm" style={cardBgStyle}>
-          <h3 className="text-sm font-bold text-slate-700 uppercase tracking-widest border-b border-[#E2DDD9] pb-2.5 mb-3 flex justify-between items-center">
+        <div className="border border-slate-200/80 p-4 rounded-2xl shadow-sm" style={cardBgStyle}>
+          <h3 className="text-sm font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 pb-2.5 mb-3 flex justify-between items-center">
             <span>Categories</span>
             <i className="fa-solid fa-filter text-slate-400 text-xs"></i>
           </h3>
@@ -81,7 +81,7 @@ export default function ProductTable() {
               className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                 activeCategory === 'all'
                   ? 'bg-crimson-600 text-white font-extrabold shadow'
-                  : 'text-slate-650 hover:bg-[#E5DFDA]/60'
+                  : 'text-slate-650 hover:bg-crimson-50 hover:text-crimson-700'
               }`}
             >
               <i className="fa-solid fa-boxes-stacked text-[11px] opacity-80"></i> All Products
@@ -93,7 +93,7 @@ export default function ProductTable() {
                 className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
                   activeCategory === cat.slug
                     ? 'bg-crimson-600 text-white font-extrabold shadow'
-                    : 'text-slate-655 hover:bg-[#E5DFDA]/60'
+                    : 'text-slate-655 hover:bg-crimson-50 hover:text-crimson-700'
                 }`}
               >
                 <i className="fa-solid fa-fire-flame-curved text-[11px] opacity-80"></i> {cat.name}
@@ -107,13 +107,13 @@ export default function ProductTable() {
       <div className="flex-grow w-full space-y-6">
         {/* Conditional Layout Rendering */}
         {viewMode === 'flex' ? (
-          <div className="border border-[#E2DDD9] rounded-2xl overflow-hidden shadow-sm" style={cardBgStyle}>
+          <div className="border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm" style={cardBgStyle}>
             
             {/* Desktop View Table */}
             <div className="hidden sm:block overflow-x-auto sm:overflow-visible">
               <table className="w-full border-collapse text-left text-xs">
                 <thead>
-                  <tr className="bg-[#E5DFDA]/80 border-b border-[#E2DDD9] text-slate-600 font-bold uppercase tracking-wider text-[10px] select-none">
+                  <tr className="bg-gradient-to-r from-crimson-700 via-crimson-600 to-crimson-800 border-b border-crimson-900 text-white font-extrabold uppercase tracking-wider text-[10.5px] select-none shadow-sm">
                     <th className="py-4 px-3 sm:px-4">Cracker Details</th>
                     <th className="hidden sm:table-cell py-4 px-4 w-28 text-center">Unit / Box</th>
                     <th className="py-4 px-3 sm:px-4 w-24 sm:w-36 text-right">Price (₹)</th>
@@ -133,15 +133,15 @@ export default function ProductTable() {
                         {/* Category Header Row */}
                         <tr
                           onClick={() => toggleCategoryCollapse(cat.slug)}
-                          className="bg-slate-50 font-bold text-slate-700 border-b border-slate-200/80 select-none cursor-pointer hover:bg-slate-100 transition-colors"
+                          className="bg-crimson-50/90 font-black text-crimson-900 border-y border-crimson-200/60 select-none cursor-pointer hover:bg-crimson-100/90 transition-colors"
                         >
-                          <td colSpan={6} className="py-3 px-3 sm:px-4 flex items-center justify-between text-crimson-655 tracking-wider">
+                          <td colSpan={6} className="py-3 px-3 sm:px-4 flex items-center justify-between tracking-wider">
                             <div className="flex items-center gap-2">
-                              <i className="fa-solid fa-fire text-[10px] text-crimson-500"></i>
+                              <i className="fa-solid fa-fire text-xs text-crimson-600"></i>
                               <span>{cat.name}</span>
                             </div>
                             <i
-                              className={`fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200 ${
+                              className={`fa-solid fa-chevron-down text-[10px] text-crimson-600/70 transition-transform duration-200 ${
                                 isCollapsed ? '-rotate-90' : 'rotate-0'
                               }`}
                             ></i>
@@ -262,14 +262,14 @@ export default function ProductTable() {
                     {/* Category Header (Mobile) */}
                     <div
                       onClick={() => toggleCategoryCollapse(cat.slug)}
-                      className="bg-slate-50 font-bold text-slate-700 border-b border-slate-200/80 select-none cursor-pointer hover:bg-slate-100 transition-colors py-3 px-3.5 flex items-center justify-between text-crimson-655 tracking-wider"
+                      className="bg-crimson-50/90 font-black text-crimson-900 border-y border-crimson-200/60 select-none cursor-pointer hover:bg-crimson-100/90 transition-colors py-3 px-3.5 flex items-center justify-between tracking-wider"
                     >
                       <div className="flex items-center gap-2">
-                        <i className="fa-solid fa-fire text-[10px] text-crimson-500"></i>
+                        <i className="fa-solid fa-fire text-xs text-crimson-600"></i>
                         <span>{cat.name}</span>
                       </div>
                       <i
-                        className={`fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200 ${
+                        className={`fa-solid fa-chevron-down text-[10px] text-crimson-600/70 transition-transform duration-200 ${
                           isCollapsed ? '-rotate-90' : 'rotate-0'
                         }`}
                       ></i>
@@ -374,15 +374,15 @@ export default function ProductTable() {
                   {/* Category Section Header */}
                   <div
                     onClick={() => toggleCategoryCollapse(cat.slug)}
-                    className="border border-[#E2DDD9] rounded-2xl p-4 flex items-center justify-between text-crimson-655 font-bold tracking-wider cursor-pointer hover:opacity-90 transition-colors select-none shadow-sm"
+                    className="border border-crimson-200/80 bg-crimson-50/80 hover:bg-crimson-100/80 rounded-2xl p-4 flex items-center justify-between text-crimson-900 font-extrabold tracking-wider cursor-pointer transition-colors select-none shadow-sm"
                     style={cardBgStyle}
                   >
                     <div className="flex items-center gap-2">
-                      <i className="fa-solid fa-fire text-xs text-crimson-500 animate-pulse"></i>
+                      <i className="fa-solid fa-fire text-xs text-crimson-600 animate-pulse"></i>
                       <span>{cat.name}</span>
                     </div>
                     <i
-                      className={`fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200 ${
+                      className={`fa-solid fa-chevron-down text-xs text-crimson-600/70 transition-transform duration-200 ${
                         isCollapsed ? '-rotate-90' : 'rotate-0'
                       }`}
                     ></i>
@@ -401,7 +401,7 @@ export default function ProductTable() {
                             key={prod.id}
                             style={qty > 0 ? undefined : cardBgStyle}
                             className={`border rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between hover:shadow-md transition-all duration-200 relative overflow-hidden group ${
-                              qty > 0 ? 'border-crimson-300 ring-1 ring-crimson-200/50 bg-crimson-50/20' : 'border-[#E2DDD9]'
+                              qty > 0 ? 'border-crimson-300 ring-1 ring-crimson-200/50 bg-crimson-50/20' : 'border-slate-200'
                             }`}
                           >
                             {/* Upper Card Area: Image + Details */}
