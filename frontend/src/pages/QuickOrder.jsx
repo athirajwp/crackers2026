@@ -5,7 +5,22 @@ import CheckoutDrawer from '../components/CheckoutDrawer';
 import { useStore } from '../context/StoreContext';
 
 export default function QuickOrder() {
-  const { loading, checkoutOpen, setCheckoutOpen } = useStore();
+  const {
+    loading,
+    checkoutOpen,
+    setCheckoutOpen,
+    searchQuery,
+    setSearchQuery,
+    viewMode,
+    changeViewMode,
+    totalFilteredProductsCount,
+    totalQty,
+    totalNet,
+  } = useStore();
+
+  const formatCurrency = (val) => {
+    return parseFloat(val || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  };
 
   if (loading) {
     return (
@@ -18,21 +33,86 @@ export default function QuickOrder() {
 
   return (
     <div className="relative text-slate-800 animate-fade-in">
-      {/* Quick Order Header Title Banner */}
-      <div className="bg-gradient-to-r from-crimson-700 via-crimson-600 to-crimson-800 text-white py-6 shadow-md border-b border-crimson-800 select-none">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="space-y-1 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 px-3 py-0.5 rounded-full text-[10px] uppercase font-black tracking-widest text-gold-400">
-              <i className="fa-solid fa-list-check text-gold-400"></i> Wholesale Quick Purchase Sheet
-            </div>
-            <h1 className="text-xl md:text-2xl font-black tracking-tight text-white">
-              Direct Factory Wholesale Quick Order Sheet
-            </h1>
+
+      {/* 1. Sticky Yellow Search & Filter Bar — Top of Quick Order Page */}
+      <div className="sticky top-0 z-30 bg-gold-500 shadow-lg select-none border-b-2 border-gold-600">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 py-3">
+
+          {/* Left/Center: Search Input */}
+          <div className="relative w-full md:max-w-[420px] flex items-center">
+            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+              <i className="fa-solid fa-magnifying-glass text-xs"></i>
+            </span>
+            <input
+              type="text"
+              placeholder="Search wholesale firecrackers by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-white border-0 focus:ring-2 focus:ring-crimson-600 rounded-xl py-2.5 pl-10 pr-24 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all shadow-inner font-semibold"
+            />
+            <button className="absolute right-1 bg-crimson-600 hover:bg-crimson-700 text-white font-extrabold text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-lg shadow transition-colors">
+              Search
+            </button>
           </div>
+
+          {/* View Mode Toggle Controls & Product Count */}
+          <div className="flex items-center justify-between w-full md:w-auto gap-4 select-none">
+            <div className="text-xs text-slate-900 font-extrabold whitespace-nowrap">
+              Showing <strong className="text-crimson-850 font-black">{totalFilteredProductsCount}</strong> products
+            </div>
+            <div className="flex items-center bg-white p-0.5 rounded-xl border border-gold-600/60 shadow-sm">
+              <button
+                type="button"
+                onClick={() => changeViewMode('flex')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition-all duration-200 ${
+                  viewMode === 'flex'
+                    ? 'bg-crimson-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
+                }`}
+                title="Flex View"
+              >
+                <i className="fa-solid fa-list-ul text-[10px]"></i>
+                <span>Flex</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => changeViewMode('grid')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition-all duration-200 ${
+                  viewMode === 'grid'
+                    ? 'bg-crimson-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100'
+                }`}
+                title="Grid View"
+              >
+                <i className="fa-solid fa-table-cells text-[10px]"></i>
+                <span>Grid</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Right: Cart Net Tally Badge */}
+          <button
+            onClick={() => setCheckoutOpen(true)}
+            className="hidden lg:flex items-center gap-3.5 bg-crimson-600 hover:bg-crimson-700 text-white py-1.5 px-4 rounded-xl shadow-inner transition-colors flex-shrink-0"
+          >
+            <div className="relative">
+              <i className="fa-solid fa-bag-shopping text-sm text-gold-500"></i>
+              {totalQty > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-yellow-400 text-slate-900 text-[8px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-crimson-600 shadow-sm animate-bounce">
+                  {totalQty}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col text-right font-extrabold text-xs">
+              <span className="text-[8px] text-gold-200 uppercase leading-none font-semibold">Total Net</span>
+              <span className="text-white mt-0.5 leading-none">₹{formatCurrency(totalNet)}</span>
+            </div>
+          </button>
+
         </div>
       </div>
 
-      {/* Product Catalog Table Section */}
+      {/* 2. Product Catalog Table Section */}
       <div className="pt-2">
         <ProductTable />
       </div>
