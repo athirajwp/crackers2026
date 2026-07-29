@@ -107,11 +107,11 @@ class StorefrontApiController extends Controller
                 if (empty($product->image)) {
                     $cleanProdName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', str_replace('colour', 'color', $product->name)));
                     if (isset($scannedMap[$cleanProdName])) {
-                        $product->image = $scannedMap[$cleanProdName];
+                        $product->setAttribute('image', $scannedMap[$cleanProdName]);
                     } else {
                         foreach ($scannedMap as $key => $path) {
                             if ($key === $cleanProdName || str_contains($cleanProdName, $key) || str_contains($key, $cleanProdName)) {
-                                $product->image = $path;
+                                $product->setAttribute('image', $path);
                                 break;
                             }
                         }
