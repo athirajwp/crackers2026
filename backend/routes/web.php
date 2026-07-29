@@ -273,3 +273,8 @@ Route::prefix('api/admin_sys')->group(function () {
 Route::get('/admin_sys/{any?}', function () {
     return view('react');
 })->where('any', '.*');
+
+// React routing fallback for public storefront UI routes
+Route::get('/{any}', function () {
+    return view('react');
+})->where('any', '.*');
