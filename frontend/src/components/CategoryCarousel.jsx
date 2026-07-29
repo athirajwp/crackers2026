@@ -15,7 +15,7 @@ export default function CategoryCarousel() {
     {
       name: 'Rockets',
       slug: 'rockets',
-      image: '/img/categories/rockets.png',
+      image: '/img/categories/rockets.webp',
       fallbackIcon: 'fa-rocket',
       description: 'High Flying Sky Repeaters',
       gradient: 'from-amber-400 to-rose-500'
@@ -23,7 +23,7 @@ export default function CategoryCarousel() {
     {
       name: 'Sparklers',
       slug: 'sparklers',
-      image: '/img/categories/sparklers.png',
+      image: '/img/categories/sparklers.webp',
       fallbackIcon: 'fa-wand-magic-sparkles',
       description: 'Electric & Color Sparklers',
       gradient: 'from-yellow-300 to-amber-500'
@@ -31,7 +31,7 @@ export default function CategoryCarousel() {
     {
       name: 'Fountains',
       slug: 'fountains-novelties',
-      image: '/img/categories/fountains.png',
+      image: '/img/categories/fountain.webp',
       fallbackIcon: 'fa-volcano',
       description: 'Vibrant Multi-Color Fountains',
       gradient: 'from-emerald-400 to-teal-600'
@@ -39,7 +39,7 @@ export default function CategoryCarousel() {
     {
       name: 'Gift Boxes',
       slug: 'gift-boxes',
-      image: '/img/categories/giftboxes.png',
+      image: '/img/categories/giftbox.webp',
       fallbackIcon: 'fa-box-open',
       description: 'Exclusive Diwali Gift Sets',
       gradient: 'from-purple-500 to-indigo-600'
@@ -47,7 +47,7 @@ export default function CategoryCarousel() {
     {
       name: 'Ground Chakkar',
       slug: 'ground-chakkars',
-      image: '/img/categories/chakkars.png',
+      image: '/img/categories/chakkar.webp',
       fallbackIcon: 'fa-dharmachakra',
       description: 'Spinning Wheel Chakkars',
       gradient: 'from-pink-500 to-rose-600'
@@ -55,7 +55,7 @@ export default function CategoryCarousel() {
     {
       name: 'Flower Pots',
       slug: 'flower-pots',
-      image: '/img/categories/flowerpots.png',
+      image: '/img/categories/flowerpots.webp',
       fallbackIcon: 'fa-fire-burner',
       description: 'Classic & Special Pots',
       gradient: 'from-red-500 to-orange-600'
@@ -63,7 +63,7 @@ export default function CategoryCarousel() {
     {
       name: 'Sound Crackers',
       slug: 'sound-crackers',
-      image: '/img/categories/soundcrackers.png',
+      image: '/img/categories/soundcrackers.webp',
       fallbackIcon: 'fa-explosion',
       description: 'Loud Festive Crackers',
       gradient: 'from-blue-500 to-indigo-600'
