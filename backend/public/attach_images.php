@@ -25,7 +25,7 @@ foreach ($files as $file) {
 
     $baseName = pathinfo($file, PATHINFO_FILENAME);
     // Normalized key (lowercase, alphanumeric only)
-    $cleanKey = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $baseName));
+    $cleanKey = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', str_replace('colour', 'color', $baseName)));
     $imageMap[$cleanKey] = 'img/' . $file;
 }
 
