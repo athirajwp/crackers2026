@@ -23,10 +23,17 @@ use Illuminate\Support\Facades\Route;
 
 // 1. API Route Group
 Route::get('/clear-cache', function () {
-    @\Illuminate\Support\Facades\Artisan::call('view:clear');
-    @\Illuminate\Support\Facades\Artisan::call('cache:clear');
-    @\Illuminate\Support\Facades\Artisan::call('config:clear');
-    return response("SUCCESS: All Laravel view and config caches cleared!");
+    try {
+        $files = glob(storage_path('framework/views/*.php'));
+        if ($files) {
+            foreach ($files as $file) {
+                @unlink($file);
+            }
+        }
+        return response("SUCCESS: All compiled Blade view templates cleared!");
+    } catch (\Exception $e) {
+        return response("Cache clear note: " . $e->getMessage());
+    }
 });
 
 Route::prefix('api')->group(function () {
