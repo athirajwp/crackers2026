@@ -119,14 +119,14 @@ export default function CategoryCarousel() {
                 onClick={() => handleCategoryClick(item.slug)}
                 className="group cursor-pointer flex flex-col items-center justify-between transition-transform duration-500 hover:-translate-y-2"
               >
-                {/* Extra Rounded Box Card */}
-                <div className="relative w-full aspect-[4/3] bg-white rounded-[2.8rem] shadow-md group-hover:shadow-xl border-2 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-5 transition-all duration-300 group-hover:scale-105 overflow-hidden">
+                {/* Circular Pod Card */}
+                <div className="relative w-full max-w-[220px] aspect-square bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-6 transition-all duration-300 group-hover:scale-105 overflow-hidden">
                   
-                  {/* Card Soft Background Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/20 to-amber-100/30 rounded-[2.8rem]"></div>
+                  {/* Circular Soft Background Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/30 to-amber-100/40 rounded-full"></div>
 
                   {/* 3D Product Image / Illustration */}
-                  <div className="relative z-10 w-full h-full flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-300">
+                  <div className="relative z-10 w-full h-full flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -135,9 +135,9 @@ export default function CategoryCarousel() {
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
                       }}
-                      className="max-h-28 md:max-h-32 object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.15)]"
+                      className="max-h-24 md:max-h-28 object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.15)]"
                     />
-                    <div className="hidden w-20 h-20 rounded-2xl bg-gradient-to-tr from-amber-400 to-rose-500 items-center justify-center text-white shadow-lg">
+                    <div className="hidden w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 items-center justify-center text-white shadow-lg">
                       <i className={`fa-solid ${item.fallbackIcon} text-3xl`}></i>
                     </div>
                   </div>
