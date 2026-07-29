@@ -76,7 +76,7 @@ export default function Header() {
 
   const navLinks = [
     { to: '/', label: 'Home', icon: 'fa-house', isLink: true },
-    { to: '/#quick-order', label: 'Quick Order Sheet', icon: 'fa-list-check', isLink: false },
+    { to: '/quick-order', label: 'Quick Order Sheet', icon: 'fa-list-check', isLink: true },
     { to: '/price-list', label: 'Price List', icon: 'fa-tags', isLink: true },
     { to: '/track', label: 'Track Order', icon: 'fa-truck-fast', isLink: true },
     { to: '/about', label: 'About Us', icon: 'fa-circle-info', isLink: true },

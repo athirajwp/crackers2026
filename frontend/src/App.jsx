@@ -10,6 +10,7 @@ import PriceList from './pages/PriceList';
 import TrackOrder from './pages/TrackOrder';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import Contact from './pages/Contact';
+import QuickOrder from './pages/QuickOrder';
 import Fireworks from './components/Fireworks';
 
 // Admin imports
@@ -226,6 +227,9 @@ function App() {
           {/* Public Pages Layout */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Storefront />} />
+            <Route path="/quick-order" element={<QuickOrder />} />
+            <Route path="/quick_order" element={<QuickOrder />} />
+            <Route path="/quick-purchase" element={<QuickOrder />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />

@@ -129,9 +129,9 @@ export default function Storefront() {
               <span>Minimum order value is <strong className="text-crimson-600 font-extrabold">₹{formatCurrency(settings.min_order_value)}</strong>. Add crackers to your cart to checkout.</span>
             </div>
             <div className="flex gap-3 w-full sm:w-auto">
-              <a href="#quick-order" className="w-full sm:w-auto text-center bg-crimson-600 hover:bg-crimson-700 text-white px-5 py-2 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors shadow">
+              <Link to="/quick-order" className="w-full sm:w-auto text-center bg-crimson-600 hover:bg-crimson-700 text-white px-5 py-2 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors shadow">
                 Start Order
-              </a>
+              </Link>
               <Link to="/price-list" className="w-full sm:w-auto text-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-5 py-2 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors">
                 Price List
               </Link>
