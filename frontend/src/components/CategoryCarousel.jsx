@@ -17,7 +17,6 @@ export default function CategoryCarousel() {
       slug: 'rockets',
       image: '/img/categories/rockets.webp',
       fallbackIcon: 'fa-rocket',
-      description: 'High Flying Sky Repeaters',
       gradient: 'from-amber-400 to-rose-500'
     },
     {
@@ -25,7 +24,6 @@ export default function CategoryCarousel() {
       slug: 'sparklers',
       image: '/img/categories/sparklers.webp',
       fallbackIcon: 'fa-wand-magic-sparkles',
-      description: 'Electric & Color Sparklers',
       gradient: 'from-yellow-300 to-amber-500'
     },
     {
@@ -33,7 +31,6 @@ export default function CategoryCarousel() {
       slug: 'fountains-novelties',
       image: '/img/categories/fountain.webp',
       fallbackIcon: 'fa-volcano',
-      description: 'Vibrant Multi-Color Fountains',
       gradient: 'from-emerald-400 to-teal-600'
     },
     {
@@ -41,7 +38,6 @@ export default function CategoryCarousel() {
       slug: 'gift-boxes',
       image: '/img/categories/giftbox.webp',
       fallbackIcon: 'fa-box-open',
-      description: 'Exclusive Diwali Gift Sets',
       gradient: 'from-purple-500 to-indigo-600'
     },
     {
@@ -49,7 +45,6 @@ export default function CategoryCarousel() {
       slug: 'ground-chakkars',
       image: '/img/categories/chakkar.webp',
       fallbackIcon: 'fa-dharmachakra',
-      description: 'Spinning Wheel Chakkars',
       gradient: 'from-pink-500 to-rose-600'
     },
     {
@@ -57,7 +52,6 @@ export default function CategoryCarousel() {
       slug: 'flower-pots',
       image: '/img/categories/flowerpots.webp',
       fallbackIcon: 'fa-fire-burner',
-      description: 'Classic & Special Pots',
       gradient: 'from-red-500 to-orange-600'
     },
     {
@@ -65,25 +59,34 @@ export default function CategoryCarousel() {
       slug: 'sound-crackers',
       image: '/img/categories/soundcrackers.webp',
       fallbackIcon: 'fa-explosion',
-      description: 'Loud Festive Crackers',
       gradient: 'from-blue-500 to-indigo-600'
     }
   ];
 
-  // Carousel pagination page index (0 or 1)
+  const ITEMS_PER_PAGE = 4;
+  const totalPages = Math.ceil(productItems.length / ITEMS_PER_PAGE);
+
   const [activePage, setActivePage] = useState(0);
 
   // Auto slide every 3.5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      setActivePage((prev) => (prev === 0 ? 1 : 0));
+      setActivePage((prev) => (prev + 1) % totalPages);
     }, 3500);
     return () => clearInterval(timer);
-  }, []);
+  }, [totalPages]);
+
+  // Always return exactly 4 items, wrapping around if on last page
+  const getPageItems = (page) => {
+    const startIdx = page * ITEMS_PER_PAGE;
+    return Array.from({ length: ITEMS_PER_PAGE }, (_, i) =>
+      productItems[(startIdx + i) % productItems.length]
+    );
+  };
 
   return (
     <section className="relative bg-gradient-to-b from-[#FAF7F2] via-[#F4EFEA] to-[#FAF7F2] py-10 md:py-14 overflow-hidden select-none shadow-sm border-y border-[#E6E0D5]">
-      
+
       {/* Background Soft Floating Gold Sparks */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <div className="absolute top-4 left-10 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
@@ -109,67 +112,63 @@ export default function CategoryCarousel() {
           </p>
         </div>
 
-        {/* 3D Organic Platforms Grid / Slider Container */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 items-center max-w-4xl mx-auto">
-          {productItems
-            .slice(activePage * 4, activePage * 4 + 4)
-            .map((item, idx) => (
-              <div
-                key={idx}
-                onClick={() => handleCategoryClick(item.slug)}
-                className="group cursor-pointer flex flex-col items-center justify-between transition-transform duration-500 hover:-translate-y-2"
-              >
-                {/* Circular Pod Card */}
-                <div className="relative w-full max-w-[143px] aspect-square bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 overflow-hidden">
-                  
-                  {/* Circular Soft Background Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/30 to-amber-100/40 rounded-full"></div>
+        {/* Always 4 items in one single row — all screen sizes */}
+        <div className="grid grid-cols-4 gap-2 sm:gap-4 lg:gap-6 items-start max-w-4xl mx-auto">
+          {getPageItems(activePage).map((item, idx) => (
+            <div
+              key={`${activePage}-${idx}`}
+              onClick={() => handleCategoryClick(item.slug)}
+              className="group cursor-pointer flex flex-col items-center transition-transform duration-500 hover:-translate-y-2"
+            >
+              {/* Circular Pod */}
+              <div className="relative w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[143px] md:h-[143px] bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-1 sm:p-2 transition-all duration-300 group-hover:scale-105 overflow-hidden mx-auto">
 
-                  {/* 3D Product Image / Illustration */}
-                  <div className="relative z-10 w-full h-full flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                      className="w-full h-full object-contain p-1 filter drop-shadow-[0_8px_15px_rgba(0,0,0,0.2)]"
-                    />
-                    <div className="hidden w-24 h-24 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 items-center justify-center text-white shadow-lg">
-                      <i className={`fa-solid ${item.fallbackIcon} text-4xl`}></i>
-                    </div>
+                {/* Soft Background Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/30 to-amber-100/40 rounded-full"></div>
+
+                {/* Product Image */}
+                <div className="relative z-10 w-full h-full flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                    className="w-full h-full object-contain p-0.5 filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.2)]"
+                  />
+                  <div className="hidden w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 items-center justify-center text-white shadow-lg">
+                    <i className={`fa-solid ${item.fallbackIcon} text-xl`}></i>
                   </div>
                 </div>
-
-                {/* Extra Rounded Yellow Category Button */}
-                <button
-                  type="button"
-                  className="mt-3 w-full max-w-[130px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-1.5 px-3 rounded-full text-[10px] md:text-xs shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wider text-center border border-gold-400"
-                >
-                  {item.name}
-                </button>
               </div>
-            ))}
+
+              {/* Category Label Button */}
+              <button
+                type="button"
+                className="mt-2 sm:mt-3 w-[68px] sm:w-[105px] md:w-[130px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-0.5 sm:py-1.5 px-1 rounded-full text-[7px] sm:text-[9px] md:text-xs shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wide text-center border border-gold-400 truncate"
+              >
+                {item.name}
+              </button>
+            </div>
+          ))}
         </div>
 
         {/* Carousel Navigation Dots */}
-        <div className="flex items-center justify-center gap-3 mt-10">
-          <button
-            onClick={() => setActivePage(0)}
-            className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
-              activePage === 0 ? 'bg-crimson-600 scale-125 shadow-md shadow-crimson-900/30' : 'bg-slate-300 hover:bg-slate-400'
-            }`}
-            aria-label="Carousel page 1"
-          />
-          <button
-            onClick={() => setActivePage(1)}
-            className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
-              activePage === 1 ? 'bg-crimson-600 scale-125 shadow-md shadow-crimson-900/30' : 'bg-slate-300 hover:bg-slate-400'
-            }`}
-            aria-label="Carousel page 2"
-          />
+        <div className="flex items-center justify-center gap-3 mt-8">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActivePage(i)}
+              className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
+                activePage === i
+                  ? 'bg-crimson-600 scale-125 shadow-md shadow-crimson-900/30'
+                  : 'bg-slate-300 hover:bg-slate-400'
+              }`}
+              aria-label={`Carousel page ${i + 1}`}
+            />
+          ))}
         </div>
 
       </div>
