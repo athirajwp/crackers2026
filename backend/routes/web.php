@@ -275,7 +275,7 @@ Route::get('/admin_sys/{any?}', function () {
     return view('react');
 })->where('any', '.*');
 
-// React routing fallback for public storefront UI routes
-Route::get('/{any}', function () {
+// React routing fallback for public storefront UI routes (quick-order, price-list, about, contact, track, etc.)
+Route::fallback(function () {
     return view('react');
-})->where('any', '.*');
+});
