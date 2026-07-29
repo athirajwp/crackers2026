@@ -241,12 +241,22 @@ export default function AdminBranding() {
     try {
       const res = await fetch('/api/admin/branding/update', {
         method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+        },
         body: postData,
       });
 
-      const data = await res.json();
+      let data = {};
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Server returned status ${res.status}`);
+      }
 
-      if (res.ok) {
+      if (res.ok && (data.success || data.status === 'success' || !data.error)) {
         Swal.fire({
           icon: 'success',
           title: 'Branding Saved!',
@@ -267,7 +277,7 @@ export default function AdminBranding() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Failed to update branding config.',
+        text: err.message || 'Failed to update branding config.',
       });
     } finally {
       setSaving(false);

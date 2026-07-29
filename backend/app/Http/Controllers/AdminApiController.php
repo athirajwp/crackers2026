@@ -888,11 +888,13 @@ class AdminApiController extends Controller
         if ($request->has('admin_theme')) {
             $themeVal = strtolower($request->admin_theme);
             Setting::set('admin_theme', $themeVal, 'text');
-            $company = view()->shared('currentCompany');
-            if ($company) {
-                $company->update(['theme' => $themeVal]);
-            } else {
-                \App\Models\Company::query()->update(['theme' => $themeVal]);
+            try {
+                $company = view()->shared('currentCompany');
+                if ($company) {
+                    $company->update(['theme' => $themeVal]);
+                }
+            } catch (\Throwable $th) {
+                // Ignore if multi-tenant company table is not present
             }
         }
 
