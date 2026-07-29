@@ -117,14 +117,66 @@ export default function Storefront() {
               <span className="text-crimson-500">{settings.store_name || 'Our Store'}</span>
             </h2>
 
-            {/* 3-column layout: features left | logo center | features right */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 items-center">
+            {/* MOBILE: logo top + 2x2 grid | DESKTOP: 3-column left|center|right */}
 
-              {/* Left Features — icon on top, right-aligned text */}
+            {/* Mobile Logo — only shown on mobile, hidden on md+ */}
+            <div className="flex md:hidden items-center justify-center mb-6">
+              <img
+                src="/img/crackers logo.jpg"
+                alt="Company Logo"
+                className="w-48 object-contain drop-shadow-xl"
+              />
+            </div>
+
+            {/* Mobile 2×2 grid — only shown on mobile */}
+            <div className="grid grid-cols-2 gap-6 md:hidden">
+              {/* Quality */}
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className="relative w-14 h-14 flex items-center justify-center mb-1">
+                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
+                    <i className="fa-solid fa-check text-white text-lg font-black"></i>
+                  </div>
+                  <div className="absolute -bottom-1 -left-1 w-5 h-5 flex items-center justify-center">
+                    <i className="fa-solid fa-ribbon text-crimson-500 text-sm"></i>
+                  </div>
+                </div>
+                <h4 className="text-sm font-black text-crimson-500">Quality</h4>
+                <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Quality &amp; innovation are the key behind our success</p>
+              </div>
+              {/* Genuine Price */}
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className="w-12 h-12 flex items-center justify-center mb-1">
+                  <i className="fa-solid fa-tag text-pink-500 text-4xl rotate-[-30deg]"></i>
+                </div>
+                <h4 className="text-sm font-black text-crimson-500">Genuine Price</h4>
+                <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Quality products at economic price is the main motto for us</p>
+              </div>
+              {/* Safe to Use */}
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md mb-1">
+                  <i className="fa-solid fa-shield-check text-white text-xl"></i>
+                </div>
+                <h4 className="text-sm font-black text-crimson-500">Safe to Use</h4>
+                <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Crackers we offer are safe &amp; made from fine quality raw materials</p>
+              </div>
+              {/* Customer Satisfaction */}
+              <div className="flex flex-col items-center text-center gap-2">
+                <div className="flex items-end gap-1 mb-1">
+                  <i className="fa-solid fa-star text-amber-400 text-2xl"></i>
+                  <i className="fa-solid fa-star text-amber-400 text-3xl"></i>
+                  <i className="fa-solid fa-star text-amber-300 text-2xl"></i>
+                </div>
+                <h4 className="text-sm font-black text-crimson-500">Customer Satisfaction</h4>
+                <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Our quality and timely delivery has attracted customers easily</p>
+              </div>
+            </div>
+
+            {/* DESKTOP: 3-column layout — hidden on mobile */}
+            <div className="hidden md:grid grid-cols-3 gap-4 items-center">
+              {/* Left Features */}
               <div className="flex flex-col gap-10">
                 {/* Quality */}
-                <div className="flex flex-col items-center md:items-end text-center md:text-right gap-2">
-                  {/* Gold medal icon */}
+                <div className="flex flex-col items-end text-right gap-2">
                   <div className="relative w-14 h-14 flex items-center justify-center mb-1">
                     <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
                       <i className="fa-solid fa-check text-white text-lg font-black"></i>
@@ -137,7 +189,7 @@ export default function Storefront() {
                   <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Quality &amp; innovation are the key behind our success</p>
                 </div>
                 {/* Safe to Use */}
-                <div className="flex flex-col items-center md:items-end text-center md:text-right gap-2">
+                <div className="flex flex-col items-end text-right gap-2">
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md mb-1">
                     <i className="fa-solid fa-shield-check text-white text-xl"></i>
                   </div>
@@ -146,19 +198,19 @@ export default function Storefront() {
                 </div>
               </div>
 
-              {/* Center Logo — floating naturally, no circle */}
-              <div className="flex items-center justify-center py-4 md:py-0">
+              {/* Center Logo */}
+              <div className="flex items-center justify-center">
                 <img
                   src="/img/crackers logo.jpg"
                   alt="Company Logo"
-                  className="w-56 md:w-72 lg:w-80 object-contain drop-shadow-xl"
+                  className="w-72 lg:w-80 object-contain drop-shadow-xl"
                 />
               </div>
 
-              {/* Right Features — icon on top, left-aligned text */}
+              {/* Right Features */}
               <div className="flex flex-col gap-10">
                 {/* Genuine Price */}
-                <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2">
+                <div className="flex flex-col items-start text-left gap-2">
                   <div className="w-12 h-12 flex items-center justify-center mb-1">
                     <i className="fa-solid fa-tag text-pink-500 text-4xl rotate-[-30deg]"></i>
                   </div>
@@ -166,7 +218,7 @@ export default function Storefront() {
                   <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Quality products at economic price is the main motto for us</p>
                 </div>
                 {/* Customer Satisfaction */}
-                <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2">
+                <div className="flex flex-col items-start text-left gap-2">
                   <div className="flex items-end gap-1 mb-1">
                     <i className="fa-solid fa-star text-amber-400 text-2xl"></i>
                     <i className="fa-solid fa-star text-amber-400 text-3xl"></i>
@@ -176,8 +228,8 @@ export default function Storefront() {
                   <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Our quality and timely delivery has attracted customers easily</p>
                 </div>
               </div>
-
             </div>
+
           </div>
         </div>
       </section>
