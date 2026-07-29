@@ -108,76 +108,76 @@ export default function Storefront() {
 
       {/* 4. Why Choose Us — Logo Center Section */}
       <section className="container mx-auto px-4 py-8 select-none z-10 relative">
-        <div className="bg-[#EFEBE8] border border-[#E2DDD9] rounded-3xl p-8 md:p-12 shadow-sm">
+        <div className="rounded-3xl overflow-hidden" style={{background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)'}}>
+          <div className="p-8 md:p-14">
 
-          {/* Heading */}
-          <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 leading-tight mb-10">
-            Festival Celebration with{' '}
-            <span className="text-crimson-500">{settings.store_name || 'Our Store'}</span>
-          </h2>
+            {/* Heading */}
+            <h2 className="text-center text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-12">
+              <span className="text-slate-800">Festival celebration with</span><br />
+              <span className="text-crimson-500">{settings.store_name || 'Our Store'}</span>
+            </h2>
 
-          {/* 3-column layout: features left | logo center | features right */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            {/* 3-column layout: features left | logo center | features right */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 items-center">
 
-            {/* Left Features */}
-            <div className="flex flex-col gap-8">
-              {/* Quality */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-right md:flex-row-reverse md:text-right">
-                <div className="w-14 h-14 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-md">
-                  <i className="fa-solid fa-medal text-2xl text-crimson-600"></i>
+              {/* Left Features — icon on top, right-aligned text */}
+              <div className="flex flex-col gap-10">
+                {/* Quality */}
+                <div className="flex flex-col items-center md:items-end text-center md:text-right gap-2">
+                  {/* Gold medal icon */}
+                  <div className="relative w-14 h-14 flex items-center justify-center mb-1">
+                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
+                      <i className="fa-solid fa-check text-white text-lg font-black"></i>
+                    </div>
+                    <div className="absolute -bottom-1 -left-1 w-5 h-5 flex items-center justify-center">
+                      <i className="fa-solid fa-ribbon text-crimson-500 text-sm"></i>
+                    </div>
+                  </div>
+                  <h4 className="text-base font-black text-crimson-500">Quality</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Quality &amp; innovation are the key behind our success</p>
                 </div>
-                <div>
-                  <h4 className="text-sm font-black text-crimson-600 uppercase tracking-wide mb-1">Quality</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Quality &amp; innovation are the key behind our success</p>
+                {/* Safe to Use */}
+                <div className="flex flex-col items-center md:items-end text-center md:text-right gap-2">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md mb-1">
+                    <i className="fa-solid fa-shield-check text-white text-xl"></i>
+                  </div>
+                  <h4 className="text-base font-black text-crimson-500">Safe to Use</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Crackers we offer are safe &amp; are made from fine quality raw materials</p>
                 </div>
               </div>
-              {/* Safe to Use */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-right md:flex-row-reverse md:text-right">
-                <div className="w-14 h-14 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-md">
-                  <i className="fa-solid fa-shield-halved text-2xl text-crimson-600"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-black text-crimson-600 uppercase tracking-wide mb-1">Safe to Use</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Crackers we offer are safe &amp; made from fine quality raw materials</p>
-                </div>
-              </div>
-            </div>
 
-            {/* Center Logo */}
-            <div className="flex items-center justify-center">
-              <div className="w-52 h-52 md:w-64 md:h-64 rounded-full bg-white shadow-xl border-4 border-gold-300 flex items-center justify-center overflow-hidden p-3">
+              {/* Center Logo — floating naturally, no circle */}
+              <div className="flex items-center justify-center py-4 md:py-0">
                 <img
                   src="/img/crackers logo.jpg"
                   alt="Company Logo"
-                  className="w-full h-full object-contain rounded-full"
+                  className="w-56 md:w-72 lg:w-80 object-contain drop-shadow-xl"
                 />
               </div>
-            </div>
 
-            {/* Right Features */}
-            <div className="flex flex-col gap-8">
-              {/* Genuine Price */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                <div className="w-14 h-14 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-md">
-                  <i className="fa-solid fa-tags text-2xl text-crimson-600"></i>
+              {/* Right Features — icon on top, left-aligned text */}
+              <div className="flex flex-col gap-10">
+                {/* Genuine Price */}
+                <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2">
+                  <div className="w-12 h-12 flex items-center justify-center mb-1">
+                    <i className="fa-solid fa-tag text-pink-500 text-4xl rotate-[-30deg]"></i>
+                  </div>
+                  <h4 className="text-base font-black text-crimson-500">Genuine Price</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Quality products at economic price is the main motto for us</p>
                 </div>
-                <div>
-                  <h4 className="text-sm font-black text-crimson-600 uppercase tracking-wide mb-1">Genuine Price</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Quality products at economic price is the main motto for us</p>
+                {/* Customer Satisfaction */}
+                <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2">
+                  <div className="flex items-end gap-1 mb-1">
+                    <i className="fa-solid fa-star text-amber-400 text-2xl"></i>
+                    <i className="fa-solid fa-star text-amber-400 text-3xl"></i>
+                    <i className="fa-solid fa-star text-amber-300 text-2xl"></i>
+                  </div>
+                  <h4 className="text-base font-black text-crimson-500">Customer Satisfaction</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Our quality and timely delivery has attracted customers easily</p>
                 </div>
               </div>
-              {/* Customer Satisfaction */}
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                <div className="w-14 h-14 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-md">
-                  <i className="fa-solid fa-star text-2xl text-crimson-600"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-black text-crimson-600 uppercase tracking-wide mb-1">Customer Satisfaction</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Our quality and timely delivery has attracted customers easily</p>
-                </div>
-              </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </section>
