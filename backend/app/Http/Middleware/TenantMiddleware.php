@@ -142,12 +142,13 @@ HTML;
                 // Check if the tenant database exists on the server
                 $dbExists = false;
                 try {
-                    $driver = \Illuminate\Support\Facades\DB::connection('central')->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+                    $connName = config('database.connections.central') ? 'central' : $defaultConn;
+                    $driver = \Illuminate\Support\Facades\DB::connection($connName)->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME);
                     if ($driver === 'pgsql') {
-                        $existsQuery = \Illuminate\Support\Facades\DB::connection('central')
+                        $existsQuery = \Illuminate\Support\Facades\DB::connection($connName)
                             ->select("SELECT 1 FROM pg_database WHERE datname = ?", [$tenantDb]);
-                    } else {
-                        $existsQuery = \Illuminate\Support\Facades\DB::connection('central')
+                    } elseif ($driver === 'mysql') {
+                        $existsQuery = \Illuminate\Support\Facades\DB::connection($connName)
                             ->select("SELECT 1 FROM information_schema.schemata WHERE schema_name = ?", [$tenantDb]);
                     }
                     $dbExists = !empty($existsQuery);
