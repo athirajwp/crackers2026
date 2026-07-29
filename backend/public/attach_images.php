@@ -2,9 +2,13 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+use Illuminate\Http\Request;
+
 require __DIR__ . '/../vendor/autoload.php';
 $app = require_once __DIR__ . '/../bootstrap/app.php';
-$app->make(\Illuminate\Contracts\Http\Kernel::class)->bootstrap();
+
+$kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
+$kernel->handle(Request::capture());
 
 echo "<h2>Attaching Images from backend/public/img to Products & Settings...</h2>";
 
