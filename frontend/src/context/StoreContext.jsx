@@ -21,7 +21,7 @@ export const StoreProvider = ({ children }) => {
     enable_tax_delivery: 'no',
     enable_fireworks: 'yes',
     show_mrp: 'yes',
-    card_bg_color: '#EFEBE8',
+    card_bg_color: '#FFFFFF',
     default_view_mode: 'flex',
     tax_percent: 18,
     delivery_charge: 150,

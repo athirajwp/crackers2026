@@ -693,7 +693,7 @@ class AdminApiController extends Controller
             'enable_tax_delivery' => Setting::get('enable_tax_delivery', 'no'),
             'enable_fireworks' => Setting::get('enable_fireworks', 'yes'),
             'show_mrp' => Setting::get('show_mrp', 'yes'),
-            'card_bg_color' => Setting::get('card_bg_color', '#EFEBE8'),
+            'card_bg_color' => Setting::get('card_bg_color', '#FFFFFF'),
             'default_view_mode' => Setting::get('default_view_mode', 'flex'),
             'tax_percent' => Setting::get('tax_percent', 18),
             'delivery_charge' => Setting::get('delivery_charge', 150),
@@ -761,7 +761,7 @@ class AdminApiController extends Controller
         Setting::set('enable_tax_delivery', $request->enable_tax_delivery, 'text');
         Setting::set('enable_fireworks', $request->enable_fireworks, 'text');
         Setting::set('show_mrp', $request->show_mrp ?? 'yes', 'text');
-        Setting::set('card_bg_color', $request->card_bg_color ?? '#EFEBE8', 'text');
+        Setting::set('card_bg_color', $request->card_bg_color ?? '#FFFFFF', 'text');
         Setting::set('default_view_mode', $request->default_view_mode ?? 'flex', 'text');
         Setting::set('tax_percent', $request->tax_percent, 'number');
         Setting::set('delivery_charge', $request->delivery_charge, 'number');

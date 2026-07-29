@@ -30,7 +30,7 @@ export default function AdminSettings() {
     enable_tax_delivery: 'no',
     enable_fireworks: 'yes',
     show_mrp: 'yes',
-    card_bg_color: '#EFEBE8',
+    card_bg_color: '#FFFFFF',
     default_view_mode: 'flex',
     tax_percent: 18,
     delivery_charge: 150,
@@ -392,16 +392,16 @@ export default function AdminSettings() {
                     <input
                       type="color"
                       name="card_bg_color"
-                      value={formData.card_bg_color || '#EFEBE8'}
+                      value={formData.card_bg_color || '#FFFFFF'}
                       onChange={handleChange}
                       className="w-10 h-10 rounded-xl cursor-pointer border border-slate-200 p-0.5 bg-white flex-shrink-0"
                     />
                     <input
                       type="text"
                       name="card_bg_color"
-                      value={formData.card_bg_color || '#EFEBE8'}
+                      value={formData.card_bg_color || '#FFFFFF'}
                       onChange={handleChange}
-                      placeholder="#EFEBE8"
+                      placeholder="#FFFFFF"
                       className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-mono font-bold outline-none transition-all uppercase"
                     />
                   </div>

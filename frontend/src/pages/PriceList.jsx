@@ -92,7 +92,7 @@ export default function PriceList() {
   let snoDesktop = 1;
   let snoMobile = 1;
 
-  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#EFEBE8' };
+  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8 select-none">

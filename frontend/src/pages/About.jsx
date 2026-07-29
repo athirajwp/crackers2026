@@ -5,7 +5,7 @@ import { useStore } from '../context/StoreContext';
 export default function About() {
   const { settings } = useStore();
   const [activeImage, setActiveImage] = useState(null);
-  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#EFEBE8' };
+  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
 
   const galleryImages = [];
   for (let i = 1; i <= 10; i++) {

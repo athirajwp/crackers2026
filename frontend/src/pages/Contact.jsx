@@ -4,7 +4,7 @@ import { useStore } from '../context/StoreContext';
 
 export default function Contact() {
   const { settings } = useStore();
-  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#EFEBE8' };
+  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
 
   return (
     <div className="relative text-slate-800 select-none bg-transparent pb-16">

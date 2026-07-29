@@ -64,7 +64,7 @@ export default function ProductTable() {
     }
   });
 
-  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#EFEBE8' };
+  const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
 
   return (
     <section id="quick-order" className="container mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8 items-start">
