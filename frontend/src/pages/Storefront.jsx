@@ -54,10 +54,7 @@ export default function Storefront() {
       {/* 1. Hero Image Slider Section */}
       <HeroSlider />
 
-      {/* 2. Shop Our Products 3D Carousel Section */}
-      <CategoryCarousel />
-
-      {/* 3. Welcome & Value Proposition Grid */}
+      {/* 2. Welcome & Value Proposition Grid */}
       <section className="container mx-auto px-4 py-8 select-none z-10 relative">
         <div className="bg-[#EFEBE8] border border-[#E2DDD9] rounded-3xl p-6 md:p-8 shadow-sm space-y-8">
 
@@ -145,7 +142,10 @@ export default function Storefront() {
         </div>
       </section>
 
-      {/* 3. Quick Order Banner Card */}
+      {/* 3. Shop Our Products 3D Carousel Section */}
+      <CategoryCarousel />
+
+      {/* 4. Quick Order Banner Card */}
       <section className="container mx-auto px-4 py-8 select-none z-10 relative">
         <div className="bg-gradient-to-r from-crimson-700 via-crimson-600 to-crimson-800 text-white rounded-3xl p-8 shadow-lg text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6 border border-crimson-800">
           <div className="space-y-2 max-w-2xl">
