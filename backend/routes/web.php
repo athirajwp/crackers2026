@@ -98,6 +98,75 @@ Route::prefix('api')->group(function () {
     });
 });
 
+Route::get('/attach-all-images', function () {
+    $imgDir = public_path('img');
+    if (!file_exists($imgDir)) {
+        return response("Directory backend/public/img does not exist.", 404);
+    }
+
+    $files = scandir($imgDir);
+    $imageMap = [];
+
+    foreach ($files as $file) {
+        if ($file === '.' || $file === '..' || is_dir($imgDir . '/' . $file)) continue;
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        if (!in_array(strtolower($ext), ['jpg', 'jpeg', 'png', 'webp', 'gif'])) continue;
+
+        $baseName = pathinfo($file, PATHINFO_FILENAME);
+        $cleanKey = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', str_replace('colour', 'color', $baseName)));
+        $imageMap[$cleanKey] = 'img/' . $file;
+    }
+
+    $products = \App\Models\Product::all();
+    $matched = 0;
+
+    foreach ($products as $product) {
+        $prodCleanKey = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', str_replace('colour', 'color', $product->name)));
+        
+        $matchedPath = null;
+        if (isset($imageMap[$prodCleanKey])) {
+            $matchedPath = $imageMap[$prodCleanKey];
+        } else {
+            foreach ($imageMap as $key => $path) {
+                if ($key === $prodCleanKey || str_contains($prodCleanKey, $key) || str_contains($key, $prodCleanKey)) {
+                    $matchedPath = $path;
+                    break;
+                }
+            }
+        }
+
+        if ($matchedPath) {
+            $product->image = $matchedPath;
+            $product->save();
+            $matched++;
+        }
+    }
+
+    if (file_exists($imgDir . '/slider img/20631.jpg')) {
+        \App\Models\Setting::set('slider_image_1', 'img/slider img/20631.jpg', 'text');
+    }
+
+    if (file_exists($imgDir . '/about us/about_showcase.png')) {
+        \App\Models\Setting::set('aboutus_image_1', 'img/about us/about_showcase.png', 'text');
+    }
+
+    $galleryDir = $imgDir . '/gallery';
+    if (file_exists($galleryDir)) {
+        $gFiles = scandir($galleryDir);
+        $gIdx = 1;
+        foreach ($gFiles as $gFile) {
+            if ($gFile === '.' || $gFile === '..' || is_dir($galleryDir . '/' . $gFile)) continue;
+            if ($gIdx > 10) break;
+            
+            $gPath = 'img/gallery/' . $gFile;
+            \App\Models\Setting::set("gallery_image_$gIdx", $gPath, 'text');
+            $gIdx++;
+        }
+    }
+
+    return response("SUCCESS: Matched $matched / " . count($products) . " product images, and set Slider, About Us & Gallery images!");
+});
+
 Route::get('/view-logs', function () {
     try {
         $laravelLog = storage_path('logs/laravel.log');
