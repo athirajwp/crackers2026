@@ -157,18 +157,18 @@ export default function ProductTable() {
                           const rowTotal = qty * parseFloat(prod.selling_price);
 
                           return (
-                            <tr key={prod.id} className="hover:bg-slate-50/50 transition-colors">
+                            <tr key={prod.id} className={`border-b border-slate-100/90 transition-colors ${qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'}`}>
                               {/* Product Info */}
                               <td className="py-3.5 px-3 sm:px-4">
                                 <div className="flex flex-col gap-1.5">
                                   {/* Title on top */}
-                                  <h4 className="font-extrabold text-slate-800 text-xs sm:text-sm leading-normal whitespace-nowrap truncate">{prod.name}</h4>
+                                  <h4 className={`font-extrabold text-xs sm:text-sm leading-normal whitespace-nowrap truncate ${qty > 0 ? 'text-crimson-950 font-black' : 'text-slate-900'}`}>{prod.name}</h4>
                                   
                                   {/* Image + Info below title */}
                                   <div className="flex items-center gap-3">
                                     {/* Left Image */}
                                     <div 
-                                      className={`flex w-10 h-10 rounded-lg bg-slate-50 border border-slate-200 items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${prod.image ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                                      className={`flex w-10 h-10 rounded-lg bg-white border border-crimson-200/60 shadow-sm items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${prod.image ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
                                       onClick={prod.image ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
                                     >
                                       {prod.image ? (
@@ -180,8 +180,8 @@ export default function ProductTable() {
                                     
                                     {/* Right Specs */}
                                     <div className="flex flex-col items-start gap-1">
-                                      <span className="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest">{cat.name}</span>
-                                      <span className="sm:hidden text-[9px] font-semibold text-slate-500 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-lg shadow-sm">
+                                      <span className="text-[8px] sm:text-[9px] font-extrabold text-crimson-700 bg-crimson-50/90 border border-crimson-200/70 px-1.5 py-0.5 rounded uppercase tracking-wider">{cat.name}</span>
+                                      <span className="sm:hidden text-[9px] font-semibold text-slate-600 bg-slate-100/80 border border-slate-200 px-2 py-0.5 rounded-lg shadow-sm">
                                         {prod.pack_size}
                                       </span>
                                     </div>
@@ -190,16 +190,16 @@ export default function ProductTable() {
                               </td>
 
                               {/* Pack size */}
-                              <td className="hidden sm:table-cell py-3.5 px-4 text-center text-slate-650 font-bold font-mono">
+                              <td className="hidden sm:table-cell py-3.5 px-4 text-center text-slate-700 font-bold font-mono">
                                 {prod.pack_size}
                               </td>
 
                               {/* Prices */}
                               <td className="py-3.5 px-3 sm:px-4 text-right">
                                 {settings?.show_mrp !== 'no' && (
-                                  <div className="text-slate-400 text-[10px] line-through">₹{formatCurrency(prod.mrp)}</div>
+                                  <div className="text-slate-400 text-[10px] line-through font-semibold">₹{formatCurrency(prod.mrp)}</div>
                                 )}
-                                <div className="text-crimson-655 font-extrabold">₹{formatCurrency(prod.selling_price)}</div>
+                                <div className="text-crimson-800 font-black text-xs sm:text-sm">₹{formatCurrency(prod.selling_price)}</div>
                               </td>
 
                               {/* Qty selectors */}
@@ -236,13 +236,13 @@ export default function ProductTable() {
                               </td>
 
                               {/* Row Total (Desktop only) */}
-                              <td className="hidden md:table-cell py-3.5 px-4 text-right font-extrabold text-slate-800 pr-6">
+                              <td className="hidden md:table-cell py-3.5 px-4 text-right font-black text-slate-900 pr-6">
                                 ₹{formatCurrency(rowTotal)}
                               </td>
 
                               {/* Sub Total (always visible) */}
                               <td className="py-3.5 px-3 sm:px-4 text-right pr-4">
-                                <span className="font-extrabold text-crimson-600">
+                                <span className={`font-black text-xs sm:text-sm ${qty > 0 ? 'text-crimson-700 font-extrabold' : 'text-slate-400'}`}>
                                   {qty > 0 ? `₹${formatCurrency(rowTotal)}` : '—'}
                                 </span>
                               </td>
@@ -290,9 +290,9 @@ export default function ProductTable() {
                       const rowTotal = qty * parseFloat(prod.selling_price);
 
                       return (
-                        <div key={prod.id} className="p-3 sm:p-4 flex flex-col gap-2 hover:bg-slate-50/50 transition-colors border-b border-slate-150 last:border-b-0">
+                        <div key={prod.id} className={`p-3 sm:p-4 flex flex-col gap-2 transition-colors border-b border-slate-150 last:border-b-0 ${qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'}`}>
                           {/* Title on top */}
-                          <h4 className="font-extrabold text-slate-800 text-[11px] sm:text-xs leading-normal whitespace-nowrap truncate">{prod.name}</h4>
+                          <h4 className={`font-extrabold text-[11px] sm:text-xs leading-normal whitespace-nowrap truncate ${qty > 0 ? 'text-crimson-950 font-black' : 'text-slate-900'}`}>{prod.name}</h4>
                           
                           {/* Specs, price, qty, subtotal underneath */}
                           <div className="flex items-center justify-between gap-1">
@@ -300,7 +300,7 @@ export default function ProductTable() {
                             {/* Image + Specs */}
                             <div className="flex items-center gap-2 min-w-0">
                               <div 
-                                className={`flex w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${prod.image ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                                className={`flex w-9 h-9 rounded-lg bg-white border border-crimson-200/60 shadow-sm items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${prod.image ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
                                 onClick={prod.image ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
                               >
                                 {prod.image ? (
@@ -310,8 +310,8 @@ export default function ProductTable() {
                                 )}
                               </div>
                               <div className="flex flex-col items-start min-w-0">
-                                <span className="text-[7.5px] font-black text-slate-400 uppercase tracking-widest truncate max-w-[65px] leading-tight mb-0.5">{cat.name}</span>
-                                <span className="text-[8.5px] font-semibold text-slate-500 bg-slate-50 border border-slate-200/80 px-1.5 py-0.5 rounded-lg shadow-sm whitespace-nowrap leading-none">
+                                <span className="text-[7.5px] font-extrabold text-crimson-700 bg-crimson-50/90 border border-crimson-200/70 px-1 py-0.5 rounded uppercase tracking-wider truncate max-w-[65px] leading-tight mb-0.5">{cat.name}</span>
+                                <span className="text-[8.5px] font-semibold text-slate-600 bg-slate-100/80 border border-slate-200 px-1.5 py-0.5 rounded-lg shadow-sm whitespace-nowrap leading-none">
                                   {prod.pack_size}
                                 </span>
                               </div>
@@ -320,9 +320,9 @@ export default function ProductTable() {
                             {/* Price */}
                             <div className="text-left flex-shrink-0 px-1">
                               {settings?.show_mrp !== 'no' && (
-                                <div className="text-slate-400 text-[9px] line-through font-bold leading-tight">₹{formatCurrency(prod.mrp)}</div>
+                                <div className="text-slate-400 text-[9px] line-through font-semibold leading-tight">₹{formatCurrency(prod.mrp)}</div>
                               )}
-                              <div className="text-slate-800 font-extrabold text-[11px] leading-tight">₹{formatCurrency(prod.selling_price)}</div>
+                              <div className="text-crimson-800 font-extrabold text-[11px] leading-tight">₹{formatCurrency(prod.selling_price)}</div>
                             </div>
 
                             {/* Qty selectors */}
