@@ -211,8 +211,8 @@ export default function ProductTable() {
                                     onClick={() => decreaseQty(prod.id)}
                                     className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
                                       qty > 0
-                                        ? 'bg-white text-crimson-700 hover:bg-crimson-600 hover:text-white border border-crimson-200/60'
-                                        : 'bg-white text-slate-500 hover:text-crimson-700 hover:bg-crimson-50 border border-slate-200/60'
+                                        ? 'bg-crimson-100 text-crimson-900 hover:bg-crimson-600 hover:text-white border border-crimson-300/80'
+                                        : 'bg-slate-200 text-slate-700 hover:bg-crimson-500 hover:text-white border border-slate-300/80'
                                     }`}
                                   >
                                     <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
@@ -333,8 +333,8 @@ export default function ProductTable() {
                                 onClick={() => decreaseQty(prod.id)}
                                 className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
                                   qty > 0
-                                    ? 'bg-white text-crimson-700 hover:bg-crimson-600 hover:text-white border border-crimson-200/60'
-                                    : 'bg-white text-slate-500 hover:text-crimson-700 hover:bg-crimson-50 border border-slate-200/60'
+                                    ? 'bg-crimson-100 text-crimson-900 hover:bg-crimson-600 hover:text-white border border-crimson-300/80'
+                                    : 'bg-slate-200 text-slate-700 hover:bg-crimson-500 hover:text-white border border-slate-300/80'
                                 }`}
                               >
                                 <i className="fa-solid fa-minus text-[8px]"></i>
@@ -479,8 +479,8 @@ export default function ProductTable() {
                                     onClick={() => decreaseQty(prod.id)}
                                     className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
                                       qty > 0
-                                        ? 'bg-white text-crimson-700 hover:bg-crimson-600 hover:text-white border border-crimson-200/60'
-                                        : 'bg-white text-slate-500 hover:text-crimson-700 hover:bg-crimson-50 border border-slate-200/60'
+                                        ? 'bg-crimson-100 text-crimson-900 hover:bg-crimson-600 hover:text-white border border-crimson-300/80'
+                                        : 'bg-slate-200 text-slate-700 hover:bg-crimson-500 hover:text-white border border-slate-300/80'
                                     }`}
                                   >
                                     <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
