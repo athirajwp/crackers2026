@@ -83,45 +83,6 @@ export default function Storefront() {
             </div>
           </div>
 
-          {/* Value Proposition Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-slate-100">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 text-slate-900 shadow-sm">
-                <i className="fa-solid fa-truck-fast text-lg text-crimson-600"></i>
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Fast Lorry Delivery</h4>
-                <p className="text-[10.5px] text-slate-500 leading-normal font-semibold">Safe transport directly from Sivakasi to your doorstep.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 text-slate-900 shadow-sm">
-                <i className="fa-solid fa-tags text-lg text-crimson-600"></i>
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Flat {settings.discount_percent}% Off</h4>
-                <p className="text-[10.5px] text-slate-500 leading-normal font-semibold">Direct factory pricing with maximum booking discounts.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 text-slate-900 shadow-sm">
-                <i className="fa-solid fa-credit-card text-lg text-crimson-600"></i>
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Secure Billing</h4>
-                <p className="text-[10.5px] text-slate-500 leading-normal font-semibold">100% verified booking and convenient offline banking options.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gold-500 flex items-center justify-center flex-shrink-0 text-slate-900 shadow-sm">
-                <i className="fa-solid fa-shield-halved text-lg text-crimson-600"></i>
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">PESO Certified</h4>
-                <p className="text-[10.5px] text-slate-500 leading-normal font-semibold">100% compliant with PESO and Supreme Court guidelines.</p>
-              </div>
-            </div>
-          </div>
 
           {/* Booking Info Alert Bar */}
           <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-700">
