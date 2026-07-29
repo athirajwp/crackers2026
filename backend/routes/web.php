@@ -22,6 +22,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 // 1. API Route Group
+Route::get('/clear-cache', function () {
+    @\Illuminate\Support\Facades\Artisan::call('view:clear');
+    @\Illuminate\Support\Facades\Artisan::call('cache:clear');
+    @\Illuminate\Support\Facades\Artisan::call('config:clear');
+    return response("SUCCESS: All Laravel view and config caches cleared!");
+});
+
 Route::prefix('api')->group(function () {
     Route::get('/storefront', [StorefrontApiController::class, 'index']);
     Route::get('/track', [StorefrontApiController::class, 'track']);
