@@ -120,7 +120,7 @@ export default function CategoryCarousel() {
                 className="group cursor-pointer flex flex-col items-center justify-between transition-transform duration-500 hover:-translate-y-2"
               >
                 {/* Circular Pod Card */}
-                <div className="relative w-full max-w-[220px] aspect-square bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-6 transition-all duration-300 group-hover:scale-105 overflow-hidden">
+                <div className="relative w-full max-w-[220px] aspect-square bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-2.5 sm:p-3.5 transition-all duration-300 group-hover:scale-105 overflow-hidden">
                   
                   {/* Circular Soft Background Gradient */}
                   <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/30 to-amber-100/40 rounded-full"></div>
@@ -135,10 +135,10 @@ export default function CategoryCarousel() {
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
                       }}
-                      className="max-h-24 md:max-h-28 object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.15)]"
+                      className="w-full h-full object-contain p-1 filter drop-shadow-[0_8px_15px_rgba(0,0,0,0.2)]"
                     />
-                    <div className="hidden w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 items-center justify-center text-white shadow-lg">
-                      <i className={`fa-solid ${item.fallbackIcon} text-3xl`}></i>
+                    <div className="hidden w-24 h-24 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 items-center justify-center text-white shadow-lg">
+                      <i className={`fa-solid ${item.fallbackIcon} text-4xl`}></i>
                     </div>
                   </div>
                 </div>
