@@ -119,14 +119,14 @@ export default function CategoryCarousel() {
                 onClick={() => handleCategoryClick(item.slug)}
                 className="group cursor-pointer flex flex-col items-center justify-between transition-transform duration-500 hover:-translate-y-2"
               >
-                {/* Soft Organic White Platform Card */}
-                <div className="relative w-full aspect-[4/3] bg-white rounded-[45%_55%_60%_40%/50%_45%_55%_50%] shadow-[0_10px_25px_rgba(0,0,0,0.08)] flex items-center justify-center p-4 transition-all duration-500 group-hover:shadow-[0_20px_40px_rgba(234,179,8,0.25)] group-hover:scale-105 border-4 border-amber-50">
+                {/* Sleek Box with Rounded Edges */}
+                <div className="relative w-full aspect-[4/3] bg-white rounded-3xl shadow-md group-hover:shadow-xl border-2 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-5 transition-all duration-300 group-hover:scale-105 overflow-hidden">
                   
-                  {/* Platform Inner Soft Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50/50 to-amber-50/20 rounded-[45%_55%_60%_40%/50%_45%_55%_50%]"></div>
+                  {/* Card Soft Background Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/20 to-amber-100/30 rounded-3xl"></div>
 
                   {/* 3D Product Image / Illustration */}
-                  <div className="relative z-10 w-full h-full flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <div className="relative z-10 w-full h-full flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-2 transition-all duration-300">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -146,7 +146,7 @@ export default function CategoryCarousel() {
                 {/* Rounded Yellow Category Button */}
                 <button
                   type="button"
-                  className="mt-4 w-full max-w-[200px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-2.5 px-4 rounded-full text-xs md:text-sm shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wider text-center border border-gold-400"
+                  className="mt-4 w-full max-w-[200px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-2.5 px-4 rounded-2xl text-xs md:text-sm shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wider text-center border border-gold-400"
                 >
                   {item.name}
                 </button>
