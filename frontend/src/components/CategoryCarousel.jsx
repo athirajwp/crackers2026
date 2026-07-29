@@ -85,19 +85,22 @@ export default function CategoryCarousel() {
   };
 
   return (
-    <section className="relative bg-gradient-to-b from-[#FAF7F2] via-[#F4EFEA] to-[#FAF7F2] py-10 md:py-14 overflow-hidden select-none shadow-sm border-y border-[#E6E0D5]">
+    <section className="relative py-8 md:py-10 overflow-hidden select-none">
 
-      {/* Background Soft Floating Gold Sparks */}
-      <div className="absolute inset-0 pointer-events-none opacity-20">
+      <div className="container mx-auto px-4">
+        <div className="bg-[#EFEBE8] border border-[#E2DDD9] rounded-3xl p-6 md:p-10 shadow-sm overflow-hidden relative">
+
+        {/* Background Soft Floating Gold Sparks */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
         <div className="absolute top-4 left-10 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
         <div className="absolute top-12 right-20 w-3 h-3 bg-amber-500 rotate-45 animate-pulse"></div>
         <div className="absolute bottom-6 left-1/4 w-2 h-4 bg-gold-500 -rotate-12"></div>
         <div className="absolute top-10 left-1/3 w-3 h-1.5 bg-amber-400 rotate-45"></div>
         <div className="absolute bottom-10 right-1/3 w-2 h-3 bg-amber-500 rotate-12"></div>
         <div className="absolute top-6 right-10 w-2.5 h-2.5 bg-amber-400 rounded-full animate-bounce"></div>
-      </div>
+        </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+        <div className="relative z-10">
 
         {/* Section Header */}
         <div className="text-center space-y-2 mb-8 md:mb-12">
@@ -171,6 +174,9 @@ export default function CategoryCarousel() {
           ))}
         </div>
 
+        </div>
+
+        </div>
       </div>
     </section>
   );
