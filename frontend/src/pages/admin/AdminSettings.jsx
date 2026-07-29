@@ -384,31 +384,7 @@ export default function AdminSettings() {
                   </select>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                    Card / Div Box Background Color
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="color"
-                      name="card_bg_color"
-                      value={formData.card_bg_color || '#FFFFFF'}
-                      onChange={handleChange}
-                      className="w-10 h-10 rounded-xl cursor-pointer border border-slate-200 p-0.5 bg-white flex-shrink-0"
-                    />
-                    <input
-                      type="text"
-                      name="card_bg_color"
-                      value={formData.card_bg_color || '#FFFFFF'}
-                      onChange={handleChange}
-                      placeholder="#FFFFFF"
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-mono font-bold outline-none transition-all uppercase"
-                    />
-                  </div>
-                  <p className="text-[10px] text-slate-400 font-semibold">
-                    Applies custom background color to all product card div boxes across the site (the Welcome banner box background will remain fixed).
-                  </p>
-                </div>
+
 
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
