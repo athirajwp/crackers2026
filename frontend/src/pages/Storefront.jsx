@@ -117,19 +117,10 @@ export default function Storefront() {
               <span className="text-crimson-500">{settings.store_name || 'Our Store'}</span>
             </h2>
 
-            {/* MOBILE: logo top + 2x2 grid | DESKTOP: 3-column left|center|right */}
+            {/* MOBILE: 2 items top | logo middle | 2 items bottom | DESKTOP: 3-column */}
 
-            {/* Mobile Logo — only shown on mobile, hidden on md+ */}
-            <div className="flex md:hidden items-center justify-center mb-6">
-              <img
-                src="/img/crackers logo.jpg"
-                alt="Company Logo"
-                className="w-48 object-contain drop-shadow-xl"
-              />
-            </div>
-
-            {/* Mobile 2×2 grid — only shown on mobile */}
-            <div className="grid grid-cols-2 gap-6 md:hidden">
+            {/* Mobile Top Row — Quality + Genuine Price */}
+            <div className="grid grid-cols-2 gap-6 md:hidden mb-6">
               {/* Quality */}
               <div className="flex flex-col items-center text-center gap-2">
                 <div className="relative w-14 h-14 flex items-center justify-center mb-1">
@@ -151,6 +142,19 @@ export default function Storefront() {
                 <h4 className="text-sm font-black text-crimson-500">Genuine Price</h4>
                 <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Quality products at economic price is the main motto for us</p>
               </div>
+            </div>
+
+            {/* Mobile Logo — centered between rows */}
+            <div className="flex md:hidden items-center justify-center my-4">
+              <img
+                src="/img/crackers logo.jpg"
+                alt="Company Logo"
+                className="w-48 object-contain drop-shadow-xl"
+              />
+            </div>
+
+            {/* Mobile Bottom Row — Safe to Use + Customer Satisfaction */}
+            <div className="grid grid-cols-2 gap-6 md:hidden mt-6">
               {/* Safe to Use */}
               <div className="flex flex-col items-center text-center gap-2">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md mb-1">
