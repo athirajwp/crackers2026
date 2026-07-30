@@ -1,9 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 
 export default function StickyQuickOrderButton() {
   const { totalQty } = useStore();
+  const location = useLocation();
+
+  // Hide the floating Shop Now button when already on the Quick Order page
+  if (
+    location.pathname === '/quick-order' ||
+    location.pathname === '/quick_order' ||
+    location.pathname === '/quick-purchase'
+  ) {
+    return null;
+  }
 
   // Elevate if cart footer is active (when totalQty > 0)
   const bottomClass = totalQty > 0 ? 'bottom-20 sm:bottom-24' : 'bottom-4 sm:bottom-6';
