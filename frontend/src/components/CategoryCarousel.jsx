@@ -136,15 +136,15 @@ export default function CategoryCarousel() {
         </div>
 
         {/* 3 items on mobile (grid-cols-3), 4 items on desktop (md:grid-cols-4) */}
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4 lg:gap-6 items-start max-w-4xl mx-auto">
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-1.5 sm:gap-4 lg:gap-6 items-start max-w-4xl mx-auto">
           {getPageItems(activePage).map((item, idx) => (
             <div
               key={`${activePage}-${idx}`}
               onClick={() => handleCategoryClick(item.slug)}
               className="group cursor-pointer flex flex-col items-center transition-transform duration-500 hover:-translate-y-2"
             >
-              {/* Circular Pod */}
-              <div className="relative w-[82px] h-[82px] sm:w-[110px] sm:h-[110px] md:w-[143px] md:h-[143px] bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-1 sm:p-2 transition-all duration-300 group-hover:scale-105 overflow-hidden mx-auto">
+              {/* Circular Pod (20% Larger on mobile: 100px) */}
+              <div className="relative w-[100px] h-[100px] sm:w-[118px] sm:h-[118px] md:w-[143px] md:h-[143px] bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-1 sm:p-2 transition-all duration-300 group-hover:scale-105 overflow-hidden mx-auto">
 
                 {/* Soft Background Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/30 to-amber-100/40 rounded-full"></div>
@@ -167,10 +167,10 @@ export default function CategoryCarousel() {
                 </div>
               </div>
 
-              {/* Category Label Button */}
+              {/* Category Label Button (20% Larger on mobile: 98px) */}
               <button
                 type="button"
-                className="mt-2 sm:mt-3 w-[80px] sm:w-[105px] md:w-[130px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-1 sm:py-1.5 px-1 rounded-full text-[8px] sm:text-[10px] md:text-xs shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wide text-center border border-gold-400 truncate"
+                className="mt-2 sm:mt-3 w-[98px] sm:w-[112px] md:w-[130px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-1 sm:py-1.5 px-1 rounded-full text-[9px] sm:text-[10px] md:text-xs shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wide text-center border border-gold-400 truncate"
               >
                 {item.name}
               </button>
