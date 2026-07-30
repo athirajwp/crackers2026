@@ -63,10 +63,30 @@ export default function CategoryCarousel() {
     }
   ];
 
-  const ITEMS_PER_PAGE = 4;
-  const totalPages = Math.ceil(productItems.length / ITEMS_PER_PAGE);
+  // Screen size state for responsive items count (3 on mobile, 4 on md+)
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const itemsPerPage = isMobile ? 3 : 4;
+  const totalPages = Math.ceil(productItems.length / itemsPerPage);
 
   const [activePage, setActivePage] = useState(0);
+
+  // Reset active page if out of bounds on resize
+  useEffect(() => {
+    if (activePage >= totalPages) {
+      setActivePage(0);
+    }
+  }, [totalPages, activePage]);
 
   // Auto slide every 3.5 seconds
   useEffect(() => {
@@ -76,10 +96,10 @@ export default function CategoryCarousel() {
     return () => clearInterval(timer);
   }, [totalPages]);
 
-  // Always return exactly 4 items, wrapping around if on last page
+  // Always return items per page, wrapping around if needed
   const getPageItems = (page) => {
-    const startIdx = page * ITEMS_PER_PAGE;
-    return Array.from({ length: ITEMS_PER_PAGE }, (_, i) =>
+    const startIdx = page * itemsPerPage;
+    return Array.from({ length: itemsPerPage }, (_, i) =>
       productItems[(startIdx + i) % productItems.length]
     );
   };
@@ -88,35 +108,35 @@ export default function CategoryCarousel() {
     <section className="relative py-8 md:py-10 overflow-hidden select-none">
 
       <div className="container mx-auto px-4">
-        <div className="bg-[#EFEBE8] border border-[#E2DDD9] rounded-3xl p-6 md:p-10 shadow-sm overflow-hidden relative">
+        <div className="bg-[#EFEBE8] border border-[#E2DDD9] rounded-3xl p-4 sm:p-6 md:p-10 shadow-sm overflow-hidden relative">
 
         {/* Background Soft Floating Gold Sparks */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
-        <div className="absolute top-4 left-10 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
-        <div className="absolute top-12 right-20 w-3 h-3 bg-amber-500 rotate-45 animate-pulse"></div>
-        <div className="absolute bottom-6 left-1/4 w-2 h-4 bg-gold-500 -rotate-12"></div>
-        <div className="absolute top-10 left-1/3 w-3 h-1.5 bg-amber-400 rotate-45"></div>
-        <div className="absolute bottom-10 right-1/3 w-2 h-3 bg-amber-500 rotate-12"></div>
-        <div className="absolute top-6 right-10 w-2.5 h-2.5 bg-amber-400 rounded-full animate-bounce"></div>
+          <div className="absolute top-4 left-10 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
+          <div className="absolute top-12 right-20 w-3 h-3 bg-amber-500 rotate-45 animate-pulse"></div>
+          <div className="absolute bottom-6 left-1/4 w-2 h-4 bg-gold-500 -rotate-12"></div>
+          <div className="absolute top-10 left-1/3 w-3 h-1.5 bg-amber-400 rotate-45"></div>
+          <div className="absolute bottom-10 right-1/3 w-2 h-3 bg-amber-500 rotate-12"></div>
+          <div className="absolute top-6 right-10 w-2.5 h-2.5 bg-amber-400 rounded-full animate-bounce"></div>
         </div>
 
         <div className="relative z-10">
 
         {/* Section Header */}
-        <div className="text-center space-y-2 mb-8 md:mb-12">
+        <div className="text-center space-y-2 mb-6 md:mb-12">
           <span className="inline-flex items-center gap-1.5 bg-gold-100 border border-gold-300/80 text-gold-900 text-[10px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-sm">
             <i className="fa-solid fa-sparkles text-gold-600"></i> Sivakasi Fireworks Range
           </span>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 uppercase font-sans">
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900 uppercase font-sans">
             Shop Our <span className="text-crimson-600">Products</span>
           </h2>
-          <p className="text-xs md:text-sm text-slate-500 font-semibold tracking-wider uppercase">
+          <p className="text-[11px] md:text-sm text-slate-500 font-semibold tracking-wider uppercase">
             Click any category to start quick ordering
           </p>
         </div>
 
-        {/* Always 4 items in one single row — all screen sizes */}
-        <div className="grid grid-cols-4 gap-2 sm:gap-4 lg:gap-6 items-start max-w-4xl mx-auto">
+        {/* 3 items on mobile (grid-cols-3), 4 items on desktop (md:grid-cols-4) */}
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4 lg:gap-6 items-start max-w-4xl mx-auto">
           {getPageItems(activePage).map((item, idx) => (
             <div
               key={`${activePage}-${idx}`}
@@ -124,7 +144,7 @@ export default function CategoryCarousel() {
               className="group cursor-pointer flex flex-col items-center transition-transform duration-500 hover:-translate-y-2"
             >
               {/* Circular Pod */}
-              <div className="relative w-[70px] h-[70px] sm:w-[110px] sm:h-[110px] md:w-[143px] md:h-[143px] bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-1 sm:p-2 transition-all duration-300 group-hover:scale-105 overflow-hidden mx-auto">
+              <div className="relative w-[82px] h-[82px] sm:w-[110px] sm:h-[110px] md:w-[143px] md:h-[143px] bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-1 sm:p-2 transition-all duration-300 group-hover:scale-105 overflow-hidden mx-auto">
 
                 {/* Soft Background Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/30 to-amber-100/40 rounded-full"></div>
@@ -150,7 +170,7 @@ export default function CategoryCarousel() {
               {/* Category Label Button */}
               <button
                 type="button"
-                className="mt-2 sm:mt-3 w-[68px] sm:w-[105px] md:w-[130px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-0.5 sm:py-1.5 px-1 rounded-full text-[7px] sm:text-[9px] md:text-xs shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wide text-center border border-gold-400 truncate"
+                className="mt-2 sm:mt-3 w-[80px] sm:w-[105px] md:w-[130px] bg-gold-500 hover:bg-gold-400 text-slate-950 font-black py-1 sm:py-1.5 px-1 rounded-full text-[8px] sm:text-[10px] md:text-xs shadow-md group-hover:shadow-gold-500/40 transition-all duration-300 uppercase tracking-wide text-center border border-gold-400 truncate"
               >
                 {item.name}
               </button>
@@ -159,7 +179,7 @@ export default function CategoryCarousel() {
         </div>
 
         {/* Carousel Navigation Dots */}
-        <div className="flex items-center justify-center gap-3 mt-8">
+        <div className="flex items-center justify-center gap-3 mt-6 md:mt-8">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
