@@ -85,56 +85,56 @@ export default function BestSellersSlider({ onPreviewProduct }) {
   if (bestsellers.length === 0) return null;
 
   return (
-    <div className="w-full mb-8 select-none" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+    <div className="w-full mb-5 select-none" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
       <div 
-        className="rounded-3xl border border-[#fde6d0] p-4 sm:p-6 md:p-8 shadow-sm relative overflow-hidden" 
+        className="rounded-2xl border border-[#fde6d0] p-3 sm:p-4 md:p-5 shadow-xs relative overflow-hidden" 
         style={{ background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)' }}
       >
         {/* Soft Sparkle Background Details */}
         <div className="absolute inset-0 pointer-events-none opacity-15">
-          <div className="absolute top-4 left-8 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
-          <div className="absolute bottom-6 right-12 w-3 h-3 bg-crimson-500 rotate-45 animate-pulse"></div>
+          <div className="absolute top-2 left-6 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
+          <div className="absolute bottom-4 right-10 w-2.5 h-2.5 bg-crimson-500 rotate-45 animate-pulse"></div>
         </div>
 
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 relative z-10">
-          <div className="space-y-1.5 text-center sm:text-left">
-            <span className="inline-flex items-center gap-1.5 bg-gold-50 border border-gold-200 text-gold-800 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-xs">
-              <i className="fa-solid fa-fire text-crimson-600 animate-pulse"></i> Fast-Selling Crackers
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5 relative z-10">
+          <div className="space-y-0.5 text-center sm:text-left">
+            <span className="inline-flex items-center gap-1 bg-gold-50 border border-gold-200 text-gold-800 text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-2xs">
+              <i className="fa-solid fa-fire text-crimson-600 animate-pulse text-[8px]"></i> Fast-Selling Crackers
             </span>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+            <h3 className="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">
               Most Sold <span className="text-crimson-600 font-cinzel">Products</span>
             </h3>
-            <p className="text-xs text-slate-500 font-medium">
+            <p className="text-[11px] text-slate-500 font-medium">
               Sivakasi's highest-demanded festive crackers — add directly to your quick order
             </p>
           </div>
 
           {/* Navigation Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center sm:justify-end gap-2 flex-shrink-0">
+            <div className="flex items-center justify-center sm:justify-end gap-1.5 flex-shrink-0">
               <button
                 type="button"
                 onClick={handlePrev}
-                className="w-9 h-9 rounded-xl bg-white border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-sm flex items-center justify-center transition-all active:scale-95"
+                className="w-7 h-7 rounded-lg bg-white border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-2xs flex items-center justify-center transition-all active:scale-95"
                 aria-label="Previous most sold products"
               >
-                <i className="fa-solid fa-chevron-left text-xs"></i>
+                <i className="fa-solid fa-chevron-left text-[10px]"></i>
               </button>
               <button
                 type="button"
                 onClick={handleNext}
-                className="w-9 h-9 rounded-xl bg-white border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-sm flex items-center justify-center transition-all active:scale-95"
+                className="w-7 h-7 rounded-lg bg-white border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-2xs flex items-center justify-center transition-all active:scale-95"
                 aria-label="Next most sold products"
               >
-                <i className="fa-solid fa-chevron-right text-xs"></i>
+                <i className="fa-solid fa-chevron-right text-[10px]"></i>
               </button>
             </div>
           )}
         </div>
 
         {/* Products Grid Slider */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 relative z-10">
           {getSlideItems(activeSlide).map((prod) => {
             const cartItem = cart[prod.id];
             const qty = cartItem ? cartItem.qty : 0;
@@ -145,17 +145,17 @@ export default function BestSellersSlider({ onPreviewProduct }) {
             return (
               <div
                 key={`${activeSlide}-${prod.id}`}
-                className={`bg-white border rounded-2xl p-3.5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative group ${
+                className={`bg-white border rounded-xl p-2.5 shadow-2xs hover:shadow-xs transition-all duration-300 flex flex-col justify-between relative group ${
                   qty > 0 ? 'border-crimson-500 ring-2 ring-crimson-500/20' : 'border-slate-200/80 hover:border-gold-400'
                 }`}
               >
                 {/* Top Badges */}
-                <div className="flex items-center justify-between gap-1 mb-2">
-                  <span className="bg-gradient-to-r from-crimson-600 to-crimson-700 text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider shadow-xs flex items-center gap-1">
-                    <i className="fa-solid fa-fire text-[8px] text-gold-400"></i> Most Sold
+                <div className="flex items-center justify-between gap-1 mb-1.5">
+                  <span className="bg-gradient-to-r from-crimson-600 to-crimson-700 text-white text-[8.5px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider shadow-2xs flex items-center gap-1">
+                    <i className="fa-solid fa-fire text-[7.5px] text-gold-400"></i> Most Sold
                   </span>
                   {mrp > sellingPrice && (
-                    <span className="bg-gold-500 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider shadow-xs">
+                    <span className="bg-gold-500 text-slate-950 text-[8.5px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider shadow-2xs">
                       {discountPercent}% OFF
                     </span>
                   )}
@@ -164,7 +164,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
                 {/* Product Image Block */}
                 <div
                   onClick={() => prod.image && onPreviewProduct && onPreviewProduct(prod)}
-                  className="w-full aspect-[200/150] bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center overflow-hidden mb-3 cursor-pointer group-hover:bg-amber-50/30 transition-colors relative"
+                  className="w-full h-24 sm:h-28 bg-slate-50 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden mb-2 cursor-pointer group-hover:bg-amber-50/30 transition-colors relative"
                 >
                   {prod.image ? (
                     <img
@@ -175,56 +175,56 @@ export default function BestSellersSlider({ onPreviewProduct }) {
                         e.target.style.display = 'none';
                         if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
                       }}
-                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300 filter drop-shadow-sm"
+                      className="w-full h-full object-contain p-1.5 group-hover:scale-105 transition-transform duration-300 filter drop-shadow-2xs"
                     />
                   ) : null}
                   <div
                     className={`${prod.image ? 'hidden' : 'flex'} w-full h-full items-center justify-center text-amber-500`}
                   >
-                    <i className="fa-solid fa-fire-burner text-3xl"></i>
+                    <i className="fa-solid fa-fire-burner text-2xl"></i>
                   </div>
                 </div>
 
                 {/* Product Info */}
-                <div className="mb-3">
-                  <h4 className="font-black text-xs sm:text-sm text-slate-900 leading-snug line-clamp-2 hover:text-crimson-600 transition-colors">
+                <div className="mb-2">
+                  <h4 className="font-black text-xs text-slate-900 leading-snug line-clamp-1 hover:text-crimson-600 transition-colors">
                     {prod.name}
                   </h4>
                 </div>
 
                 {/* Quick Add / Quantity Controls */}
-                <div className="pt-2 border-t border-slate-100">
+                <div className="pt-1.5 border-t border-slate-100">
                   {qty === 0 ? (
                     <button
                       type="button"
                       onClick={() => increaseQty(prod)}
-                      className="w-full bg-crimson-600 hover:bg-crimson-700 active:scale-98 text-white font-extrabold text-xs py-2 px-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5"
+                      className="w-full bg-crimson-600 hover:bg-crimson-700 active:scale-98 text-white font-extrabold text-[11px] py-1.5 px-2 rounded-lg transition-all shadow-2xs flex items-center justify-center gap-1"
                     >
-                      <i className="fa-solid fa-plus text-[10px]"></i>
+                      <i className="fa-solid fa-plus text-[9px]"></i>
                       <span>Add to Order</span>
                     </button>
                   ) : (
-                    <div className="flex items-center justify-between bg-crimson-50 border border-crimson-200 rounded-xl p-1">
+                    <div className="flex items-center justify-between bg-crimson-50 border border-crimson-200 rounded-lg p-0.5">
                       <button
                         type="button"
                         onClick={() => decreaseQty(prod.id)}
-                        className="w-7 h-7 bg-white text-crimson-700 border border-crimson-200 rounded-lg flex items-center justify-center hover:bg-crimson-600 hover:text-white transition-colors active:scale-95 shadow-xs"
+                        className="w-6 h-6 bg-white text-crimson-700 border border-crimson-200 rounded flex items-center justify-center hover:bg-crimson-600 hover:text-white transition-colors active:scale-95 shadow-2xs"
                       >
-                        <i className="fa-solid fa-minus text-[10px]"></i>
+                        <i className="fa-solid fa-minus text-[9px]"></i>
                       </button>
                       <input
                         type="number"
                         min="0"
                         value={qty}
                         onChange={(e) => updateQty(prod, parseInt(e.target.value) || 0)}
-                        className="w-10 text-center font-black text-xs text-crimson-900 bg-transparent focus:outline-none"
+                        className="w-8 text-center font-black text-xs text-crimson-900 bg-transparent focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => increaseQty(prod)}
-                        className="w-7 h-7 bg-crimson-600 text-white rounded-lg flex items-center justify-center hover:bg-crimson-700 transition-colors active:scale-95 shadow-xs"
+                        className="w-6 h-6 bg-crimson-600 text-white rounded flex items-center justify-center hover:bg-crimson-700 transition-colors active:scale-95 shadow-2xs"
                       >
-                        <i className="fa-solid fa-plus text-[10px]"></i>
+                        <i className="fa-solid fa-plus text-[9px]"></i>
                       </button>
                     </div>
                   )}
@@ -236,16 +236,16 @@ export default function BestSellersSlider({ onPreviewProduct }) {
 
         {/* Carousel Dots */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-6 relative z-10">
+          <div className="flex items-center justify-center gap-1.5 mt-3.5 relative z-10">
             {Array.from({ length: totalPages }).map((_, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => setActiveSlide(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-1.5 rounded-full transition-all duration-300 ${
                   activeSlide === i
-                    ? 'w-6 bg-crimson-600'
-                    : 'w-2 bg-slate-300 hover:bg-slate-400'
+                    ? 'w-5 bg-crimson-600'
+                    : 'w-1.5 bg-slate-300 hover:bg-slate-400'
                 }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
