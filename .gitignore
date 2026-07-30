@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/vendor/
+
+# Tools & Binaries
+backend/.tools/
+
+# Environment files
+.env
+backend/.env
+
+# Laravel Storage & Uploads
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/framework/cache/*
+backend/storage/logs/*
+backend/public/uploads/*
+!backend/storage/logs/.gitkeep
+!backend/storage/framework/cache/data/.gitkeep
+
+# System & OS Files
+.DS_Store
+Thumbs.db
+*.log
