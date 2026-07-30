@@ -124,9 +124,6 @@ export default function CategoryCarousel() {
 
         {/* Section Header */}
         <div className="text-center space-y-2 mb-6 md:mb-12">
-          <span className="inline-flex items-center gap-1.5 bg-gold-100 border border-gold-300/80 text-gold-900 text-[10px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-sm">
-            <i className="fa-solid fa-sparkles text-gold-600"></i> Sivakasi Fireworks Range
-          </span>
           <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900 uppercase font-sans">
             Shop Our <span className="text-crimson-600">Products</span>
           </h2>
