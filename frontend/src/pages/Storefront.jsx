@@ -7,7 +7,6 @@ import ProductTable from '../components/ProductTable';
 import CartFooter from '../components/CartFooter';
 import CheckoutDrawer from '../components/CheckoutDrawer';
 import diwaliKidsHD from '../assets/diwali-kids-hd.jpg';
-import ChromaKeyVideo from '../components/ChromaKeyVideo';
 
 export default function Storefront() {
   const {
@@ -74,12 +73,12 @@ export default function Storefront() {
               </p>
             </div>
 
-            {/* Right: Festive Animated Video Showcase */}
-            <div className="md:col-span-5 flex justify-center items-center">
-              <ChromaKeyVideo
-                src="/img/home/homeanime.mp4"
-                className="w-full max-w-sm md:max-w-md lg:max-w-lg"
-                maxHeight="340px"
+            {/* Right: Diwali Kids Image */}
+            <div className="md:col-span-5 flex justify-center items-center overflow-hidden">
+              <img
+                src={diwaliKidsHD}
+                alt="Diwali Fireworks Celebration"
+                className="w-full max-w-sm md:max-w-md lg:max-w-lg max-h-72 md:max-h-80 lg:max-h-96 object-contain drop-shadow-sm transition-transform duration-500 hover:scale-105"
               />
             </div>
           </div>
