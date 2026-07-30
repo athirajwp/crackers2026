@@ -108,7 +108,7 @@ export default function CategoryCarousel() {
     <section className="relative py-8 md:py-10 overflow-hidden select-none">
 
       <div className="container mx-auto px-4">
-        <div className="bg-[#EFEBE8] border border-[#E2DDD9] rounded-3xl p-4 sm:p-6 md:p-10 shadow-sm overflow-hidden relative">
+        <div className="rounded-3xl p-4 sm:p-6 md:p-10 shadow-sm overflow-hidden relative" style={{background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)'}}>
 
         {/* Background Soft Floating Gold Sparks */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
