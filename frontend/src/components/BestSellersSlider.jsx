@@ -51,14 +51,10 @@ export default function BestSellersSlider({ onPreviewProduct }) {
     AOS.init({
       duration: 800,
       easing: 'ease-in-out',
-      once: false,
-      mirror: true,
+      once: true,
+      mirror: false,
     });
   }, []);
-
-  useEffect(() => {
-    AOS.refresh();
-  }, [activeSlide]);
 
   // Auto-slide every 4 seconds
   useEffect(() => {
@@ -89,7 +85,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
   if (bestsellers.length === 0) return null;
 
   return (
-    <div className="w-full mb-8 select-none">
+    <div className="w-full mb-8 select-none" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
       <div 
         className="rounded-3xl border border-[#fde6d0] p-4 sm:p-6 md:p-8 shadow-sm relative overflow-hidden" 
         style={{ background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)' }}
@@ -101,7 +97,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
         </div>
 
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 relative z-10" data-aos="fade-down" data-aos-duration="1000">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 relative z-10">
           <div className="space-y-1.5 text-center sm:text-left">
             <span className="inline-flex items-center gap-1.5 bg-gold-50 border border-gold-200 text-gold-800 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-xs">
               <i className="fa-solid fa-fire text-crimson-600 animate-pulse"></i> Fast-Selling Crackers
@@ -139,7 +135,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
 
         {/* Products Grid Slider */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
-          {getSlideItems(activeSlide).map((prod, idx) => {
+          {getSlideItems(activeSlide).map((prod) => {
             const cartItem = cart[prod.id];
             const qty = cartItem ? cartItem.qty : 0;
             const discountPercent = settings.discount_percent || 60;
@@ -149,9 +145,6 @@ export default function BestSellersSlider({ onPreviewProduct }) {
             return (
               <div
                 key={`${activeSlide}-${prod.id}`}
-                data-aos="zoom-in"
-                data-aos-duration="800"
-                data-aos-delay={idx * 120}
                 className={`bg-white border rounded-2xl p-3.5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative group ${
                   qty > 0 ? 'border-crimson-500 ring-2 ring-crimson-500/20' : 'border-slate-200/80 hover:border-gold-400'
                 }`}
