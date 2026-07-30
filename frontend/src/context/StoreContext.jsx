@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { getImageUrl } from '../utils/imageUrl';
 
 const StoreContext = createContext();
 
@@ -55,9 +56,7 @@ export const StoreProvider = ({ children }) => {
 
           // Update dynamic browser favicon if present
           if (data.settings.store_favicon) {
-            const faviconUrl = data.settings.store_favicon.startsWith('data:') || data.settings.store_favicon.startsWith('http') 
-              ? data.settings.store_favicon 
-              : `/${data.settings.store_favicon}`;
+            const faviconUrl = getImageUrl(data.settings.store_favicon);
             const links = document.querySelectorAll("link[rel*='icon']");
             if (links.length > 0) {
               links.forEach((l) => (l.href = faviconUrl));

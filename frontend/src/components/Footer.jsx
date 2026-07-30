@@ -114,7 +114,7 @@ export default function Footer() {
                 <div className="pt-2 border-t border-slate-700/80 space-y-1.5 text-[11px] md:text-xs">
                   <p className="flex justify-between items-center">
                     <span className="text-slate-400">License Name:</span>
-                    <strong className="text-white font-bold">{settings.license_name || 'Jallikattu Crackers'}</strong>
+                    <strong className="text-white font-bold font-cinzel">{settings.license_name || 'Jallikattu Crackers'}</strong>
                   </p>
                   <p className="flex justify-between items-center">
                     <span className="text-slate-400">License No:</span>
@@ -128,7 +128,7 @@ export default function Footer() {
 
           {/* Bottom Credits */}
           <div className="border-t border-slate-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-500 gap-4">
-            <p>&copy; 2026 {settings.store_name} Sivakasi. All Rights Reserved.</p>
+            <p>&copy; 2026 <span className="font-cinzel font-bold text-slate-300">{settings.store_name}</span> Sivakasi. All Rights Reserved.</p>
             <div className="flex gap-4 font-bold">
               <span className="hover:text-gold-500 cursor-pointer transition-colors">Privacy Policy</span>
               <span>&bull;</span>

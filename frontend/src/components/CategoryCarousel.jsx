@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
 
 export default function CategoryCarousel() {
@@ -96,6 +98,19 @@ export default function CategoryCarousel() {
     return () => clearInterval(timer);
   }, [totalPages]);
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: false,
+      mirror: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    AOS.refresh();
+  }, [activePage]);
+
   // Always return items per page, wrapping around if needed
   const getPageItems = (page) => {
     const startIdx = page * itemsPerPage;
@@ -124,10 +139,10 @@ export default function CategoryCarousel() {
 
         {/* Section Header */}
         <div className="text-center space-y-2 mb-6 md:mb-12">
-          <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900 uppercase font-sans">
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900 font-sans" data-aos="fade-down" data-aos-duration="1000">
             Shop Our <span className="text-crimson-600">Products</span>
           </h2>
-          <p className="text-[11px] md:text-sm text-slate-500 font-semibold tracking-wider uppercase">
+          <p className="text-[11px] md:text-sm text-slate-500 font-semibold tracking-wider" data-aos="fade-up" data-aos-duration="800" data-aos-delay="150">
             Click any category to start quick ordering
           </p>
         </div>
@@ -138,6 +153,9 @@ export default function CategoryCarousel() {
             <div
               key={`${activePage}-${idx}`}
               onClick={() => handleCategoryClick(item.slug)}
+              data-aos="zoom-in"
+              data-aos-duration="800"
+              data-aos-delay={idx * 150}
               className="group cursor-pointer flex flex-col items-center transition-transform duration-500 hover:-translate-y-2"
             >
               {/* Circular Pod (20% Larger on mobile: 100px) */}
@@ -176,7 +194,7 @@ export default function CategoryCarousel() {
         </div>
 
         {/* Carousel Navigation Dots */}
-        <div className="flex items-center justify-center gap-3 mt-6 md:mt-8">
+        <div className="flex items-center justify-center gap-3 mt-6 md:mt-8" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}

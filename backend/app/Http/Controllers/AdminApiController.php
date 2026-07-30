@@ -841,6 +841,18 @@ class AdminApiController extends Controller
             $settings[$key] = Setting::get($key, '');
         }
 
+        $company = view()->shared('currentCompany');
+        if (empty($settings['store_logo']) && $company && !empty($company->logo_path)) {
+            $settings['store_logo'] = $company->logo_path;
+        }
+        if ($settings['store_logo'] === 'img/crackers logo.jpg' || $settings['store_logo'] === '/img/crackers logo.jpg') {
+            $settings['store_logo'] = '';
+        }
+
+        if (empty($settings['store_favicon']) && $company && !empty($company->favicon_path)) {
+            $settings['store_favicon'] = $company->favicon_path;
+        }
+
         if (empty($settings['admin_theme'])) $settings['admin_theme'] = 'gold';
         if (empty($settings['about_us_badge'])) $settings['about_us_badge'] = 'A Decade of Quality';
         if (empty($settings['about_us_title'])) $settings['about_us_title'] = 'We Provide Premium Quality Fireworks';
@@ -864,6 +876,18 @@ class AdminApiController extends Controller
                     @unlink(public_path($oldPath));
                 }
                 Setting::set($removeKey, '', 'text');
+
+                $company = view()->shared('currentCompany');
+                if ($company) {
+                    try {
+                        if ($removeKey === 'store_logo') {
+                            $company->update(['logo_path' => null]);
+                        } elseif ($removeKey === 'store_favicon') {
+                            $company->update(['favicon_path' => null]);
+                        }
+                    } catch (\Throwable $th) {}
+                }
+
                 return response()->json(['success' => true, 'removed' => $removeKey]);
             }
         }

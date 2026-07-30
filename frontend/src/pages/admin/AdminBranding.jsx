@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from './AdminLayout';
+import { getImageUrl } from '../../utils/imageUrl';
 
 const Swal = window.Swal;
 
@@ -384,7 +385,7 @@ export default function AdminBranding() {
                 {imagePaths.store_logo && (
                   <div className="w-full h-24 bg-slate-100 border border-slate-200 rounded-xl overflow-hidden shadow-inner flex items-center justify-center p-2">
                     <img
-                      src={imagePaths.store_logo.startsWith('data:') || imagePaths.store_logo.startsWith('http') ? imagePaths.store_logo : `/${imagePaths.store_logo}`}
+                      src={getImageUrl(imagePaths.store_logo)}
                       alt="Store Logo"
                       className="max-h-full max-w-full object-contain"
                     />
@@ -430,7 +431,7 @@ export default function AdminBranding() {
                 {imagePaths.store_favicon && (
                   <div className="w-full h-24 bg-slate-100 border border-slate-200 rounded-xl overflow-hidden shadow-inner flex items-center justify-center p-2">
                     <img
-                      src={imagePaths.store_favicon.startsWith('data:') || imagePaths.store_favicon.startsWith('http') ? imagePaths.store_favicon : `/${imagePaths.store_favicon}`}
+                      src={getImageUrl(imagePaths.store_favicon)}
                       alt="Store Favicon"
                       className="h-10 w-10 object-contain"
                     />

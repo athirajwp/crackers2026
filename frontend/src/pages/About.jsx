@@ -41,7 +41,7 @@ export default function About() {
           <div className="flex justify-center items-center gap-2 text-xs font-extrabold text-slate-350 uppercase tracking-widest">
             <Link to="/" className="hover:text-gold-500 transition-colors">Home</Link>
             <i className="fa-solid fa-chevron-right text-[8px] text-slate-450"></i>
-            <span className="text-gold-500">About {settings.store_name || 'Our Company'}</span>
+            <span className="text-gold-500">About <span className="font-cinzel">{settings.store_name || 'Our Company'}</span></span>
           </div>
         </div>
       </section>

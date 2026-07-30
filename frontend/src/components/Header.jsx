@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
+import { getImageUrl } from '../utils/imageUrl';
 
 export default function Header() {
   const {
@@ -128,8 +129,8 @@ export default function Header() {
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-gold-500 shadow-md shadow-gold-500/20 overflow-hidden bg-white flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-hover:border-gold-400">
               {settings.store_logo ? (
                 <img
-                  src={settings.store_logo.startsWith('data:') || settings.store_logo.startsWith('http') ? settings.store_logo : `/${settings.store_logo}`}
-                  alt={settings.store_name}
+                  src={getImageUrl(settings.store_logo)}
+                  alt={settings.store_name || 'Company Logo'}
                   className="w-full h-full object-cover"
                 />
               ) : (

@@ -1,8 +1,5 @@
 @echo off
 echo Starting Cracker Demo local development environment...
-echo Starting all company servers...
-call "%~dp0artisan.bat" serve:all
 echo Opening browser...
-start http://127.0.0.1:8000/admin_sys/login
-"%~dp0.tools\php\php.exe" -c "%~dp0.tools\php\php.ini" "%~dp0artisan" serve --port=8000
-
+start http://127.0.0.1:9000
+"%~dp0.tools\php\php.exe" -c "%~dp0.tools\php\php.ini" "%~dp0artisan" serve --port=9000

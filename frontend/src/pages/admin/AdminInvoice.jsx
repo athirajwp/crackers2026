@@ -168,7 +168,7 @@ export default function AdminInvoice() {
           <tbody>
             <tr>
               <td>
-                <div className="header-brand">{settings.store_name?.toUpperCase()}</div>
+                <div className="header-brand font-cinzel">{settings.store_name}</div>
                 <div style={{ fontSize: '10px', marginTop: '3px' }}>
                   {settings.store_address}<br />
                   Phone: {settings.store_phone} | Email: {settings.store_email}

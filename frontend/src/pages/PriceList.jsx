@@ -141,7 +141,7 @@ export default function PriceList() {
         {/* Header Branding (Visible on Print and Screen) */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[#E2DDD9] pb-6 mb-6 gap-4">
           <div>
-            <h1 className="text-2xl font-black tracking-tight text-crimson-700 uppercase leading-none">
+            <h1 className="text-2xl font-black tracking-tight text-crimson-700 leading-none font-cinzel">
               {settings.store_name}
             </h1>
             <p className="text-[10px] text-slate-500 tracking-widest uppercase font-bold mt-1.5">

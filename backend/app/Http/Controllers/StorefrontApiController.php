@@ -21,10 +21,33 @@ class StorefrontApiController extends Controller
             ->orderBy('sort_order', 'asc')
             ->get();
 
+        $company = view()->shared('currentCompany');
+
+        $storeName = Setting::get('store_name', '');
+        if (empty($storeName) && $company && !empty($company->name)) {
+            $storeName = $company->name;
+        }
+        if (empty($storeName)) {
+            $storeName = 'Cracker Demo';
+        }
+
+        $storeLogo = Setting::get('store_logo', '');
+        if (empty($storeLogo) && $company && !empty($company->logo_path)) {
+            $storeLogo = $company->logo_path;
+        }
+        if ($storeLogo === 'img/crackers logo.jpg' || $storeLogo === '/img/crackers logo.jpg') {
+            $storeLogo = '';
+        }
+
+        $storeFavicon = Setting::get('store_favicon', '');
+        if (empty($storeFavicon) && $company && !empty($company->favicon_path)) {
+            $storeFavicon = $company->favicon_path;
+        }
+
         $settings = [
-            'store_name' => Setting::get('store_name', 'Cracker Demo'),
-            'store_logo' => Setting::get('store_logo', ''),
-            'store_favicon' => Setting::get('store_favicon', ''),
+            'store_name' => $storeName,
+            'store_logo' => $storeLogo,
+            'store_favicon' => $storeFavicon,
             'min_order_value' => Setting::get('min_order_value', 3800),
             'discount_percent' => Setting::get('discount_percent', 60),
             'store_whatsapp' => Setting::get('store_whatsapp', '919998887776'),

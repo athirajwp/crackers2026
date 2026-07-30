@@ -7,7 +7,10 @@
     <title>Sivakasi Online Fireworks Booking Shop</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -104,6 +107,7 @@
             extend: {
               fontFamily: {
                 sans: ['Outfit', 'Poppins', 'sans-serif'],
+                cinzel: ['Cinzel', 'serif'],
               },
               colors: {
                 gold: selectedThemeColors.gold,
@@ -122,6 +126,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
+      .font-cinzel {
+        font-family: 'Cinzel', serif !important;
+      }
       html {
         scroll-behavior: smooth;
       }
@@ -153,8 +160,8 @@
         100% { transform: translateX(-100%); }
       }
     </style>
-    <script type="module" crossorigin src="/build/assets/index-HveIeLiK.js"></script>
-    <link rel="stylesheet" crossorigin href="/build/assets/index-D3I8qIAU.css">
+    <script type="module" crossorigin src="/build/assets/index-OTBRIFIo.js"></script>
+    <link rel="stylesheet" crossorigin href="/build/assets/index-Cf-cbYoi.css">
   </head>
   <body class="bg-slate-50 text-slate-800 font-sans">
     <div id="root"></div>
