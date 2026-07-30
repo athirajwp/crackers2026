@@ -12,6 +12,7 @@ import CheckoutSuccess from './pages/CheckoutSuccess';
 import Contact from './pages/Contact';
 import QuickOrder from './pages/QuickOrder';
 import Fireworks from './components/Fireworks';
+import StickyQuickOrderButton from './components/StickyQuickOrderButton';
 
 // Admin imports
 import AdminLogin from './pages/admin/AdminLogin';
@@ -214,6 +215,7 @@ function PublicLayout() {
         </div>
       )}
 
+      <StickyQuickOrderButton />
       <Footer />
     </div>
   );
