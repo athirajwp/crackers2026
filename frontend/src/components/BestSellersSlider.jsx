@@ -186,32 +186,10 @@ export default function BestSellersSlider({ onPreviewProduct }) {
                 </div>
 
                 {/* Product Info */}
-                <div className="space-y-1.5 mb-3">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block truncate">
-                    {prod.categoryName || 'Firecrackers'}
-                  </span>
-                  <h4 className="font-black text-xs sm:text-sm text-slate-900 leading-snug line-clamp-1 hover:text-crimson-600 transition-colors">
+                <div className="mb-3">
+                  <h4 className="font-black text-xs sm:text-sm text-slate-900 leading-snug line-clamp-2 hover:text-crimson-600 transition-colors">
                     {prod.name}
                   </h4>
-
-                  {/* Pack / Unit */}
-                  {prod.pack_size && (
-                    <p className="text-[10.5px] font-bold text-slate-500">
-                      Box / Unit: <span className="text-slate-700">{prod.pack_size}</span>
-                    </p>
-                  )}
-
-                  {/* Pricing */}
-                  <div className="flex items-baseline gap-2 pt-1">
-                    <span className="text-sm font-black text-crimson-600">
-                      ₹{formatCurrency(sellingPrice)}
-                    </span>
-                    {mrp > sellingPrice && (
-                      <span className="text-xs font-bold text-slate-400 line-through">
-                        ₹{formatCurrency(mrp)}
-                      </span>
-                    )}
-                  </div>
                 </div>
 
                 {/* Quick Add / Quantity Controls */}
