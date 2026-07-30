@@ -77,7 +77,7 @@ export default function Header() {
 
   const navLinks = [
     { to: '/', label: 'Home', icon: 'fa-house', isLink: true },
-    { to: '/quick-order', label: 'Quick Order Sheet', icon: 'fa-list-check', isLink: true },
+    { to: '/quick-order', label: 'Quick Order', icon: 'fa-list-check', isLink: true },
     { to: '/price-list', label: 'Price List', icon: 'fa-tags', isLink: true },
     { to: '/track', label: 'Track Order', icon: 'fa-truck-fast', isLink: true },
     { to: '/about', label: 'About Us', icon: 'fa-circle-info', isLink: true },
@@ -157,16 +157,47 @@ export default function Header() {
               </span>
             </a>
 
-            {/* RIGHT: Phone Button */}
-            <div className="flex-shrink-0">
-              <a
-                href={`tel:${settings.store_phone || ''}`}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-crimson-600 hover:bg-crimson-700 active:bg-crimson-800 text-white text-[11px] font-extrabold uppercase tracking-wider shadow-xs hover:shadow transition-all group/phone border border-crimson-700"
-                title={`Call ${settings.store_phone || 'Us'}`}
-              >
-                <i className="fa-solid fa-phone text-[10px] text-gold-400 group-hover/phone:animate-bounce"></i>
-                <span>Phone</span>
-              </a>
+            {/* RIGHT: Mobile Numbers */}
+            <div className="flex flex-col items-center text-center gap-0.5 flex-shrink-0">
+              <h3 className="text-crimson-700 font-extrabold text-[10px] sm:text-xs uppercase tracking-wider">
+                Mobile Numbers
+              </h3>
+              <div className="flex flex-col items-center justify-center gap-0.5">
+                {settings.store_phone ? (
+                  <a
+                    href={`tel:${settings.store_phone}`}
+                    className="text-slate-900 text-[10px] sm:text-xs font-black hover:text-crimson-700 transition-colors block"
+                  >
+                    {settings.store_phone}
+                  </a>
+                ) : (
+                  <span className="text-slate-900 text-[10px] sm:text-xs font-black">+91 99449 91600</span>
+                )}
+                {settings.store_phone_2 && (
+                  <a
+                    href={`tel:${settings.store_phone_2}`}
+                    className="text-slate-900 text-[10px] sm:text-xs font-black hover:text-crimson-700 transition-colors block"
+                  >
+                    {settings.store_phone_2}
+                  </a>
+                )}
+                {settings.store_phone_3 && (
+                  <a
+                    href={`tel:${settings.store_phone_3}`}
+                    className="text-slate-900 text-[10px] sm:text-xs font-black hover:text-crimson-700 transition-colors block"
+                  >
+                    {settings.store_phone_3}
+                  </a>
+                )}
+                {settings.store_phone_4 && (
+                  <a
+                    href={`tel:${settings.store_phone_4}`}
+                    className="text-slate-900 text-[10px] sm:text-xs font-black hover:text-crimson-700 transition-colors block"
+                  >
+                    {settings.store_phone_4}
+                  </a>
+                )}
+              </div>
             </div>
           </div>
 

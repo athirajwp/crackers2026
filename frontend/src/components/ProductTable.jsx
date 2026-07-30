@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
+import BestSellersSlider from './BestSellersSlider';
 
 export default function ProductTable() {
   const {
@@ -17,6 +18,7 @@ export default function ProductTable() {
   } = useStore();
 
   const [popProduct, setPopProduct] = useState(null);
+  const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
   const [collapsedCategories, setCollapsedCategories] = useState(new Set());
 
@@ -67,7 +69,100 @@ export default function ProductTable() {
   const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
 
   return (
-    <section id="quick-order" className="container mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8 items-start">
+    <section id="quick-order" className="container mx-auto px-4 py-8 select-none">
+      {/* 1. Most Sold Products Slider */}
+      <BestSellersSlider onPreviewProduct={(prod) => setPopProduct({ prod, catName: prod.categoryName || 'Bestsellers' })} />
+
+      {/* 2. Main Quick Order Table & Category Sidebar Layout */}
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        {/* Mobile Custom Theme-Synced Categories Dropdown (Visible on Mobile & Tablet < 1024px) */}
+      <div className="block lg:hidden w-full select-none mb-3 relative z-30">
+        <div
+          onClick={() => setMobileCategoryOpen(!mobileCategoryOpen)}
+          className="w-full bg-gradient-to-r from-crimson-700 via-crimson-600 to-crimson-800 text-white border border-crimson-700 rounded-2xl p-3.5 shadow-md flex items-center justify-between cursor-pointer active:scale-[0.99] transition-all"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <i className="fa-solid fa-boxes-stacked text-gold-400 text-sm flex-shrink-0"></i>
+            <span className="text-xs font-black uppercase tracking-wider text-slate-100 flex-shrink-0">
+              Categories:
+            </span>
+            <span className="bg-gold-500 text-slate-950 text-[10.5px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-xs truncate">
+              {activeCategory === 'all'
+                ? 'All Products'
+                : categories.find((c) => c.slug === activeCategory)?.name || activeCategory}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 text-gold-400 flex-shrink-0 ml-2">
+            <i className="fa-solid fa-filter text-xs"></i>
+            <i className={`fa-solid fa-chevron-down text-xs transition-transform duration-300 ${mobileCategoryOpen ? 'rotate-180 text-gold-300' : ''}`}></i>
+          </div>
+        </div>
+
+        {/* Custom Theme-Synced Dropdown Panel */}
+        {mobileCategoryOpen && (
+          <div className="absolute left-0 right-0 top-full mt-2 bg-white border-2 border-gold-400/90 rounded-2xl shadow-2xl p-2 z-50 animate-fade-in max-h-80 overflow-y-auto divide-y divide-slate-100">
+            <div className="p-2 pb-1.5 flex items-center justify-between text-slate-700 font-extrabold text-xs uppercase tracking-wider">
+              <span className="flex items-center gap-1.5 text-crimson-700">
+                <i className="fa-solid fa-layer-group text-xs"></i> Select Category
+              </span>
+              <span className="text-[10px] text-slate-400 font-bold">
+                {categories.length + 1} Options
+              </span>
+            </div>
+
+            <div className="pt-1.5 space-y-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveCategory('all');
+                  setMobileCategoryOpen(false);
+                }}
+                className={`w-full text-left px-3.5 py-3 rounded-xl text-xs flex items-center justify-between transition-all ${
+                  activeCategory === 'all'
+                    ? 'bg-crimson-600 text-white font-black shadow-sm'
+                    : 'text-slate-700 hover:bg-crimson-50 hover:text-crimson-700 font-bold'
+                }`}
+              >
+                <span className="flex items-center gap-2.5">
+                  <i className={`fa-solid fa-boxes-stacked text-xs ${activeCategory === 'all' ? 'text-gold-400' : 'text-slate-400'}`}></i>
+                  <span>All Products</span>
+                </span>
+                {activeCategory === 'all' && (
+                  <i className="fa-solid fa-circle-check text-gold-400 text-sm"></i>
+                )}
+              </button>
+
+              {categories.map((cat) => {
+                const isActive = activeCategory === cat.slug;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveCategory(cat.slug);
+                      setMobileCategoryOpen(false);
+                    }}
+                    className={`w-full text-left px-3.5 py-3 rounded-xl text-xs flex items-center justify-between transition-all ${
+                      isActive
+                        ? 'bg-crimson-600 text-white font-black shadow-sm'
+                        : 'text-slate-700 hover:bg-crimson-50 hover:text-crimson-700 font-bold'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-fire-flame-curved text-xs ${isActive ? 'text-gold-400' : 'text-slate-400'}`}></i>
+                      <span>{cat.name}</span>
+                    </span>
+                    {isActive && (
+                      <i className="fa-solid fa-circle-check text-gold-400 text-sm"></i>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Left: Category sidebar filters (Hidden on Mobile, Sticky on Desktop) */}
       <aside className="hidden lg:block lg:w-64 flex-shrink-0 lg:sticky lg:top-24 space-y-4 select-none">
         <div className="border border-slate-200/80 p-4 rounded-2xl shadow-sm" style={cardBgStyle}>
@@ -653,6 +748,7 @@ export default function ProductTable() {
           </div>
         );
       })()}
+      </div>
     </section>
   );
 }

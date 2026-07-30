@@ -126,12 +126,12 @@ export default function Storefront() {
           {/* Booking Info Alert Bar */}
           <div className="bg-white/80 backdrop-blur border border-amber-200/80 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-700 shadow-sm">
             <div className="flex items-center gap-2">
-              <i className="fa-solid fa-circle-exclamation text-gold-600 text-sm"></i>
-              <span>Minimum order value is <strong className="text-crimson-600 font-extrabold">₹{formatCurrency(settings.min_order_value)}</strong>. Add crackers to your cart to checkout.</span>
+              <i className="fa-solid fa-wand-magic-sparkles text-gold-600 text-sm"></i>
+              <span>✨ Light up your celebrations for less! Get Sivakasi fireworks straight from our factory at the best wholesale prices</span>
             </div>
             <div className="flex gap-3 w-full sm:w-auto">
               <Link to="/quick-order" className="w-full sm:w-auto text-center bg-crimson-600 hover:bg-crimson-700 text-white px-5 py-2 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors shadow">
-                Start Order
+                Quick Order
               </Link>
               <Link to="/price-list" className="w-full sm:w-auto text-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-5 py-2 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors">
                 Price List
@@ -303,7 +303,7 @@ export default function Storefront() {
               to="/quick-order"
               className="bg-gold-500 hover:bg-gold-400 text-slate-950 font-black px-7 py-3.5 rounded-2xl text-xs uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all text-center"
             >
-              <i className="fa-solid fa-list-check mr-2"></i> Open Quick Order Sheet
+              <i className="fa-solid fa-list-check mr-2"></i> Open Quick Order
             </Link>
             <Link
               to="/price-list"
