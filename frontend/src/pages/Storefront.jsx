@@ -90,11 +90,15 @@ export default function Storefront() {
               <i className="fa-solid fa-circle-exclamation text-gold-600 text-sm"></i>
               <span>Minimum order value is <strong className="text-crimson-600 font-extrabold">₹{formatCurrency(settings.min_order_value)}</strong>. Add crackers to your cart to checkout.</span>
             </div>
-            <div className="flex gap-3 w-full sm:w-auto">
-              <Link to="/quick-order" className="w-full sm:w-auto text-center bg-crimson-600 hover:bg-crimson-700 text-white px-5 py-2 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors shadow">
-                Start Order
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-center">
+              <Link to="/quick-order" className="inline-block group flex-shrink-0">
+                <img
+                  src="/img/quickpurchase.png"
+                  alt="Shop Now"
+                  className="h-12 sm:h-14 w-auto object-contain animate-pulse hover:scale-105 transition-all duration-300 drop-shadow-md"
+                />
               </Link>
-              <Link to="/price-list" className="w-full sm:w-auto text-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-5 py-2 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors">
+              <Link to="/price-list" className="w-full sm:w-auto text-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-5 py-2.5 rounded-xl text-[10px] uppercase tracking-wider font-extrabold transition-colors">
                 Price List
               </Link>
             </div>
@@ -252,12 +256,16 @@ export default function Storefront() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto flex-shrink-0 justify-center">
             <Link
               to="/quick-order"
-              className="bg-gold-500 hover:bg-gold-400 text-slate-950 font-black px-7 py-3.5 rounded-2xl text-xs uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all text-center"
+              className="inline-block group flex-shrink-0"
             >
-              <i className="fa-solid fa-list-check mr-2"></i> Open Quick Order Sheet
+              <img
+                src="/img/quickpurchase.png"
+                alt="Shop Now"
+                className="h-16 md:h-20 w-auto object-contain animate-pulse hover:scale-105 transition-all duration-300 drop-shadow-md"
+              />
             </Link>
             <Link
               to="/price-list"

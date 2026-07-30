@@ -186,6 +186,15 @@ export default function Header() {
             )}
           </div>
 
+          {/* FAR RIGHT: Blinking Quick Purchase / Shop Now Button (matching kavincrackers.com) */}
+          <Link to="/quick-order" className="hidden lg:block flex-shrink-0 group">
+            <img
+              src="/img/quickpurchase.png"
+              alt="Shop Now Quick Purchase"
+              className="h-16 lg:h-20 w-auto object-contain animate-pulse hover:scale-105 transition-all duration-300 drop-shadow-md"
+            />
+          </Link>
+
           {/* Mobile: Hamburger & Cart */}
           <div className="flex md:hidden items-center gap-2 flex-shrink-0">
             <button
