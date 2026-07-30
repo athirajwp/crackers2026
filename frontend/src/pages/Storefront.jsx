@@ -74,10 +74,10 @@ export default function Storefront() {
               </p>
             </div>
 
-            {/* Right: Transparent Animated Video Showcase */}
-            <div className="md:col-span-5 flex justify-center items-center overflow-hidden">
+            {/* Right: Festive Animated Video Showcase */}
+            <div className="md:col-span-5 flex justify-center items-center">
               <ChromaKeyVideo
-                src="/img/home/green-screen-video.webm"
+                src="/img/home/homeanime.mp4"
                 className="w-full max-w-sm md:max-w-md lg:max-w-lg"
                 maxHeight="340px"
               />
