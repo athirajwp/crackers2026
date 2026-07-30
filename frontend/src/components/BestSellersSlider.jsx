@@ -97,44 +97,28 @@ export default function BestSellersSlider({ onPreviewProduct }) {
         </div>
 
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5 relative z-10">
-          <div className="space-y-0.5 text-center sm:text-left">
-            <span className="inline-flex items-center gap-1 bg-gold-50 border border-gold-200 text-gold-800 text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-2xs">
-              <i className="fa-solid fa-fire text-crimson-600 animate-pulse text-[8px]"></i> Fast-Selling Crackers
-            </span>
-            <h3 className="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">
-              Most Sold <span className="text-crimson-600 font-cinzel">Products</span>
-            </h3>
-            <p className="text-[11px] text-slate-500 font-medium">
-              Sivakasi's highest-demanded festive crackers — add directly to your quick order
-            </p>
-          </div>
-
-          {/* Navigation Controls */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center sm:justify-end gap-1.5 flex-shrink-0">
-              <button
-                type="button"
-                onClick={handlePrev}
-                className="w-7 h-7 rounded-lg bg-white border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-2xs flex items-center justify-center transition-all active:scale-95"
-                aria-label="Previous most sold products"
-              >
-                <i className="fa-solid fa-chevron-left text-[10px]"></i>
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                className="w-7 h-7 rounded-lg bg-white border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-2xs flex items-center justify-center transition-all active:scale-95"
-                aria-label="Next most sold products"
-              >
-                <i className="fa-solid fa-chevron-right text-[10px]"></i>
-              </button>
-            </div>
-          )}
+        <div className="mb-3 text-center sm:text-left relative z-10">
+          <h3 className="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">
+            Most Sold <span className="text-crimson-600 font-cinzel">Products</span>
+          </h3>
         </div>
 
-        {/* Products Grid Slider (3 items on Mobile, 4 items on Desktop) */}
-        <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3 relative z-10">
+        {/* Products Grid Slider with Left & Right Flanking Buttons */}
+        <div className="relative z-10">
+          {/* Left Arrow Button */}
+          {totalPages > 1 && (
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/95 border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-md flex items-center justify-center transition-all active:scale-95"
+              aria-label="Previous most sold products"
+            >
+              <i className="fa-solid fa-chevron-left text-[10px] sm:text-xs"></i>
+            </button>
+          )}
+
+          {/* Products Grid */}
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3 px-1 sm:px-2">
           {getSlideItems(activeSlide).map((prod) => {
             const cartItem = cart[prod.id];
             const qty = cartItem ? cartItem.qty : 0;
@@ -232,6 +216,19 @@ export default function BestSellersSlider({ onPreviewProduct }) {
               </div>
             );
           })}
+        </div>
+
+          {/* Right Arrow Button */}
+          {totalPages > 1 && (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/95 border border-amber-200 text-slate-700 hover:bg-crimson-600 hover:text-white hover:border-crimson-600 shadow-md flex items-center justify-center transition-all active:scale-95"
+              aria-label="Next most sold products"
+            >
+              <i className="fa-solid fa-chevron-right text-[10px] sm:text-xs"></i>
+            </button>
+          )}
         </div>
 
         {/* Carousel Dots */}
