@@ -5,6 +5,7 @@ import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
 import HeroSlider from '../components/HeroSlider';
 import CategoryCarousel from '../components/CategoryCarousel';
+import StatsHighlights from '../components/StatsHighlights';
 import ProductTable from '../components/ProductTable';
 import CartFooter from '../components/CartFooter';
 import CheckoutDrawer from '../components/CheckoutDrawer';
@@ -143,6 +144,9 @@ export default function Storefront() {
 
       {/* 3. Shop Our Products 3D Carousel Section */}
       <CategoryCarousel />
+
+      {/* 4. Stats & Highlights Banner Section */}
+      <StatsHighlights />
 
       {/* 4. Why Choose Us — Logo Center Section */}
       <section className="container mx-auto px-4 py-8 select-none z-10 relative">

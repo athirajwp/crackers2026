@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
+import { getImageUrl } from '../utils/imageUrl';
 
 export default function Footer() {
-  const { settings } = useStore();
+  const { settings, totalQty } = useStore();
   const location = useLocation();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -15,138 +16,160 @@ export default function Footer() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const storeName = settings?.store_name || 'Kavin Crackers';
+  const storePhone = settings?.store_phone || '(+91) 99449 91600';
+  const storeEmail = settings?.store_email || 'jackyjohnson18@gmail.com';
+  const storeAddress = settings?.store_address || '9/346/6, Anuppankulam, Sivakasi Satur Main Road, Sivakasi, Anuppankulam, Tamil Nadu - 626 189';
+  const licenseNo = settings?.license_no || '----';
+
+  const isQuickOrderPage =
+    location.pathname === '/quick-order' ||
+    location.pathname === '/quick_order' ||
+    location.pathname === '/quick-purchase';
+
+  // Position Scroll To Top button cleanly ABOVE the floating Shop Now image button with high z-index to prevent overlap or div hiding
+  const scrollTopBottomClass = isQuickOrderPage
+    ? (totalQty > 0 ? 'bottom-24 sm:bottom-28' : 'bottom-6 sm:bottom-8')
+    : (totalQty > 0 ? 'bottom-44 sm:bottom-52' : 'bottom-28 sm:bottom-32');
+
   return (
     <>
-      <footer className="bg-slate-900 text-slate-350 border-t-4 border-gold-500 mt-auto select-none pt-16 pb-8">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            
-            {/* Contact details */}
-            <div className="space-y-4">
-              <h4 className="text-xs md:text-sm font-black text-white uppercase tracking-widest border-b border-gold-500/80 pb-2.5 flex items-center gap-2">
-                <i className="fa-solid fa-address-card text-gold-500"></i> Contact Details
-              </h4>
-              <ul className="space-y-3 text-xs md:text-sm text-slate-300 font-bold">
-                <li className="flex items-start gap-2.5 leading-normal">
-                  <i className="fa-solid fa-location-dot text-gold-400 mt-0.5 flex-shrink-0"></i>
-                  <span>{settings.store_address}</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <i className="fa-solid fa-phone text-gold-400 mt-1 flex-shrink-0"></i>
-                  <div className="flex flex-col gap-1">
-                    {settings.store_phone && (
-                      <a href={`tel:${settings.store_phone}`} className="hover:text-gold-400 transition-colors font-extrabold text-white">
-                        {settings.store_phone}
-                      </a>
-                    )}
-                    {settings.store_phone_2 && (
-                      <a href={`tel:${settings.store_phone_2}`} className="hover:text-gold-400 transition-colors font-extrabold text-white">
-                        {settings.store_phone_2}
-                      </a>
-                    )}
-                    {settings.store_phone_3 && (
-                      <a href={`tel:${settings.store_phone_3}`} className="hover:text-gold-400 transition-colors font-extrabold text-white">
-                        {settings.store_phone_3}
-                      </a>
-                    )}
-                    {settings.store_phone_4 && (
-                      <a href={`tel:${settings.store_phone_4}`} className="hover:text-gold-400 transition-colors font-extrabold text-white">
-                        {settings.store_phone_4}
-                      </a>
-                    )}
-                  </div>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <i className="fa-solid fa-envelope text-gold-400 flex-shrink-0"></i>
-                  <a href={`mailto:${settings.store_email}`} className="hover:text-gold-400 transition-colors text-slate-300">{settings.store_email}</a>
-                </li>
-              </ul>
-              
-              {/* Google Map iframe */}
-              <div className="map-container w-full h-44 md:h-48 rounded-xl overflow-hidden border border-slate-700/80 shadow-md [&_iframe]:w-full [&_iframe]:h-full [&>div]:w-full [&>div]:h-full mt-3">
-                {settings.store_map_iframe ? (
-                  <div dangerouslySetInnerHTML={{ __html: settings.store_map_iframe }} className="w-full h-full" />
-                ) : (
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31484.78768782782!2d77.78440079999999!3d9.4475475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b06cee41fe51a8d%3A0xe964a2754897f1f!2sSivakasi%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1717830000000!5m2!1sen!2sin"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Store Location Map"
-                  ></iframe>
-                )}
+      <footer className="relative bg-[#0B132B] text-white select-none border-t border-slate-800 mt-auto pt-14 pb-8 overflow-hidden">
+        {/* Soft Background Festive Glow */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+
+          {/* TOP SECTION: 3-Column Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+
+            {/* LEFT COLUMN: Store Title, Tagline & Vertical Quick Links */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+                  {storeName}
+                </h3>
+                <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-medium mt-2 max-w-sm">
+                  {settings?.store_description || 'We take immense pride in delivering the highest quality crackers that exceed your expectations.'}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-lg md:text-xl font-bold text-white tracking-tight">
+                  Quick Links
+                </h4>
+                <ul className="space-y-2.5 text-xs md:text-sm font-semibold text-slate-200">
+                  <li>
+                    <Link to="/" className="hover:text-gold-400 transition-colors block">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/about" className="hover:text-gold-400 transition-colors block">
+                      About Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/price-list" className="hover:text-gold-400 transition-colors block">
+                      Crackers Pricelist
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/safety-tips" className="hover:text-gold-400 transition-colors block">
+                      Safety Tips
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/contact" className="hover:text-gold-400 transition-colors block">
+                      Contact Us
+                    </Link>
+                  </li>
+                </ul>
               </div>
             </div>
 
-            {/* Safety guidelines */}
-            <div className="space-y-4">
-              <h4 className="text-xs md:text-sm font-black text-white uppercase tracking-widest border-b border-gold-500/80 pb-2.5 flex items-center gap-2">
-                <i className="fa-solid fa-shield-cat text-gold-500"></i> Safety Disclaimer
-              </h4>
-              <div className="bg-slate-800/50 border border-slate-700/80 p-4 rounded-xl text-[11px] md:text-xs text-slate-300 leading-relaxed space-y-2.5 font-medium shadow-inner">
-                <p className="text-gold-400 font-black text-xs md:text-sm flex items-center gap-1.5">
-                  <i className="fa-solid fa-triangle-exclamation animate-pulse text-amber-400"></i> Burst Wisely & Safely:
-                </p>
-                <p className="flex items-start gap-1.5">
-                  <span className="text-gold-400 font-bold">1.</span> Keep a water bucket & fire extinguisher handy when bursting crackers.
-                </p>
-                <p className="flex items-start gap-1.5">
-                  <span className="text-gold-400 font-bold">2.</span> Children must always perform fireworks under strict adult supervision.
-                </p>
-                <p className="flex items-start gap-1.5">
-                  <span className="text-gold-400 font-bold">3.</span> Do not wear loose synthetic clothes near crackers; prefer thick cotton.
-                </p>
-              </div>
-            </div>
-
-            {/* Supreme Court compliance notice */}
-            <div className="space-y-4">
-              <h4 className="text-xs md:text-sm font-black text-white uppercase tracking-widest border-b border-gold-500/80 pb-2.5 flex items-center gap-2">
-                <i className="fa-solid fa-gavel text-gold-500"></i> Supreme Court Compliance
-              </h4>
-              <div className="bg-slate-800/50 border border-slate-700/80 p-4 rounded-xl text-[11px] md:text-xs text-slate-300 leading-relaxed space-y-2.5 font-medium shadow-inner">
-                <p className="leading-relaxed">
-                  As per 2018 Supreme Court Order, Online Sale of Firecrackers is NOT permitted. We follow 100% legal & statutory compliances.
-                </p>
-                <div className="pt-2 border-t border-slate-700/80 space-y-1.5 text-[11px] md:text-xs">
-                  <p className="flex justify-between items-center">
-                    <span className="text-slate-400">License Name:</span>
-                    <strong className="text-white font-bold font-cinzel">{settings.license_name || 'Jallikattu Crackers'}</strong>
-                  </p>
-                  <p className="flex justify-between items-center">
-                    <span className="text-slate-400">License No:</span>
-                    <strong className="text-gold-400 font-bold font-mono">{settings.license_no || '123/ABCD/2024'}</strong>
-                  </p>
+            {/* CENTER COLUMN: Store Logo Display (No Circle Ring) */}
+            <div className="flex flex-col items-center justify-center text-center py-4">
+              <Link to="/" className="group inline-block">
+                <div className="w-48 sm:w-56 md:w-64 max-h-56 flex items-center justify-center p-2 transition-transform duration-300 group-hover:scale-105">
+                  {settings?.store_logo ? (
+                    <img
+                      src={getImageUrl(settings.store_logo)}
+                      alt={storeName}
+                      className="w-full h-full max-h-52 object-contain"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-gold-400 py-4">
+                      <i className="fa-solid fa-fire text-5xl mb-2"></i>
+                      <span className="font-black text-xl text-white tracking-wider uppercase text-center">
+                        {storeName}
+                      </span>
+                    </div>
+                  )}
                 </div>
+              </Link>
+            </div>
+
+            {/* RIGHT COLUMN: Contact Info */}
+            <div className="space-y-5">
+              <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                Contact Info
+              </h3>
+
+              <div className="space-y-1.5">
+                <h4 className="text-xs md:text-sm font-semibold text-slate-300">
+                  Shop Location
+                </h4>
+                <p className="text-xs md:text-sm text-slate-200 font-semibold leading-relaxed max-w-sm">
+                  {storeAddress}
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  href={`tel:${storePhone}`}
+                  className="text-xs md:text-sm text-slate-200 font-bold hover:text-gold-400 transition-colors block"
+                >
+                  {storePhone}
+                </a>
+              </div>
+
+              <div className="space-y-1">
+                <a
+                  href={`mailto:${storeEmail}`}
+                  className="text-xs md:text-sm text-slate-200 font-bold hover:text-gold-400 transition-colors block"
+                >
+                  {storeEmail}
+                </a>
               </div>
             </div>
 
           </div>
 
-          {/* Bottom Credits */}
-          <div className="border-t border-slate-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-500 gap-4">
-            <p>&copy; 2026 <span className="font-cinzel font-bold text-slate-300">{settings.store_name}</span> Sivakasi. All Rights Reserved.</p>
-            <div className="flex gap-4 font-bold">
-              <span className="hover:text-gold-500 cursor-pointer transition-colors">Privacy Policy</span>
-              <span>&bull;</span>
-              <Link to="/terms" className="hover:text-gold-500 transition-colors">Terms & Conditions</Link>
-            </div>
+          {/* MIDDLE SECTION: Supreme Court Legal Notice */}
+          <div className="mt-14 pt-8 border-t border-slate-800 max-w-5xl mx-auto text-center px-2 sm:px-4">
+            <p className="text-xs sm:text-[13px] text-slate-300 font-semibold leading-relaxed">
+              As per 2018 supreme court order, online sale of firecrackers are not permitted! We value our customers and at the same time, respect jurisdiction. We request you to add your products to the cart and submit the required crackers through the enquiry button. We will contact you within 24 hrs and confirm the order through WhatsApp or phone call. Please add and submit your enquiries and enjoy your Diwali with {storeName}. Our License No.{licenseNo ? ` ${licenseNo}` : '----'}. {storeName} as a company following 100% legal & statutory compliances and all our shops, go-downs are maintained as per the explosive acts. We send the parcels through registered and legal transport service providers as like every other major companies in Sivakasi is doing so.
+            </p>
           </div>
+
+          {/* BOTTOM SECTION: Copyright Bar */}
+          <div className="mt-8 pt-4 border-t border-slate-800 text-center text-xs text-slate-400 font-medium">
+            Copyright © {new Date().getFullYear()}, {storeName}. All Rights Reserved.
+          </div>
+
         </div>
       </footer>
 
-      {/* Floating Back to Top button */}
+      {/* Floating Back to Top Button on Bottom Right (Positioned above Shop Now button with z-[99]) */}
       {showScrollTop && (
-        <div className="fixed bottom-6 right-6 z-45 select-none pointer-events-auto">
+        <div className={`fixed ${scrollTopBottomClass} right-3 sm:right-6 z-[99] select-none pointer-events-auto transition-all duration-300`}>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="w-11 h-11 bg-gold-500 text-slate-905 rounded-xl flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all duration-300 border border-gold-400/20 group"
+            className="w-11 h-11 bg-gold-500 text-slate-900 rounded-xl flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 border border-gold-400/30 group"
             title="Scroll to Top"
           >
-            <i className="fa-solid fa-arrow-up text-sm group-hover:-translate-y-0.5 transition-transform text-slate-900"></i>
+            <i className="fa-solid fa-arrow-up text-sm group-hover:-translate-y-0.5 transition-transform font-black text-slate-950"></i>
           </button>
         </div>
       )}

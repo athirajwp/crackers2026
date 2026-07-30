@@ -112,7 +112,7 @@ export default function Header() {
       </div>
 
       {/* ROW 2: Light Festive Brand Bar — theme color background in light mode */}
-      <div className="relative bg-crimson-50 border-b border-crimson-100 py-5 select-none overflow-hidden">
+      <div className="relative bg-crimson-50 border-b border-crimson-100 py-1.5 sm:py-2 select-none overflow-hidden">
 
         {/* Left soft festive glow */}
         <div className="absolute left-0 top-0 h-full w-48 pointer-events-none" style={{background: 'radial-gradient(ellipse at 10% 50%, rgba(220,38,38,0.08) 0%, rgba(234,179,8,0.05) 40%, transparent 70%)'}}></div>
@@ -122,119 +122,254 @@ export default function Header() {
         <div className="absolute right-0 top-0 h-full w-48 pointer-events-none" style={{background: 'radial-gradient(ellipse at 90% 50%, rgba(220,38,38,0.08) 0%, rgba(234,179,8,0.05) 40%, transparent 70%)'}}></div>
         <div className="absolute right-8 top-1/2 -translate-y-1/2 w-32 h-32 rounded-full pointer-events-none opacity-20" style={{background: 'radial-gradient(circle, rgba(251,191,36,0.4) 0%, rgba(220,38,38,0.2) 50%, transparent 70%)', filter: 'blur(12px)'}}></div>
 
-        <div className="container mx-auto px-4 relative z-10 flex items-center justify-between md:justify-center gap-6 md:gap-16 lg:gap-24">
+        <div className="container mx-auto px-4 relative z-10">
 
-          {/* LEFT: Circular Logo */}
-          <Link to="/" className="group flex-shrink-0">
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-gold-500 shadow-md shadow-gold-500/20 overflow-hidden bg-white flex items-center justify-center transition-transform duration-300 group-hover:scale-105 group-hover:border-gold-400">
-              {settings.store_logo ? (
-                <img
-                  src={getImageUrl(settings.store_logo)}
-                  alt={settings.store_name || 'Company Logo'}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <i className="fa-solid fa-fire text-3xl text-gold-500"></i>
-              )}
-            </div>
-          </Link>
+          {/* MOBILE LAYOUT (< 768px): Logo left | Address center | Phone button right */}
+          <div className="flex md:hidden items-center justify-between gap-2 py-1">
+            {/* LEFT: Circular Logo */}
+            <Link to="/" className="group flex-shrink-0">
+              <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-full overflow-hidden bg-white flex items-center justify-center transition-transform duration-300 group-hover:scale-105 p-1 shadow-sm border border-gold-400/40">
+                {settings.store_logo ? (
+                  <img
+                    src={getImageUrl(settings.store_logo)}
+                    alt={settings.store_name || 'Company Logo'}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <i className="fa-solid fa-fire text-2xl text-gold-500"></i>
+                )}
+              </div>
+            </Link>
 
-          {/* CENTER: Address */}
-          <a
-            href={getGoogleMapsUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 md:flex-none flex flex-col items-center justify-center text-center gap-1 group/address hover:scale-105 transition-transform duration-200"
-          >
-            <h3 className="text-crimson-700 font-extrabold text-sm uppercase tracking-widest group-hover/address:text-crimson-600 transition-colors">Address</h3>
-            <p className="text-slate-800 text-xs md:text-sm font-bold leading-relaxed max-w-sm">
-              {settings.store_address || 'Virudhunagar to Sivakasi Main Road, Sivakasi'}
-            </p>
-            <span className="text-[10px] md:text-xs font-black text-gold-600 group-hover/address:text-gold-500 flex items-center gap-1 mt-0.5 underline decoration-dotted transition-colors">
-              <i className="fa-solid fa-location-dot animate-bounce text-[10px]"></i> Shop Location
-            </span>
-          </a>
+            {/* CENTER: Address Block */}
+            <a
+              href={getGoogleMapsUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex flex-col items-center justify-center text-center gap-0.5 group/address hover:scale-105 transition-transform duration-200 px-1"
+            >
+              <h3 className="text-crimson-700 font-extrabold text-[11px] uppercase tracking-wider group-hover/address:text-crimson-600 transition-colors">Address</h3>
+              <p className="text-slate-800 text-[10px] sm:text-[11px] font-bold leading-tight max-w-[170px] sm:max-w-xs">
+                {settings.store_address || 'Virudhunagar to Sivakasi Main Road, Sivakasi'}
+              </p>
+              <span className="text-[9px] sm:text-[10px] font-black text-gold-600 group-hover/address:text-gold-500 flex items-center gap-1 mt-0.5 underline decoration-dotted transition-colors">
+                <i className="fa-solid fa-location-dot animate-bounce text-[9px]"></i> Shop Location
+              </span>
+            </a>
 
-          {/* RIGHT: Mobile Numbers */}
-          <div className="hidden md:flex flex-col items-center text-center gap-0.5 flex-shrink-0">
-            <h3 className="text-crimson-700 font-extrabold text-xs uppercase tracking-widest">Mobile Numbers</h3>
-            <div className="flex flex-col items-center justify-center gap-0.5">
-              {settings.store_phone && (
-                <a href={`tel:${settings.store_phone}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
-                  {settings.store_phone}
-                </a>
-              )}
-              {settings.store_phone_2 && (
-                <a href={`tel:${settings.store_phone_2}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
-                  {settings.store_phone_2}
-                </a>
-              )}
-              {settings.store_phone_3 && (
-                <a href={`tel:${settings.store_phone_3}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
-                  {settings.store_phone_3}
-                </a>
-              )}
-              {settings.store_phone_4 && (
-                <a href={`tel:${settings.store_phone_4}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
-                  {settings.store_phone_4}
-                </a>
-              )}
-            </div>
-            {settings.store_email && (
-              <a href={`mailto:${settings.store_email}`} className="text-slate-500 text-[10px] font-bold hover:text-crimson-700 transition-colors mt-0.5">
-                {settings.store_email}
+            {/* RIGHT: Phone Button */}
+            <div className="flex-shrink-0">
+              <a
+                href={`tel:${settings.store_phone || ''}`}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-crimson-600 hover:bg-crimson-700 active:bg-crimson-800 text-white text-[11px] font-extrabold uppercase tracking-wider shadow-xs hover:shadow transition-all group/phone border border-crimson-700"
+                title={`Call ${settings.store_phone || 'Us'}`}
+              >
+                <i className="fa-solid fa-phone text-[10px] text-gold-400 group-hover/phone:animate-bounce"></i>
+                <span>Phone</span>
               </a>
-            )}
+            </div>
           </div>
 
-          {/* Mobile: Hamburger & Cart */}
-          <div className="flex md:hidden items-center gap-2 flex-shrink-0">
-            <button
-              onClick={() => setCheckoutOpen(true)}
-              className="relative w-9 h-9 border border-crimson-200 rounded-xl bg-white flex items-center justify-center text-slate-700 hover:bg-crimson-100 transition-colors"
-              title="Cart"
+          {/* DESKTOP LAYOUT (>= 768px): 3-Column horizontal centered bar */}
+          <div className="hidden md:flex items-center justify-center gap-12 lg:gap-16 py-1">
+            {/* LEFT: Circular Logo */}
+            <Link to="/" className="group flex-shrink-0">
+              <div className="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-white flex items-center justify-center transition-transform duration-300 group-hover:scale-105 p-1.5 shadow-sm">
+                {settings.store_logo ? (
+                  <img
+                    src={getImageUrl(settings.store_logo)}
+                    alt={settings.store_name || 'Company Logo'}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <i className="fa-solid fa-fire text-3xl text-gold-500"></i>
+                )}
+              </div>
+            </Link>
+
+            {/* CENTER: Address */}
+            <a
+              href={getGoogleMapsUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center text-center gap-1 group/address hover:scale-105 transition-transform duration-200"
             >
-              <i className="fa-solid fa-bag-shopping text-sm"></i>
-              {totalQty > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-crimson-600 text-white text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-white shadow-sm">
-                  {totalQty}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-9 h-9 border border-crimson-200 rounded-xl bg-white flex items-center justify-center text-slate-700 hover:bg-crimson-100 transition-colors"
-            >
-              <i className={mobileMenuOpen ? 'fa-solid fa-xmark text-sm' : 'fa-solid fa-bars text-sm'}></i>
-            </button>
+              <h3 className="text-crimson-700 font-extrabold text-sm uppercase tracking-widest group-hover/address:text-crimson-600 transition-colors">Address</h3>
+              <p className="text-slate-800 text-sm font-bold leading-relaxed max-w-sm">
+                {settings.store_address || 'Virudhunagar to Sivakasi Main Road, Sivakasi'}
+              </p>
+              <span className="text-xs font-black text-gold-600 group-hover/address:text-gold-500 flex items-center gap-1 mt-0.5 underline decoration-dotted transition-colors">
+                <i className="fa-solid fa-location-dot animate-bounce text-[10px]"></i> Shop Location
+              </span>
+            </a>
+
+            {/* RIGHT: Mobile Numbers */}
+            <div className="flex flex-col items-center text-center gap-0.5 flex-shrink-0">
+              <h3 className="text-crimson-700 font-extrabold text-xs uppercase tracking-widest">Mobile Numbers</h3>
+              <div className="flex flex-col items-center justify-center gap-0.5">
+                {settings.store_phone && (
+                  <a href={`tel:${settings.store_phone}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
+                    {settings.store_phone}
+                  </a>
+                )}
+                {settings.store_phone_2 && (
+                  <a href={`tel:${settings.store_phone_2}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
+                    {settings.store_phone_2}
+                  </a>
+                )}
+                {settings.store_phone_3 && (
+                  <a href={`tel:${settings.store_phone_3}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
+                    {settings.store_phone_3}
+                  </a>
+                )}
+                {settings.store_phone_4 && (
+                  <a href={`tel:${settings.store_phone_4}`} className="text-slate-900 text-xs font-black hover:text-crimson-700 transition-colors block">
+                    {settings.store_phone_4}
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
 
         </div>
       </div>
 
-      {/* ROW 3: Main Navigation Bar — styled like reference screenshot, synced to crimson/gold theme */}
-      <div className="hidden md:block bg-crimson-600 select-none shadow-md">
-        <div className="flex items-center justify-center">
+      {/* ROW 3: Main Navigation Bar */}
+      <div className="bg-crimson-600 select-none shadow-md border-t border-crimson-700/60">
+        <div className="container mx-auto">
 
-          {navLinks.map((link, idx) => {
-            const active = link.isLink && isActive(link.to);
-            const linkClass = `flex items-center gap-2 px-5 py-3.5 text-[11px] font-extrabold uppercase tracking-widest whitespace-nowrap transition-all duration-150 border-r border-crimson-500
-              ${active
-                ? 'bg-gold-500 text-crimson-800 shadow-inner'
-                : 'text-white hover:bg-crimson-700 hover:text-gold-300'}`;
-
-            return link.isLink ? (
-              <Link key={link.to} to={link.to} className={linkClass}>
-                <i className={`fa-solid ${link.icon} text-[10px]`}></i>
-                <span>{link.label}</span>
-              </Link>
-            ) : (
-              <a key={link.to} href={link.to} className={linkClass}>
-                <i className={`fa-solid ${link.icon} text-[10px]`}></i>
-                <span>{link.label}</span>
+          {/* Mobile Navigation Bar (Left: Social Media Links | Middle: Cart | Right: Nav Dot Button) */}
+          <div className="flex md:hidden items-center justify-between px-3 py-1.5 gap-2">
+            {/* Left: Social Media Links */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <a
+                href={`https://wa.me/${settings.store_whatsapp || settings.store_phone || '919998887776'}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="WhatsApp"
+              >
+                <i className="fa-brands fa-whatsapp text-xs"></i>
               </a>
-            );
-          })}
+              <a
+                href={settings.instagram_url || 'https://instagram.com'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 hover:opacity-90 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="Instagram"
+              >
+                <i className="fa-brands fa-instagram text-xs"></i>
+              </a>
+              <a
+                href={settings.facebook_url || 'https://facebook.com'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="Facebook"
+              >
+                <i className="fa-brands fa-facebook-f text-xs"></i>
+              </a>
+              <a
+                href={settings.youtube_url || 'https://youtube.com'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="YouTube"
+              >
+                <i className="fa-brands fa-youtube text-xs"></i>
+              </a>
+            </div>
+
+            {/* Middle: Cart Button */}
+            <div className="flex-1 flex justify-center px-1">
+              <button
+                onClick={() => setCheckoutOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 active:bg-white/30 text-white font-extrabold text-[10px] uppercase tracking-wider border border-white/20 transition-all backdrop-blur shadow-sm"
+              >
+                <i className="fa-solid fa-bag-shopping text-gold-400 text-[10px]"></i>
+                <span>Cart</span>
+                {totalQty > 0 && (
+                  <span className="bg-gold-400 text-crimson-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center ml-0.5">
+                    {totalQty}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {/* Right: Nav Dot Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="w-9 h-9 border border-white/20 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 text-white flex items-center justify-center backdrop-blur transition-all shadow-sm flex-shrink-0"
+              aria-label="Toggle Navigation Menu"
+            >
+              <i className={mobileMenuOpen ? 'fa-solid fa-xmark text-base text-gold-400' : 'fa-solid fa-bars text-base text-gold-400'}></i>
+            </button>
+          </div>
+
+          {/* Desktop Navigation Bar */}
+          <div className="hidden md:flex items-center justify-between px-6">
+            <div className="flex items-center justify-center flex-1">
+              {navLinks.map((link, idx) => {
+                const active = link.isLink && isActive(link.to);
+                const linkClass = `flex items-center gap-2 px-5 py-3.5 text-[11px] font-extrabold uppercase tracking-widest whitespace-nowrap transition-all duration-150 border-r border-crimson-500
+                  ${active
+                    ? 'bg-gold-500 text-crimson-800 shadow-inner'
+                    : 'text-white hover:bg-crimson-700 hover:text-gold-300'}`;
+
+                return link.isLink ? (
+                  <Link key={link.to} to={link.to} className={linkClass}>
+                    <i className={`fa-solid ${link.icon} text-[10px]`}></i>
+                    <span>{link.label}</span>
+                  </Link>
+                ) : (
+                  <a key={link.to} href={link.to} className={linkClass}>
+                    <i className={`fa-solid ${link.icon} text-[10px]`}></i>
+                    <span>{link.label}</span>
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Desktop Social Media Icons */}
+            <div className="flex items-center gap-2 border-l border-crimson-500/80 pl-4 py-2">
+              <a
+                href={`https://wa.me/${settings.store_whatsapp || settings.store_phone || '919998887776'}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="WhatsApp"
+              >
+                <i className="fa-brands fa-whatsapp text-xs"></i>
+              </a>
+              <a
+                href={settings.instagram_url || 'https://instagram.com'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 hover:opacity-90 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="Instagram"
+              >
+                <i className="fa-brands fa-instagram text-xs"></i>
+              </a>
+              <a
+                href={settings.facebook_url || 'https://facebook.com'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="Facebook"
+              >
+                <i className="fa-brands fa-facebook-f text-xs"></i>
+              </a>
+              <a
+                href={settings.youtube_url || 'https://youtube.com'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-7 h-7 rounded-lg bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                title="YouTube"
+              >
+                <i className="fa-brands fa-youtube text-xs"></i>
+              </a>
+            </div>
+          </div>
 
         </div>
       </div>
