@@ -164,7 +164,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
                 {/* Product Image Block */}
                 <div
                   onClick={() => prod.image && onPreviewProduct && onPreviewProduct(prod)}
-                  className="w-full h-32 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center overflow-hidden mb-3 cursor-pointer group-hover:bg-amber-50/30 transition-colors relative"
+                  className="w-full aspect-[200/150] bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center overflow-hidden mb-3 cursor-pointer group-hover:bg-amber-50/30 transition-colors relative"
                 >
                   {prod.image ? (
                     <img
