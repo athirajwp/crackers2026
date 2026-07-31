@@ -147,7 +147,7 @@
                     @php
                         $storeLogo = App\Models\Setting::get('store_logo', '');
                     @endphp
-                    @if($storeLogo && file_exists(public_path($storeLogo)))
+                    @if(extension_loaded('gd') && $storeLogo && file_exists(public_path($storeLogo)))
                         <img src="{{ public_path($storeLogo) }}" style="max-height: 50px; max-width: 180px; margin-bottom: 5px; object-fit: contain;" alt="Logo"><br>
                     @endif
                     <div class="header-brand">{{ strtoupper(App\Models\Setting::get('store_name', 'Cracker Demo')) }}</div>

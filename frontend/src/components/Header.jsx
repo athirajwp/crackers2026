@@ -121,6 +121,7 @@ export default function Header() {
           {/* MOBILE LAYOUT (< 768px): Logo left | Address center | Phone button right */}
           <div className="flex md:hidden items-center justify-between gap-2 py-1">
             {/* LEFT: Circular Logo */}
+            {/* LEFT: Circular Logo */}
             <Link to="/" className="group flex-shrink-0">
               <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-full overflow-hidden bg-white flex items-center justify-center transition-transform duration-300 group-hover:scale-105 p-1 shadow-sm border border-gold-400/40">
                 {settings.store_logo ? (
@@ -128,10 +129,13 @@ export default function Header() {
                     src={getImageUrl(settings.store_logo)}
                     alt={settings.store_name || 'Company Logo'}
                     className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      if (e.target.nextElementSibling) e.target.nextElementSibling.style.display = 'block';
+                    }}
                   />
-                ) : (
-                  <i className="fa-solid fa-fire text-2xl text-gold-500"></i>
-                )}
+                ) : null}
+                <i className="fa-solid fa-fire text-2xl text-gold-500" style={{ display: settings.store_logo ? 'none' : 'block' }}></i>
               </div>
             </Link>
 
@@ -205,10 +209,13 @@ export default function Header() {
                     src={getImageUrl(settings.store_logo)}
                     alt={settings.store_name || 'Company Logo'}
                     className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      if (e.target.nextElementSibling) e.target.nextElementSibling.style.display = 'block';
+                    }}
                   />
-                ) : (
-                  <i className="fa-solid fa-fire text-3xl text-gold-500"></i>
-                )}
+                ) : null}
+                <i className="fa-solid fa-fire text-3xl text-gold-500" style={{ display: settings.store_logo ? 'none' : 'block' }}></i>
               </div>
             </Link>
 
@@ -265,36 +272,66 @@ export default function Header() {
 
           {/* Mobile Navigation Bar (Left: Social Media Links | Middle: Cart | Right: Nav Dot Button) */}
           <div className="flex md:hidden items-center justify-between px-3 py-1.5 gap-2">
-            {/* Left: Social Media Links */}
-            <div className="flex items-center gap-1.5 flex-shrink-0">
-              <a
-                href={settings.instagram_url || 'https://instagram.com'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 hover:opacity-90 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="Instagram"
-              >
-                <i className="fa-brands fa-instagram text-xs"></i>
-              </a>
-              <a
-                href={settings.facebook_url || 'https://facebook.com'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="Facebook"
-              >
-                <i className="fa-brands fa-facebook-f text-xs"></i>
-              </a>
-              <a
-                href={settings.youtube_url || 'https://youtube.com'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="YouTube"
-              >
-                <i className="fa-brands fa-youtube text-xs"></i>
-              </a>
-            </div>
+            {/* Left: Social Media Links (Only visible if links set in Admin Panel) */}
+            {(settings.instagram_link || settings.instagram_url || settings.facebook_link || settings.facebook_url || settings.youtube_link || settings.youtube_url || settings.whatsapp_link || settings.twitter_link) ? (
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                {(settings.instagram_link || settings.instagram_url) && (
+                  <a
+                    href={settings.instagram_link || settings.instagram_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 hover:opacity-90 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="Instagram"
+                  >
+                    <i className="fa-brands fa-instagram text-xs"></i>
+                  </a>
+                )}
+                {(settings.facebook_link || settings.facebook_url) && (
+                  <a
+                    href={settings.facebook_link || settings.facebook_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="Facebook"
+                  >
+                    <i className="fa-brands fa-facebook-f text-xs"></i>
+                  </a>
+                )}
+                {(settings.youtube_link || settings.youtube_url) && (
+                  <a
+                    href={settings.youtube_link || settings.youtube_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="YouTube"
+                  >
+                    <i className="fa-brands fa-youtube text-xs"></i>
+                  </a>
+                )}
+                {settings.whatsapp_link && (
+                  <a
+                    href={settings.whatsapp_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="WhatsApp"
+                  >
+                    <i className="fa-brands fa-whatsapp text-xs"></i>
+                  </a>
+                )}
+                {settings.twitter_link && (
+                  <a
+                    href={settings.twitter_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="Twitter"
+                  >
+                    <i className="fa-brands fa-x-twitter text-xs"></i>
+                  </a>
+                )}
+              </div>
+            ) : <div className="w-4"></div>}
 
             {/* Middle: Cart Button */}
             <div className="flex-1 flex justify-center px-1">
@@ -346,36 +383,66 @@ export default function Header() {
               })}
             </div>
 
-            {/* Desktop Social Media Icons */}
-            <div className="flex items-center gap-2 border-l border-crimson-500/80 pl-4 py-2">
-              <a
-                href={settings.instagram_url || 'https://instagram.com'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 hover:opacity-90 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="Instagram"
-              >
-                <i className="fa-brands fa-instagram text-xs"></i>
-              </a>
-              <a
-                href={settings.facebook_url || 'https://facebook.com'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="Facebook"
-              >
-                <i className="fa-brands fa-facebook-f text-xs"></i>
-              </a>
-              <a
-                href={settings.youtube_url || 'https://youtube.com'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="YouTube"
-              >
-                <i className="fa-brands fa-youtube text-xs"></i>
-              </a>
-            </div>
+            {/* Desktop Social Media Icons (Only visible if links set in Admin Panel) */}
+            {(settings.instagram_link || settings.instagram_url || settings.facebook_link || settings.facebook_url || settings.youtube_link || settings.youtube_url || settings.whatsapp_link || settings.twitter_link) && (
+              <div className="flex items-center gap-2 border-l border-crimson-500/80 pl-4 py-2">
+                {(settings.instagram_link || settings.instagram_url) && (
+                  <a
+                    href={settings.instagram_link || settings.instagram_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 hover:opacity-90 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="Instagram"
+                  >
+                    <i className="fa-brands fa-instagram text-xs"></i>
+                  </a>
+                )}
+                {(settings.facebook_link || settings.facebook_url) && (
+                  <a
+                    href={settings.facebook_link || settings.facebook_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-blue-600/90 hover:bg-blue-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="Facebook"
+                  >
+                    <i className="fa-brands fa-facebook-f text-xs"></i>
+                  </a>
+                )}
+                {(settings.youtube_link || settings.youtube_url) && (
+                  <a
+                    href={settings.youtube_link || settings.youtube_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-red-600/90 hover:bg-red-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="YouTube"
+                  >
+                    <i className="fa-brands fa-youtube text-xs"></i>
+                  </a>
+                )}
+                {settings.whatsapp_link && (
+                  <a
+                    href={settings.whatsapp_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="WhatsApp"
+                  >
+                    <i className="fa-brands fa-whatsapp text-xs"></i>
+                  </a>
+                )}
+                {settings.twitter_link && (
+                  <a
+                    href={settings.twitter_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-7 h-7 rounded-lg bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
+                    title="Twitter"
+                  >
+                    <i className="fa-brands fa-x-twitter text-xs"></i>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
         </div>

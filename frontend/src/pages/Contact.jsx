@@ -12,17 +12,13 @@ export default function Contact() {
     settings?.contact_banner_1 || settings?.contact_banner,
     settings?.contact_banner_2,
     settings?.contact_banner_3,
-    settings?.page_header_banner,
-    settings?.slider_image_1,
-    settings?.slider_image_2,
-    settings?.slider_image_3,
   ].filter(Boolean);
 
   return (
     <div className="relative text-slate-800 select-none bg-transparent pb-16">
 
-      {/* 1. Home Page Style Banner Image Slider */}
-      <HeroSlider customImages={contactBannerImages} />
+      {/* 1. Banner Image Slider (Only visible if uploaded from admin panel) */}
+      <HeroSlider customImages={contactBannerImages} hideIfEmpty={true} />
 
       {/* 2. Main Content Section (Separated Container Layout) */}
       <section className="container mx-auto px-4 py-8 md:py-12 z-10 relative">
@@ -179,42 +175,7 @@ export default function Contact() {
 
           </div>
 
-          {/* 3. Grid of Key Highlight Cards (Matching About Us Feature Style) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-200/60">
-            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
-              <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
-                <i className="fa-solid fa-clock text-lg text-crimson-600"></i>
-              </div>
-              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">Working Hours</h4>
-              <p className="text-xs text-slate-500 leading-relaxed font-semibold">
-                Monday – Saturday: 9:00 AM to 8:00 PM<br />
-                Sunday: 10:00 AM to 6:00 PM
-              </p>
-            </div>
 
-            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
-              <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
-                <i className="fa-solid fa-truck-fast text-lg text-crimson-600"></i>
-              </div>
-              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">Delivery Coverage</h4>
-              <p className="text-xs text-slate-500 leading-relaxed font-semibold">
-                We deliver across Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, and Telangana via trusted transport carriers.
-              </p>
-            </div>
-
-            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
-              <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
-                <i className="fa-solid fa-shield-halved text-lg text-crimson-600"></i>
-              </div>
-              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">Safe & PESO Certified</h4>
-              <p className="text-xs text-slate-500 leading-relaxed font-semibold">
-                All products are PESO certified and comply strictly with Supreme Court safety guidelines for fireworks.
-              </p>
-            </div>
-          </div>
 
           {/* 4. Social Media Links Section */}
           {(settings.facebook_link || settings.instagram_link || settings.youtube_link || settings.whatsapp_link || settings.twitter_link) && (

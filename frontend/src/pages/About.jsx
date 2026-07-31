@@ -14,10 +14,6 @@ export default function About() {
     settings?.about_banner_1 || settings?.about_banner,
     settings?.about_banner_2,
     settings?.about_banner_3,
-    settings?.page_header_banner,
-    settings?.slider_image_1,
-    settings?.slider_image_2,
-    settings?.slider_image_3,
   ].filter(Boolean);
 
   // Gallery images list from admin settings or default fallbacks
@@ -59,8 +55,8 @@ export default function About() {
   return (
     <div className="relative text-slate-800 select-none bg-transparent pb-16">
 
-      {/* 1. Home Page Style Banner Image Slider */}
-      <HeroSlider customImages={aboutBannerImages} />
+      {/* 1. Banner Image Slider (Only visible if uploaded from admin panel) */}
+      <HeroSlider customImages={aboutBannerImages} hideIfEmpty={true} />
 
       {/* 2. Main Story & Profile Section (Separated Container Layout) */}
       <section className="container mx-auto px-4 py-8 md:py-12 z-10 relative">

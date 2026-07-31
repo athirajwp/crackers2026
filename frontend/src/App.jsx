@@ -16,6 +16,7 @@ import Contact from './pages/Contact';
 import QuickOrder from './pages/QuickOrder';
 import Fireworks from './components/Fireworks';
 import StickyQuickOrderButton from './components/StickyQuickOrderButton';
+import CheckoutDrawer from './components/CheckoutDrawer';
 
 // Admin imports
 import AdminLogin from './pages/admin/AdminLogin';
@@ -39,7 +40,7 @@ import AdminSysCompany from './pages/admin_sys/AdminSysCompany';
 import AdminSysProfile from './pages/admin_sys/AdminSysProfile';
 
 function PublicLayout() {
-  const { loading, settings, checkoutOpen, totalQty } = useStore();
+  const { loading, settings, checkoutOpen, setCheckoutOpen, totalQty } = useStore();
   const [companyInfo, setCompanyInfo] = useState({ name: '', logo: '' });
 
   useEffect(() => {
@@ -73,6 +74,8 @@ function PublicLayout() {
   const displayName = settings?.store_name || companyInfo.name || 'Sivakasi Fireworks';
   const logoPath = settings?.store_logo || companyInfo.logo || '';
   const displayLogo = logoPath ? getImageUrl(logoPath) : null;
+
+
 
 
 
@@ -222,6 +225,7 @@ function PublicLayout() {
 
       <StickyQuickOrderButton />
       <Footer />
+      <CheckoutDrawer isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 }

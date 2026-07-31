@@ -10,6 +10,7 @@ export default function CartFooter({ onCheckoutClick }) {
     totalUniqueProducts,
     totalDiscount,
     clearCart,
+    setCheckoutOpen,
   } = useStore();
 
   const enableMinOrder = settings.enable_min_order === 'yes';
@@ -58,6 +59,29 @@ export default function CartFooter({ onCheckoutClick }) {
   if (totalQty === 0) return null;
 
   const isCheckoutDisabled = enableMinOrder && totalNet < minOrderValue;
+
+  const handleCheckoutBtnClick = () => {
+    if (isCheckoutDisabled) {
+      const needed = minOrderValue - totalNet;
+      if (window.Swal) {
+        window.Swal.fire({
+          icon: 'warning',
+          title: 'Minimum Order Not Met',
+          html: `<div className="text-xs text-slate-600">Your total net booking is <strong>₹${formatCurrency(totalNet)}</strong>. The minimum order value is <strong>₹${formatCurrency(minOrderValue)}</strong>.<br/><br/><span className="text-crimson-600 font-bold">Please add ₹${formatCurrency(needed)} more items to your cart to proceed with checkout.</span></div>`,
+          confirmButtonColor: '#dc2626',
+          confirmButtonText: 'Continue Shopping',
+        });
+      } else {
+        alert(`Minimum order value is ₹${formatCurrency(minOrderValue)}. Please add ₹${formatCurrency(needed)} more items to proceed.`);
+      }
+      return;
+    }
+    if (onCheckoutClick) {
+      onCheckoutClick();
+    } else {
+      setCheckoutOpen(true);
+    }
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200/80 shadow-2xl py-2.5 backdrop-blur-md px-4 select-none print:hidden">
@@ -113,12 +137,11 @@ export default function CartFooter({ onCheckoutClick }) {
 
           {/* Checkout Action Button */}
           <button
-            onClick={onCheckoutClick}
-            disabled={isCheckoutDisabled}
-            className={`w-full sm:w-auto px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 ${
+            onClick={handleCheckoutBtnClick}
+            className={`w-full sm:w-auto px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
               !isCheckoutDisabled
                 ? 'bg-gradient-to-r from-crimson-600 to-crimson-500 hover:from-crimson-700 hover:to-crimson-600 text-white shadow-md shadow-crimson-100 hover:scale-105 active:scale-95'
-                : 'bg-slate-200 border border-slate-350 text-slate-400 cursor-not-allowed'
+                : 'bg-slate-300 border border-slate-400 text-slate-700 hover:bg-slate-400/30'
             }`}
           >
             <i className="fa-solid fa-basket-shopping"></i>

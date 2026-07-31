@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
 import { getImageUrl } from '../utils/imageUrl';
 
-export default function HeroSlider({ customImages = null }) {
+export default function HeroSlider({ customImages = null, hideIfEmpty = false }) {
   const { settings } = useStore();
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -19,11 +19,19 @@ export default function HeroSlider({ customImages = null }) {
     settings?.slider_image_3,
   ].filter(Boolean);
 
-  const baseSliders = (customImages && customImages.length > 0)
-    ? customImages.filter(Boolean)
-    : defaultSliders;
+  let activeSliders = [];
+  if (customImages !== null) {
+    activeSliders = customImages.filter(Boolean);
+    if (!hideIfEmpty && activeSliders.length === 0) {
+      activeSliders = defaultSliders.length > 0 ? defaultSliders : fallbackSliders;
+    }
+  } else {
+    activeSliders = defaultSliders.length > 0 ? defaultSliders : fallbackSliders;
+  }
 
-  const activeSliders = baseSliders.length > 0 ? baseSliders : fallbackSliders;
+  if (activeSliders.length === 0) {
+    return null;
+  }
 
   useEffect(() => {
     if (activeSliders.length <= 1) return;
@@ -58,6 +66,10 @@ export default function HeroSlider({ customImages = null }) {
               src={getImageUrl(slide)}
               alt={`Promotional Slide ${index + 1}`}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = fallbackSliders[index % fallbackSliders.length];
+              }}
             />
           </div>
         ))}

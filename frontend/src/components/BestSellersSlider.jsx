@@ -97,9 +97,9 @@ export default function BestSellersSlider({ onPreviewProduct }) {
         </div>
 
         {/* Section Header */}
-        <div className="mb-3 text-center sm:text-left relative z-10">
-          <h3 className="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-tight">
-            Most Sold <span className="text-crimson-600 font-cinzel">Products</span>
+        <div className="mb-4 text-center relative z-10 flex items-center justify-center">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 tracking-tight">
+            Most Sold <span className="text-indigo-600 font-cinzel font-black uppercase">PRODUCTS</span>
           </h3>
         </div>
 

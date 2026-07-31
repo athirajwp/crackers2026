@@ -39,14 +39,17 @@ class CheckoutController extends Controller
         $netAmount = 0; // selling price sum
         $validatedItems = [];
 
-        // Fetch products and calculate totals safely
+        // Fetch products in 1 single bulk query for instant performance
+        $productIds = array_filter(array_map(function ($i) { return $i['id'] ?? null; }, $cartItems));
+        $productsMap = Product::whereIn('id', $productIds)->get()->keyBy('id');
+
         foreach ($cartItems as $item) {
-            $qty = (int) $item['qty'];
+            $qty = (int) ($item['qty'] ?? 0);
             if ($qty <= 0) {
                 continue;
             }
 
-            $product = Product::find($item['id']);
+            $product = $productsMap->get($item['id']);
             if (!$product) {
                 return response()->json(['error' => 'Product not found!'], 422);
             }
@@ -76,7 +79,7 @@ class CheckoutController extends Controller
         $taxPercent = (float) Setting::get('tax_percent', 18);
         $deliveryCharge = (float) Setting::get('delivery_charge', 150);
 
-        // Validate Minimum Purchase (Must qualify based on original net total before promo discount is evaluated)
+        // Validate Minimum Purchase
         if ($enableMinOrder) {
             $minOrder = Setting::get('min_order_value', 3800);
             if ($netAmount < $minOrder) {
@@ -86,7 +89,7 @@ class CheckoutController extends Controller
             }
         }
 
-        // Backend Promo Code validation & calculation (only if enabled)
+        // Backend Promo Code validation & calculation
         $promoDiscount = 0;
         $appliedPromo = null;
 
@@ -157,8 +160,10 @@ class CheckoutController extends Controller
                 'notes' => $notes,
             ]);
 
+            $now = now();
+            $orderItemsToInsert = [];
             foreach ($validatedItems as $vItem) {
-                OrderItem::create([
+                $orderItemsToInsert[] = [
                     'order_id' => $order->id,
                     'product_id' => $vItem['product']->id,
                     'product_name' => $vItem['product']->name,
@@ -166,39 +171,28 @@ class CheckoutController extends Controller
                     'price' => $vItem['price'],
                     'quantity' => $vItem['qty'],
                     'total_price' => $vItem['total_price'],
-                ]);
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
             }
+            OrderItem::insert($orderItemsToInsert);
 
             DB::commit();
 
-            // Send order invoice email to admin and customer
+            // Non-blocking order invoice email dispatch
             try {
                 $adminEmail = Setting::get('store_email', config('mail.from.address'));
                 $customerEmail = $order->email;
-
                 $order->load('items');
 
-                // Send admin invoice email
                 if (!empty($adminEmail)) {
-                    try {
-                        \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
-                        Log::info("Admin invoice email sent successfully to {$adminEmail} for order {$order->order_number}");
-                    } catch (\Throwable $m1) {
-                        Log::error("Failed to send admin order invoice email to {$adminEmail}: " . $m1->getMessage());
-                    }
+                    @\Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
                 }
-
-                // Send customer confirmation email
                 if (!empty($customerEmail)) {
-                    try {
-                        \Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\CustomerOrderMail($order));
-                        Log::info("Customer confirmation email sent successfully to {$customerEmail} for order {$order->order_number}");
-                    } catch (\Throwable $m2) {
-                        Log::error("Failed to send customer order confirmation email to {$customerEmail}: " . $m2->getMessage());
-                    }
+                    @\Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\CustomerOrderMail($order));
                 }
             } catch (\Throwable $e) {
-                Log::error('Failed to process order email dispatch: ' . $e->getMessage());
+                Log::error('Order email dispatch notice: ' . $e->getMessage());
             }
 
             return response()->json([

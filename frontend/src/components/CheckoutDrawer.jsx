@@ -290,53 +290,7 @@ export default function CheckoutDrawer({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                    <i className="fa-solid fa-truck-ramp-box mr-1 text-crimson-500/80"></i>Preferred Lorry Transport Name
-                  </label>
-                  <input
-                    type="text"
-                    name="transport_name"
-                    placeholder="Preferred Transport Name (Optional)"
-                    value={form.transport_name}
-                    onChange={handleInputChange}
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all"
-                  />
-                </div>
 
-                {/* Promo Code Input */}
-                {enablePromoCodes && (
-                  <div className="space-y-1.5">
-                    <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                      <i className="fa-solid fa-ticket mr-1 text-crimson-500/80"></i>Promo / Coupon Code
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Enter Promo Code"
-                        value={promoCodeInput}
-                        onChange={(e) => setPromoCodeInput(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none transition-all uppercase font-mono"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleApplyPromo}
-                        className="bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                    {promoMessage && (
-                      <span
-                        className={`text-[10px] block mt-1 font-bold ${
-                          promoSuccess ? 'text-emerald-600' : 'text-crimson-600'
-                        }`}
-                      >
-                        {promoMessage}
-                      </span>
-                    )}
-                  </div>
-                )}
 
                 <div>
                   <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
