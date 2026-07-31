@@ -20,6 +20,8 @@ export default function AdminBranding() {
     admin_theme: 'theme_1',
     terms_conditions: '', about_us: '',
     about_us_badge: '', about_us_title: '',
+    about_us_est_tag: '', about_us_expert_title: '', about_us_expert_desc: '',
+    about_us_feat_1: '', about_us_feat_2: '', about_us_feat_3: '', about_us_feat_4: '',
     license_name: '', license_no: '', store_map_iframe: '',
     marquee_alert_1: '', marquee_alert_2: '', marquee_alert_3: '',
     marquee_alert_4: '', marquee_alert_5: '', marquee_alert_6: '',
@@ -775,32 +777,7 @@ export default function AdminBranding() {
                 About us & licenses
               </h3>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Badge subtitle
-                    </label>
-                    <input
-                      type="text"
-                      name="about_us_badge"
-                      value={formData.about_us_badge}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Heading Title
-                    </label>
-                    <input
-                      type="text"
-                      name="about_us_title"
-                      value={formData.about_us_title}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                    />
-                  </div>
-                </div>
+
 
                 <div className="space-y-1.5">
                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
@@ -813,6 +790,88 @@ export default function AdminBranding() {
                     onChange={handleChange}
                     className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all resize-none font-mono"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-slate-100">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Heritage / EST. Tag
+                    </label>
+                    <input
+                      type="text"
+                      name="about_us_est_tag"
+                      value={formData.about_us_est_tag || ''}
+                      onChange={handleChange}
+                      placeholder="EST. 1999 • Sivakasi"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Floating Card Title
+                    </label>
+                    <input
+                      type="text"
+                      name="about_us_expert_title"
+                      value={formData.about_us_expert_title || ''}
+                      onChange={handleChange}
+                      placeholder="EXPERT TEAM"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Floating Card Subtitle
+                    </label>
+                    <input
+                      type="text"
+                      name="about_us_expert_desc"
+                      value={formData.about_us_expert_desc || ''}
+                      onChange={handleChange}
+                      placeholder="We have an experienced pyro team"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-100 space-y-2">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                    Feature Bullet Checklist Cards (4 Items)
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      name="about_us_feat_1"
+                      value={formData.about_us_feat_1 || ''}
+                      onChange={handleChange}
+                      placeholder="Feature 1: Branded Crackers at reasonable price"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all"
+                    />
+                    <input
+                      type="text"
+                      name="about_us_feat_2"
+                      value={formData.about_us_feat_2 || ''}
+                      onChange={handleChange}
+                      placeholder="Feature 2: 100% Safe & Certified Standard"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all"
+                    />
+                    <input
+                      type="text"
+                      name="about_us_feat_3"
+                      value={formData.about_us_feat_3 || ''}
+                      onChange={handleChange}
+                      placeholder="Feature 3: High Quality & Timely Delivery"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all"
+                    />
+                    <input
+                      type="text"
+                      name="about_us_feat_4"
+                      value={formData.about_us_feat_4 || ''}
+                      onChange={handleChange}
+                      placeholder="Feature 4: 100% Satisfaction Guaranteed"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all"
+                    />
+                  </div>
                 </div>
 
                 {/* About Us Banner Image */}
@@ -862,97 +921,14 @@ export default function AdminBranding() {
                 </div>
 
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      License holder
-                    </label>
-                    <input
-                      type="text"
-                      name="license_name"
-                      value={formData.license_name || ''}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      License Number
-                    </label>
-                    <input
-                      type="text"
-                      name="license_no"
-                      value={formData.license_no || ''}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all font-mono"
-                    />
-                  </div>
-                </div>
+
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
-              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
-                Terms & Conditions & Location Map
-              </h3>
-              <div className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                    Terms & Booking Guidelines
-                  </label>
-                  <textarea
-                    rows="6"
-                    name="terms_conditions"
-                    value={formData.terms_conditions}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all resize-none font-mono"
-                  />
-                </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                    Google Maps embed iframe link
-                  </label>
-                  <input
-                    type="text"
-                    name="store_map_iframe"
-                    value={formData.store_map_iframe}
-                    onChange={handleChange}
-                    placeholder="e.g. https://google.com/maps/embed/..."
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Social links handles */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
-              Social Media Coordinate channels
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
-              {['whatsapp', 'youtube', 'instagram', 'facebook', 'twitter'].map((channel) => {
-                const key = `${channel}_link`;
-                return (
-                  <div key={channel} className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1.5">
-                      <i className={`fa-brands fa-${channel === 'twitter' ? 'x-twitter' : channel} text-slate-450`}></i>
-                      <span>{channel} Link</span>
-                    </label>
-                    <input
-                      type="text"
-                      name={key}
-                      value={formData[key] || ''}
-                      onChange={handleChange}
-                      placeholder={`https://${channel}.com/...`}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all placeholder-slate-400"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+
 
           <div className="flex justify-end select-none">
             <button

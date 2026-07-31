@@ -534,6 +534,97 @@ class AdminApiController extends Controller
         return response()->json(['orders' => $orders]);
     }
 
+    public function createBillingOrder(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.qty' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $subtotal = 0;
+            $itemsData = [];
+
+            foreach ($request->items as $item) {
+                $product = Product::find($item['product_id']);
+                if (!$product) continue;
+
+                $price = floatval($item['price']);
+                $qty = intval($item['qty']);
+                $mrp = floatval($product->mrp);
+                $subtotal += ($mrp > 0 ? $mrp : $price) * $qty;
+
+                $itemsData[] = [
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'pack_size' => $product->pack_size ?? '',
+                    'price' => $price,
+                    'quantity' => $qty,
+                    'total_price' => $price * $qty,
+                ];
+            }
+
+            $discountAmount = floatval($request->discount_amount ?? 0);
+            $netAmount = floatval($request->net_amount ?? 0);
+            if ($netAmount <= 0) {
+                $itemTotalSum = array_sum(array_column($itemsData, 'total_price'));
+                $netAmount = max(0, $itemTotalSum - $discountAmount);
+            }
+
+            $paymentMethod = $request->payment_method ?? 'Cash';
+            $paymentStatus = $request->payment_status ?? 'paid';
+            $orderStatus = $request->order_status ?? 'confirmed';
+            $notes = $request->notes ?? '';
+            if ($paymentMethod) {
+                $notes = trim("Payment Mode: {$paymentMethod}\n" . $notes);
+            }
+
+            $order = Order::create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'whatsapp' => $request->whatsapp ?? $request->phone,
+                'email' => $request->email ?? '',
+                'address' => $request->address ?? '',
+                'landmark' => $request->landmark ?? '',
+                'city' => $request->city ?? '',
+                'state' => $request->state ?? '',
+                'pincode' => $request->pincode ?? '',
+                'subtotal' => $subtotal,
+                'discount_amount' => $discountAmount,
+                'net_amount' => $netAmount,
+                'payment_status' => $paymentStatus,
+                'order_status' => $orderStatus,
+                'notes' => $notes,
+            ]);
+
+            $now = now();
+            foreach ($itemsData as &$iData) {
+                $iData['order_id'] = $order->id;
+                $iData['created_at'] = $now;
+                $iData['updated_at'] = $now;
+            }
+            OrderItem::insert($itemsData);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id,
+                'message' => 'Bill created successfully!'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Billing Order Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to create bill: ' . $e->getMessage()], 500);
+        }
+    }
+
     public function order($id)
     {
         $order = Order::with('items')->findOrFail($id);
@@ -680,6 +771,15 @@ class AdminApiController extends Controller
             'store_phone_4' => Setting::get('store_phone_4', ''),
             'store_email' => Setting::get('store_email', 'crackerdemo@gmail.com'),
             'store_address' => Setting::get('store_address', 'Virudhunagar to Sivakasi Main Road, Sivakasi'),
+            'store_map_iframe' => Setting::get('store_map_iframe', ''),
+            'license_name' => Setting::get('license_name', 'Fireworks Factory License'),
+            'license_no' => Setting::get('license_no', 'LE-4/SIVAKASI/2024'),
+            'store_experience' => Setting::get('store_experience', '10+'),
+            'instagram_link' => Setting::get('instagram_link', ''),
+            'facebook_link' => Setting::get('facebook_link', ''),
+            'youtube_link' => Setting::get('youtube_link', ''),
+            'whatsapp_link' => Setting::get('whatsapp_link', ''),
+            'twitter_link' => Setting::get('twitter_link', ''),
             'store_upi' => Setting::get('store_upi', 'aathishacrackers@okaxis'),
             'store_upi_qr' => Setting::get('store_upi_qr', ''),
             'bank_name' => Setting::get('bank_name', 'State Bank of India'),
@@ -719,6 +819,15 @@ class AdminApiController extends Controller
             'store_phone_4' => 'nullable|string|max:20',
             'store_email' => 'required|email|max:255',
             'store_address' => 'required|string',
+            'store_map_iframe' => 'nullable|string',
+            'license_name' => 'nullable|string|max:255',
+            'license_no' => 'nullable|string|max:255',
+            'store_experience' => 'nullable|string|max:50',
+            'instagram_link' => 'nullable|string|max:500',
+            'facebook_link' => 'nullable|string|max:500',
+            'youtube_link' => 'nullable|string|max:500',
+            'whatsapp_link' => 'nullable|string|max:500',
+            'twitter_link' => 'nullable|string|max:500',
             'store_upi' => 'nullable|string|max:255',
             'bank_name' => 'nullable|string|max:255',
             'bank_acc_no' => 'nullable|string|max:255',
@@ -750,6 +859,15 @@ class AdminApiController extends Controller
         Setting::set('store_phone_4', $request->store_phone_4 ?? '', 'text');
         Setting::set('store_email', $request->store_email, 'text');
         Setting::set('store_address', $request->store_address, 'textarea');
+        Setting::set('store_map_iframe', $request->store_map_iframe ?? '', 'textarea');
+        Setting::set('license_name', $request->license_name ?? '', 'text');
+        Setting::set('license_no', $request->license_no ?? '', 'text');
+        Setting::set('store_experience', $request->store_experience ?? '10+', 'text');
+        Setting::set('instagram_link', $request->instagram_link ?? '', 'text');
+        Setting::set('facebook_link', $request->facebook_link ?? '', 'text');
+        Setting::set('youtube_link', $request->youtube_link ?? '', 'text');
+        Setting::set('whatsapp_link', $request->whatsapp_link ?? '', 'text');
+        Setting::set('twitter_link', $request->twitter_link ?? '', 'text');
         Setting::set('enable_aisensy', $request->enable_aisensy ?? 'no', 'text');
         Setting::set('aisensy_api_key', $request->aisensy_api_key ?? '', 'text');
         Setting::set('aisensy_campaign_name', $request->aisensy_campaign_name ?? '', 'text');
@@ -828,6 +946,12 @@ class AdminApiController extends Controller
             'admin_theme', 'banner_scroller',
             'terms_conditions', 'about_us',
             'about_us_badge', 'about_us_title',
+            'about_us_est_tag', 'about_us_expert_title', 'about_us_expert_desc',
+            'about_us_feat_1', 'about_us_feat_2', 'about_us_feat_3', 'about_us_feat_4',
+            'about_us_why_subtitle', 'about_us_why_title',
+            'about_us_card1_title', 'about_us_card1_desc',
+            'about_us_card2_title', 'about_us_card2_desc',
+            'about_us_card3_title', 'about_us_card3_desc',
             'slider_image_1', 'slider_image_2', 'slider_image_3',
             'aboutus_image_1', 'page_header_banner', 
             'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
@@ -859,8 +983,15 @@ class AdminApiController extends Controller
         }
 
         if (empty($settings['admin_theme'])) $settings['admin_theme'] = 'gold';
-        if (empty($settings['about_us_badge'])) $settings['about_us_badge'] = 'A Decade of Quality';
-        if (empty($settings['about_us_title'])) $settings['about_us_title'] = 'We Provide Premium Quality Fireworks';
+        if (empty($settings['about_us_badge'])) $settings['about_us_badge'] = 'A DECADE OF QUALITY';
+        if (empty($settings['about_us_title'])) $settings['about_us_title'] = 'WE PROVIDE PREMIUM QUALITY FIREWORKS';
+        if (empty($settings['about_us_est_tag'])) $settings['about_us_est_tag'] = 'EST. 1999 • Sivakasi';
+        if (empty($settings['about_us_expert_title'])) $settings['about_us_expert_title'] = 'EXPERT TEAM';
+        if (empty($settings['about_us_expert_desc'])) $settings['about_us_expert_desc'] = 'We have an experienced pyro technicians team';
+        if (empty($settings['about_us_feat_1'])) $settings['about_us_feat_1'] = 'Branded Crackers at reasonable price';
+        if (empty($settings['about_us_feat_2'])) $settings['about_us_feat_2'] = '100% Safe & Certified Standard';
+        if (empty($settings['about_us_feat_3'])) $settings['about_us_feat_3'] = 'High Quality & Timely Delivery';
+        if (empty($settings['about_us_feat_4'])) $settings['about_us_feat_4'] = '100% Satisfaction Guaranteed';
 
         return response()->json(['settings' => $settings]);
     }

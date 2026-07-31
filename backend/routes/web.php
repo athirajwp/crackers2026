@@ -230,6 +230,7 @@ Route::prefix('api/admin')->group(function () {
         Route::get('/products/export', [AdminApiController::class, 'exportProductTemplate']);
         
         Route::get('/orders', [AdminApiController::class, 'orders']);
+        Route::post('/orders/create-billing', [AdminApiController::class, 'createBillingOrder']);
         Route::get('/orders/{id}', [AdminApiController::class, 'order']);
         Route::post('/orders/{id}/status', [AdminApiController::class, 'updateOrderStatus']);
         Route::post('/orders/{id}/items', [AdminApiController::class, 'updateOrderItems']);

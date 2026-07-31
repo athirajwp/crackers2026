@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import LoadingScreen from '../../components/LoadingScreen';
 
 export default function AdminLayout({ children }) {
   const navigate = useNavigate();
@@ -34,12 +35,7 @@ export default function AdminLayout({ children }) {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 space-y-4">
-        <i className="fa-solid fa-circle-notch animate-spin text-4xl text-crimson-600"></i>
-        <p className="text-sm font-bold text-slate-500">Checking admin authorization...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   const menuItems = [
@@ -47,6 +43,7 @@ export default function AdminLayout({ children }) {
     { path: '/admin/reports', label: 'Sales Reports', icon: 'fa-chart-line' },
     { path: '/admin/customers', label: 'Customers', icon: 'fa-users' },
     { path: '/admin/orders', label: 'Orders', icon: 'fa-cart-shopping' },
+    { path: '/admin/billing', label: 'POS Billing', icon: 'fa-receipt' },
     { path: '/admin/products', label: 'Products', icon: 'fa-box-open' },
     { path: '/admin/categories', label: 'Categories', icon: 'fa-tags' },
     { path: '/admin/settings', label: 'General Settings', icon: 'fa-sliders' },

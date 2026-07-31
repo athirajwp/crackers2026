@@ -19,6 +19,15 @@ export default function AdminSettings() {
     store_phone_4: '',
     store_email: '',
     store_address: '',
+    store_map_iframe: '',
+    license_name: '',
+    license_no: '',
+    store_experience: '',
+    instagram_link: '',
+    facebook_link: '',
+    youtube_link: '',
+    whatsapp_link: '',
+    twitter_link: '',
     store_upi: '',
     store_upi_qr: '',
     bank_name: '',
@@ -51,6 +60,15 @@ export default function AdminSettings() {
             store_phone_2: data.settings.store_phone_2 || '',
             store_phone_3: data.settings.store_phone_3 || '',
             store_phone_4: data.settings.store_phone_4 || '',
+            store_map_iframe: data.settings.store_map_iframe || '',
+            license_name: data.settings.license_name || '',
+            license_no: data.settings.license_no || '',
+            store_experience: data.settings.store_experience || '',
+            instagram_link: data.settings.instagram_link || '',
+            facebook_link: data.settings.facebook_link || '',
+            youtube_link: data.settings.youtube_link || '',
+            whatsapp_link: data.settings.whatsapp_link || '',
+            twitter_link: data.settings.twitter_link || '',
             min_order_value: parseFloat(data.settings.min_order_value) || 0,
             discount_percent: parseFloat(data.settings.discount_percent) || 0,
             tax_percent: parseFloat(data.settings.tax_percent) || 0,
@@ -272,6 +290,136 @@ export default function AdminSettings() {
                     className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all resize-none"
                   />
                 </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                    Google Maps Embed iframe Link
+                  </label>
+                  <textarea
+                    rows="2"
+                    name="store_map_iframe"
+                    value={formData.store_map_iframe || ''}
+                    onChange={handleChange}
+                    placeholder="Paste Google Maps embed code (<iframe src='...'></iframe>)"
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all resize-none font-mono"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Factory License Name
+                    </label>
+                    <input
+                      type="text"
+                      name="license_name"
+                      value={formData.license_name || ''}
+                      onChange={handleChange}
+                      placeholder="e.g. Fireworks Factory License"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Factory License Number (No.)
+                    </label>
+                    <input
+                      type="text"
+                      name="license_no"
+                      value={formData.license_no || ''}
+                      onChange={handleChange}
+                      placeholder="e.g. LE-4/SIVAKASI/2024"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all font-mono"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Shop Experience in Fireworks
+                    </label>
+                    <input
+                      type="text"
+                      name="store_experience"
+                      value={formData.store_experience || ''}
+                      onChange={handleChange}
+                      placeholder="e.g. 10+ Years"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Social Media Links */}
+                <div className="pt-3 border-t border-slate-100 space-y-3">
+                  <h4 className="text-[10px] font-black text-slate-800 uppercase tracking-wider">
+                    Social Media Handles & Links
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1.5">
+                        <i className="fa-brands fa-instagram text-rose-500"></i> Instagram Link
+                      </label>
+                      <input
+                        type="text"
+                        name="instagram_link"
+                        value={formData.instagram_link || ''}
+                        onChange={handleChange}
+                        placeholder="https://instagram.com/yourhandle"
+                        className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1.5">
+                        <i className="fa-brands fa-facebook-f text-blue-600"></i> Facebook Link
+                      </label>
+                      <input
+                        type="text"
+                        name="facebook_link"
+                        value={formData.facebook_link || ''}
+                        onChange={handleChange}
+                        placeholder="https://facebook.com/yourpage"
+                        className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1.5">
+                        <i className="fa-brands fa-youtube text-red-600"></i> YouTube Channel Link
+                      </label>
+                      <input
+                        type="text"
+                        name="youtube_link"
+                        value={formData.youtube_link || ''}
+                        onChange={handleChange}
+                        placeholder="https://youtube.com/@yourchannel"
+                        className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1.5">
+                        <i className="fa-brands fa-whatsapp text-emerald-500"></i> WhatsApp Group / Direct Link
+                      </label>
+                      <input
+                        type="text"
+                        name="whatsapp_link"
+                        value={formData.whatsapp_link || ''}
+                        onChange={handleChange}
+                        placeholder="https://wa.me/919998887776"
+                        className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1.5">
+                        <i className="fa-brands fa-x-twitter text-slate-800"></i> Twitter / X Link
+                      </label>
+                      <input
+                        type="text"
+                        name="twitter_link"
+                        value={formData.twitter_link || ''}
+                        onChange={handleChange}
+                        placeholder="https://x.com/yourhandle"
+                        className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -452,107 +600,7 @@ export default function AdminSettings() {
             </div>
           </div>
 
-          {/* Payment & offline banks */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
-              Offline Payment credentials & UPI
-            </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs font-semibold">
-              <div className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                    Merchant UPI ID
-                  </label>
-                  <input
-                    type="text"
-                    name="store_upi"
-                    value={formData.store_upi}
-                    onChange={handleChange}
-                    placeholder="e.g. name@upi, code@okaxis"
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                    Upload UPI QR Code (Image)
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setQrFile(e.target.files[0])}
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2 text-xs font-semibold outline-none transition-all"
-                  />
-                  {formData.store_upi_qr && (
-                    <div className="mt-2 w-28 h-28 border border-slate-200 bg-slate-100 rounded-lg overflow-hidden flex items-center justify-center">
-                      <img
-                        src={`/${formData.store_upi_qr}`}
-                        alt="Current UPI QR"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Bank Name
-                    </label>
-                    <input
-                      type="text"
-                      name="bank_name"
-                      value={formData.bank_name}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Account Holder
-                    </label>
-                    <input
-                      type="text"
-                      name="bank_holder"
-                      value={formData.bank_holder}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Account Number
-                    </label>
-                    <input
-                      type="text"
-                      name="bank_acc_no"
-                      value={formData.bank_acc_no}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all font-mono"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      IFSC Code
-                    </label>
-                    <input
-                      type="text"
-                      name="bank_ifsc"
-                      value={formData.bank_ifsc}
-                      onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all font-mono"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div className="flex justify-end gap-3 select-none">
             <button

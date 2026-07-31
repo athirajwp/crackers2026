@@ -1,10 +1,13 @@
 import React from 'react';
+import { useStore } from '../context/StoreContext';
 
 export default function StatsHighlights() {
+  const { settings } = useStore();
+
   const stats = [
     {
       icon: 'fa-solid fa-clock',
-      value: '10 +',
+      value: settings?.store_experience || '10+',
       label: 'Year Of Experience',
     },
     {

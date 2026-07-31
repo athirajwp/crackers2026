@@ -85,6 +85,25 @@ class AdminSysApiController extends Controller
     {
         $this->ensureCompanyTableExists();
 
+        // Auto-seed the current shop as the default company if none exist
+        if (Company::count() === 0) {
+            try {
+                Company::create([
+                    'code'       => preg_replace('/[^a-zA-Z0-9_]/', '', strtolower(Setting::get('store_name', env('APP_NAME', 'shop')))),
+                    'name'       => Setting::get('store_name', env('APP_NAME', 'My Shop')),
+                    'website'    => env('APP_URL', 'localhost:8000'),
+                    'contact_1'  => Setting::get('store_phone', env('STORE_PHONE', '')),
+                    'contact_2'  => Setting::get('store_whatsapp', env('STORE_WHATSAPP', '')),
+                    'address'    => Setting::get('store_address', env('STORE_ADDRESS', '')),
+                    'gst_no'     => Setting::get('store_gst', ''),
+                    'pan_no'     => Setting::get('store_pan', ''),
+                    'status'     => 'active',
+                ]);
+            } catch (\Throwable $e) {
+                Log::warning('Auto-seed default company failed: ' . $e->getMessage());
+            }
+        }
+
         $companies = Company::orderBy('id', 'asc')->get();
         return response()->json([
             'success' => true,

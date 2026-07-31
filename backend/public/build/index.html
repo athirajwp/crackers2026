@@ -165,7 +165,7 @@
         100% { transform: translateX(-100%); }
       }
     </style>
-    <script type="module" crossorigin src="/build/assets/index-BdpDBgeG.js"></script>
+    <script type="module" crossorigin src="/build/assets/index-Vs_Ora1D.js"></script>
     <link rel="stylesheet" crossorigin href="/build/assets/index-Dwp_K-xG.css">
   </head>
   <body class="bg-slate-50 text-slate-800 font-sans">

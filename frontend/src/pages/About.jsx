@@ -49,8 +49,14 @@ export default function About() {
         'Our comprehensive range of products includes Sparklers, Ground Chakkars, Flower Pots, Fountains, Fancy Fireworks, Sound Crackers, Rockets, Bombs, Twinkling Stars, Repeating Shots, Aerial Colour Novelties, and Fireworks Gift Boxes.'
       ];
 
-  const badgeText = settings?.about_us_badge || 'Sivakasi Pioneers';
-  const titleText = settings?.about_us_title || 'Quality Firecrackers Direct From Sivakasi';
+  const estTagText = settings?.about_us_est_tag || 'EST. 1999 • Sivakasi';
+  const expertTitle = settings?.about_us_expert_title || 'EXPERT TEAM';
+  const expertDesc = settings?.about_us_expert_desc || 'We have an experienced pyro technicians team';
+
+  const feat1 = settings?.about_us_feat_1 || 'Branded Crackers at reasonable price';
+  const feat2 = settings?.about_us_feat_2 || '100% Safe & Certified Standard';
+  const feat3 = settings?.about_us_feat_3 || 'High Quality & Timely Delivery';
+  const feat4 = settings?.about_us_feat_4 || '100% Satisfaction Guaranteed';
 
   return (
     <div className="relative text-slate-800 select-none bg-transparent pb-16">
@@ -80,7 +86,7 @@ export default function About() {
                 {/* Overlay Badge 1: Heritage Year */}
                 <div className="absolute top-6 left-6 bg-slate-900/85 backdrop-blur-md border border-gold-500/40 text-gold-400 text-xs font-black px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-2">
                   <i className="fa-solid fa-award text-gold-400"></i>
-                  <span>EST. 1999 • Sivakasi</span>
+                  <span>{estTagText}</span>
                 </div>
               </div>
 
@@ -90,9 +96,9 @@ export default function About() {
                   <i className="fa-solid fa-user-shield"></i>
                 </div>
                 <div>
-                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Expert Team</h4>
+                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">{expertTitle}</h4>
                   <p className="text-[11px] text-slate-600 font-semibold leading-tight mt-0.5">
-                    We have an experienced pyro technicians team
+                    {expertDesc}
                   </p>
                 </div>
               </div>
@@ -102,16 +108,7 @@ export default function About() {
             {/* Right Column: Text Content & Bullet Highlights */}
             <div className="lg:col-span-7 space-y-6">
               
-              {/* Badge & Title */}
-              <div className="space-y-2" data-aos="fade-left">
-                <span className="inline-flex items-center gap-2 bg-gold-50 border border-gold-300 text-gold-900 text-xs font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-sm">
-                  <i className="fa-solid fa-sparkles text-gold-600"></i>
-                  {badgeText}
-                </span>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-cinzel text-slate-900 tracking-tight leading-tight">
-                  {titleText}
-                </h2>
-              </div>
+
 
               {/* Dynamic Paragraphs */}
               <div className="space-y-3.5 text-slate-600 text-sm md:text-base leading-relaxed font-normal" data-aos="fade-left" data-aos-delay="150">
@@ -128,30 +125,32 @@ export default function About() {
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-check text-xs"></i>
                   </div>
-                  <span>Branded Crackers at reasonable price</span>
+                  <span>{feat1}</span>
                 </div>
 
                 <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors" data-aos="fade-up" data-aos-delay="200">
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-shield-heart text-xs"></i>
                   </div>
-                  <span>100% Safe & Certified Standard</span>
+                  <span>{feat2}</span>
                 </div>
 
                 <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors" data-aos="fade-up" data-aos-delay="300">
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-truck-fast text-xs"></i>
                   </div>
-                  <span>High Quality & Timely Delivery</span>
+                  <span>{feat3}</span>
                 </div>
 
                 <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors" data-aos="fade-up" data-aos-delay="400">
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-face-smile-beam text-xs"></i>
                   </div>
-                  <span>100% Satisfaction Guaranteed</span>
+                  <span>{feat4}</span>
                 </div>
               </div>
+
+
 
               {/* Call to Action Button */}
               <div className="pt-2 flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="500">

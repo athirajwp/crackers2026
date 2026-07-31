@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, Outlet } from 'react-router-dom';
 import { useStore } from '../../context/StoreContext';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const Swal = window.Swal;
 
@@ -58,14 +59,7 @@ export default function AdminSysLayout() {
   };
 
   if (checkingAuth) {
-    return (
-      <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center space-y-4">
-        <i className="fa-solid fa-crown animate-bounce text-4xl text-amber-500"></i>
-        <p className="text-xs font-black text-slate-600 uppercase tracking-widest">
-          Authenticating Super Admin...
-        </p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   const navItems = [

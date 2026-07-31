@@ -28,7 +28,7 @@ export default function Footer() {
               {storeName}
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-medium mt-2">
-              {settings?.store_description || `Your trusted destination for premium quality Sivakasi crackers. With over ${settings?.experience_years || '10'} years of experience, we bring you safe, bright, and affordable fireworks to light up your celebrations. Your safety and happiness are our top priorities. Let's make every festival memorable!`}
+              {settings?.store_description || `Your trusted destination for premium quality Sivakasi crackers. With over ${settings?.store_experience || '10+'} years of experience, we bring you safe, bright, and affordable fireworks to light up your celebrations. Your safety and happiness are our top priorities. Let's make every festival memorable!`}
             </p>
           </div>
 
