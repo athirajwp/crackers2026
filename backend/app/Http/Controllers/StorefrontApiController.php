@@ -63,6 +63,7 @@ class StorefrontApiController extends Controller
             'enable_promo_codes' => Setting::get('enable_promo_codes', 'yes'),
             'enable_tax_delivery' => Setting::get('enable_tax_delivery', 'no'),
             'enable_fireworks' => Setting::get('enable_fireworks', 'yes'),
+            'enable_aos' => Setting::get('enable_aos', 'yes'),
             'show_mrp' => Setting::get('show_mrp', 'yes'),
             'card_bg_color' => Setting::get('card_bg_color', '#FFFFFF'),
             'admin_theme' => Setting::get('admin_theme', 'theme_1'),

@@ -29,6 +29,7 @@ export default function AdminSettings() {
     enable_promo_codes: 'yes',
     enable_tax_delivery: 'no',
     enable_fireworks: 'yes',
+    enable_aos: 'yes',
     show_mrp: 'yes',
     card_bg_color: '#FFFFFF',
     default_view_mode: 'flex',
@@ -361,6 +362,21 @@ export default function AdminSettings() {
                   <select
                     name="enable_fireworks"
                     value={formData.enable_fireworks}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-bold outline-none transition-all"
+                  >
+                    <option value="yes">Yes (Enabled)</option>
+                    <option value="no">No (Disabled)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                    Enable Scroll Animations (AOS)
+                  </label>
+                  <select
+                    name="enable_aos"
+                    value={formData.enable_aos || 'yes'}
                     onChange={handleChange}
                     className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-bold outline-none transition-all"
                   >

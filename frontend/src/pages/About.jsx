@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
 import { getImageUrl } from '../utils/imageUrl';
 import HeroSlider from '../components/HeroSlider';
@@ -11,16 +9,6 @@ export default function About() {
   const [activeImage, setActiveImage] = useState(null);
 
   const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
-
-  useEffect(() => {
-    AOS.init({
-      duration: 900,
-      easing: 'ease-in-out',
-      once: false,
-      mirror: true,
-    });
-    AOS.refresh();
-  }, []);
 
   const aboutBannerImages = [
     settings?.about_banner_1 || settings?.about_banner,
@@ -76,12 +64,12 @@ export default function About() {
 
       {/* 2. Main Story & Profile Section (Separated Container Layout) */}
       <section className="container mx-auto px-4 py-8 md:py-12 z-10 relative">
-        <div className="border border-[#E2DDD9] rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl space-y-12" style={cardBgStyle} data-aos="fade-up">
+        <div className="border border-[#E2DDD9] rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl space-y-12" style={cardBgStyle}>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
             {/* Left Column: Image with Technician Badge */}
-            <div className="lg:col-span-5 relative group" data-aos="fade-right" data-aos-delay="100">
+            <div className="lg:col-span-5 relative group" data-aos="fade-right">
               {/* Animated Decorative Backdrop Glow */}
               <div className="absolute -inset-2 bg-gradient-to-tr from-gold-500 to-crimson-600 rounded-3xl opacity-20 group-hover:opacity-30 blur-xl transition-all duration-500"></div>
 
@@ -101,7 +89,7 @@ export default function About() {
               </div>
 
               {/* Floating Highlight Card (Deepam Inspired Badge) */}
-              <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:-right-4 bg-white border-2 border-gold-200 p-4 rounded-2xl shadow-xl flex items-center gap-4 max-w-xs transition-transform duration-300 hover:scale-105 z-30">
+              <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:-right-4 bg-white border-2 border-gold-200 p-4 rounded-2xl shadow-xl flex items-center gap-4 max-w-xs transition-transform duration-300 hover:scale-105 z-30" data-aos="fade-up" data-aos-delay="200">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-500 to-crimson-600 flex items-center justify-center text-white text-xl flex-shrink-0 shadow-md">
                   <i className="fa-solid fa-user-shield"></i>
                 </div>
@@ -116,10 +104,10 @@ export default function About() {
             </div>
 
             {/* Right Column: Text Content & Bullet Highlights */}
-            <div className="lg:col-span-7 space-y-6" data-aos="fade-left" data-aos-delay="200">
+            <div className="lg:col-span-7 space-y-6">
               
               {/* Badge & Title */}
-              <div className="space-y-2">
+              <div className="space-y-2" data-aos="fade-left">
                 <span className="inline-flex items-center gap-2 bg-gold-50 border border-gold-300 text-gold-900 text-xs font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-sm">
                   <i className="fa-solid fa-sparkles text-gold-600"></i>
                   {badgeText}
@@ -130,7 +118,7 @@ export default function About() {
               </div>
 
               {/* Dynamic Paragraphs */}
-              <div className="space-y-3.5 text-slate-600 text-sm md:text-base leading-relaxed font-normal">
+              <div className="space-y-3.5 text-slate-600 text-sm md:text-base leading-relaxed font-normal" data-aos="fade-left" data-aos-delay="150">
                 {paragraphs.map((p, idx) => (
                   <p key={idx} className="leading-relaxed">
                     {p}
@@ -140,28 +128,28 @@ export default function About() {
 
               {/* Deepam Fireworks Bullet Checklist Grid */}
               <div className="pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs md:text-sm font-bold text-slate-800">
-                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors">
+                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors" data-aos="fade-up" data-aos-delay="100">
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-check text-xs"></i>
                   </div>
                   <span>Branded Crackers at reasonable price</span>
                 </div>
 
-                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors">
+                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors" data-aos="fade-up" data-aos-delay="200">
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-shield-heart text-xs"></i>
                   </div>
                   <span>100% Safe & Certified Standard</span>
                 </div>
 
-                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors">
+                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors" data-aos="fade-up" data-aos-delay="300">
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-truck-fast text-xs"></i>
                   </div>
                   <span>High Quality & Timely Delivery</span>
                 </div>
 
-                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors">
+                <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 p-3 rounded-xl hover:border-gold-300 transition-colors" data-aos="fade-up" data-aos-delay="400">
                   <div className="w-7 h-7 rounded-lg bg-crimson-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
                     <i className="fa-solid fa-face-smile-beam text-xs"></i>
                   </div>
@@ -170,7 +158,7 @@ export default function About() {
               </div>
 
               {/* Call to Action Button */}
-              <div className="pt-2 flex flex-wrap gap-4">
+              <div className="pt-2 flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="500">
                 <Link
                   to="/"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-crimson-600 to-crimson-700 hover:from-crimson-500 hover:to-crimson-600 text-white text-xs md:text-sm font-black uppercase tracking-wider px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
@@ -192,8 +180,8 @@ export default function About() {
           </div>
 
           {/* 3. Grid of Key Feature Cards */}
-          <div className="pt-8 border-t border-slate-200/60" data-aos="fade-up">
-            <div className="text-center max-w-xl mx-auto mb-8 space-y-2">
+          <div className="pt-8 border-t border-slate-200/60">
+            <div className="text-center max-w-xl mx-auto mb-8 space-y-2" data-aos="fade-up">
               <span className="text-[11px] font-black text-crimson-600 uppercase tracking-widest block">
                 Why Choose Us
               </span>
@@ -244,8 +232,8 @@ export default function About() {
           </div>
 
           {/* 4. Photo Gallery Section */}
-          <div className="border-t border-slate-200/60 pt-10 space-y-8" data-aos="fade-up">
-            <div className="text-center space-y-2">
+          <div className="border-t border-slate-200/60 pt-10 space-y-8">
+            <div className="text-center space-y-2" data-aos="fade-up">
               <span className="inline-flex items-center gap-2 bg-gold-50 border border-gold-200 text-gold-900 text-[11px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-sm">
                 <i className="fa-solid fa-camera-retro text-gold-600 text-xs"></i> Photo Gallery
               </span>
@@ -263,9 +251,10 @@ export default function About() {
                   key={idx} 
                   onClick={() => setActiveImage(src)}
                   data-aos="zoom-in"
-                  data-aos-delay={(idx % 3) * 100}
+                  data-aos-delay={(idx % 3) * 100 + 100}
                   className="group relative bg-white border-2 border-slate-100 hover:border-gold-400 rounded-2xl md:rounded-3xl p-2 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 cursor-pointer overflow-hidden"
                 >
+
                   <div className="absolute -inset-1 bg-gradient-to-r from-gold-500 to-crimson-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-500 pointer-events-none"></div>
 
                   <div className="relative w-full h-40 sm:h-48 md:h-[210px] overflow-hidden rounded-xl md:rounded-2xl bg-slate-100">
@@ -291,7 +280,7 @@ export default function About() {
           </div>
 
           {/* 5. Statutory Compliance & Licensing Details */}
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 mt-8" data-aos="fade-up">
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6 mt-8">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-gold-500 flex items-center justify-center text-slate-900 flex-shrink-0 shadow-sm">
                 <i className="fa-solid fa-scale-balanced text-lg text-crimson-600"></i>

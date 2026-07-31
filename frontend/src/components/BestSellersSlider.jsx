@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
 import { getImageUrl } from '../utils/imageUrl';
 
@@ -58,15 +56,6 @@ export default function BestSellersSlider({ onPreviewProduct }) {
 
   const [activeSlide, setActiveSlide] = useState(0);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false,
-    });
-  }, []);
-
   // Auto-slide every 4 seconds
   useEffect(() => {
     if (totalPages <= 1) return;
@@ -96,10 +85,10 @@ export default function BestSellersSlider({ onPreviewProduct }) {
   if (bestsellers.length === 0) return null;
 
   return (
-    <div className="w-full mb-2.5 select-none" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+    <div className="w-full mb-2.5 select-none">
       <div 
-        className="rounded-2xl border border-[#fde6d0] p-3 sm:p-4 md:p-5 shadow-xs relative overflow-hidden" 
-        style={{ background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)' }}
+        className="rounded-2xl border border-slate-200/80 p-3 sm:p-4 md:p-5 shadow-xs relative overflow-hidden bg-white" 
+        style={{ backgroundColor: '#ffffff' }}
       >
         {/* Soft Sparkle Background Details */}
         <div className="absolute inset-0 pointer-events-none opacity-15">

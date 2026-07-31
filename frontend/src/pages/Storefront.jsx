@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
 import HeroSlider from '../components/HeroSlider';
 import CategoryCarousel from '../components/CategoryCarousel';
@@ -31,16 +29,6 @@ export default function Storefront() {
   } = useStore();
 
   const [deptMenuOpen, setDeptMenuOpen] = useState(false);
-
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      easing: 'ease-in-out',
-      once: false,
-      mirror: true,
-    });
-    AOS.refresh();
-  }, []);
 
   const logoSrc = getImageUrl(settings.store_logo, '');
 
@@ -72,7 +60,7 @@ export default function Storefront() {
 
       {/* 2. Welcome & Value Proposition Grid */}
       <section className="container mx-auto px-4 py-8 select-none z-10 relative">
-        <div className="rounded-3xl border border-[#fde6d0] p-6 md:p-8 shadow-sm space-y-8 overflow-hidden" style={{background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)'}}>
+        <div className="rounded-3xl border border-slate-200/80 p-6 md:p-8 shadow-sm space-y-8 overflow-hidden bg-white" style={{backgroundColor: '#ffffff'}}>
 
           {/* Welcome Text & Image Block */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
@@ -150,11 +138,11 @@ export default function Storefront() {
 
       {/* 4. Why Choose Us — Logo Center Section */}
       <section className="container mx-auto px-4 py-8 select-none z-10 relative">
-        <div className="rounded-3xl overflow-hidden" style={{background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)'}}>
+        <div className="rounded-3xl overflow-hidden bg-white border border-slate-200/80" style={{backgroundColor: '#ffffff'}}>
           <div className="p-8 md:p-14">
 
             {/* Heading */}
-            <h2 className="text-center text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-12" data-aos="fade-down" data-aos-duration="1000">
+            <h2 className="text-center text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-12" data-aos="fade-up">
               <span className="text-slate-800">Festival celebration with</span><br />
               <span className="text-crimson-500 font-cinzel tracking-wide">{settings.store_name || 'Our Store'}</span>
             </h2>
@@ -164,7 +152,7 @@ export default function Storefront() {
             {/* Mobile Top Row — Quality + Genuine Price */}
             <div className="grid grid-cols-2 gap-6 md:hidden mb-6">
               {/* Quality */}
-              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-duration="800">
+              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-delay="100">
                 <div className="relative w-14 h-14 flex items-center justify-center mb-1">
                   <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
                     <i className="fa-solid fa-check text-white text-lg font-black"></i>
@@ -177,7 +165,7 @@ export default function Storefront() {
                 <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Quality &amp; innovation are the key behind our success</p>
               </div>
               {/* Genuine Price */}
-              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-duration="800">
+              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-delay="100">
                 <div className="w-16 h-16 flex items-center justify-center mb-1">
                   <i className="fa-solid fa-tag text-pink-500 text-6xl rotate-[-30deg]"></i>
                 </div>
@@ -188,7 +176,7 @@ export default function Storefront() {
 
             {/* Mobile Logo — centered between rows if custom logo exists */}
             {logoSrc && (
-              <div className="flex md:hidden items-center justify-center my-4" data-aos="zoom-in" data-aos-duration="800">
+              <div className="flex md:hidden items-center justify-center my-4" data-aos="zoom-in">
                 <img
                   src={logoSrc}
                   alt={settings.store_name || "Company Logo"}
@@ -200,7 +188,7 @@ export default function Storefront() {
             {/* Mobile Bottom Row — Safe to Use + Customer Satisfaction */}
             <div className="grid grid-cols-2 gap-6 md:hidden mt-6">
               {/* Safe to Use */}
-              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
+              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-delay="200">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md mb-1">
                   <i className="fa-solid fa-shield-check text-white text-xl"></i>
                 </div>
@@ -208,7 +196,7 @@ export default function Storefront() {
                 <p className="text-[11px] text-slate-600 leading-relaxed font-medium">Crackers we offer are safe &amp; made from fine quality raw materials</p>
               </div>
               {/* Customer Satisfaction */}
-              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+              <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-delay="200">
                 <div className="flex items-end gap-1 mb-1">
                   <i className="fa-solid fa-star text-amber-400 text-3xl md:text-[34px]"></i>
                   <i className="fa-solid fa-star text-amber-400 text-4xl md:text-[42px]"></i>
@@ -224,7 +212,7 @@ export default function Storefront() {
               {/* Left Features */}
               <div className="flex flex-col gap-10">
                 {/* Quality */}
-                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-duration="800" data-aos-delay="100">
+                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-delay="100">
                   <div className="relative w-14 h-14 flex items-center justify-center mb-1">
                     <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
                       <i className="fa-solid fa-check text-white text-lg font-black"></i>
@@ -237,7 +225,7 @@ export default function Storefront() {
                   <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Quality &amp; innovation are the key behind our success</p>
                 </div>
                 {/* Safe to Use */}
-                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
+                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-right" data-aos-delay="250">
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-md mb-1">
                     <i className="fa-solid fa-shield-check text-white text-xl"></i>
                   </div>
@@ -247,7 +235,7 @@ export default function Storefront() {
               </div>
 
               {/* Center Logo */}
-              <div className="flex items-center justify-center" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="200">
+              <div className="flex items-center justify-center" data-aos="zoom-in" data-aos-delay="150">
                 {logoSrc ? (
                   <img
                     src={logoSrc}
@@ -260,7 +248,7 @@ export default function Storefront() {
               {/* Right Features */}
               <div className="flex flex-col gap-10">
                 {/* Genuine Price */}
-                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-duration="800" data-aos-delay="100">
+                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-delay="100">
                   <div className="w-16 h-16 flex items-center justify-center mb-1">
                     <i className="fa-solid fa-tag text-pink-500 text-6xl rotate-[-30deg]"></i>
                   </div>
@@ -268,7 +256,7 @@ export default function Storefront() {
                   <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-[180px]">Quality products at economic price is the main motto for us</p>
                 </div>
                 {/* Customer Satisfaction */}
-                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-duration="800" data-aos-delay="300">
+                <div className="flex flex-col items-center text-center gap-2" data-aos="fade-left" data-aos-delay="250">
                   <div className="flex items-end gap-1 mb-1">
                     <i className="fa-solid fa-star text-amber-400 text-3xl md:text-[34px]"></i>
                     <i className="fa-solid fa-star text-amber-400 text-4xl md:text-[42px]"></i>
@@ -279,6 +267,7 @@ export default function Storefront() {
                 </div>
               </div>
             </div>
+
 
           </div>
         </div>

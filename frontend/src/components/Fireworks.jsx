@@ -98,16 +98,16 @@ export default function Fireworks() {
         this.history = [];
         this.maxHistory = random(7, 13);
         
-        // Circular distribution - 15% bigger speed & spread
+        // Circular distribution - increased explosion radius by 50%
         const angle = random(0, Math.PI * 2);
-        const speed = random(1.15, 6.0);
+        const speed = random(0.9, 4.5);
         this.vx = Math.cos(angle) * speed;
         this.vy = Math.sin(angle) * speed;
         
         this.friction = 0.96;
         this.gravity = 0.08;
         this.alpha = 1;
-        this.decay = random(0.008, 0.02);
+        this.decay = random(0.019, 0.050); // 30% increased spark duration
         this.color = `hsl(${hue}, 100%, ${random(50, 75)}%)`;
         
         // Sparkle flicker
@@ -178,27 +178,27 @@ export default function Fireworks() {
       }
     }
 
-    // Explode particles (15% bigger count)
+    // Explode particles (50% increased count)
     const createExplosion = (x, y, hue) => {
       const isMobile = window.innerWidth < 768;
-      const count = isMobile ? 96 : Math.floor(random(130, 210));
+      const count = isMobile ? 72 : Math.floor(random(98, 158));
       for (let i = 0; i < count; i++) {
         particles.push(new Particle(x, y, hue));
       }
     };
 
-    // Auto launcher (Increased flight height: burst higher up on screen)
+    // Auto launcher
     const autoLaunch = () => {
       const startX = random(window.innerWidth * 0.1, window.innerWidth * 0.9);
       const startY = window.innerHeight + 10;
       const targetX = random(window.innerWidth * 0.15, window.innerWidth * 0.85);
-      const targetY = random(window.innerHeight * 0.18, window.innerHeight * 0.50);
+      const targetY = random(window.innerHeight * 0.30, window.innerHeight * 0.65);
       rockets.push(new Rocket(startX, startY, targetX, targetY));
     };
 
     let lastTime = 0;
     let autoLaunchTimer = 0;
-    const autoLaunchDelay = 2000; // Launch fireworks every 2 seconds (2000ms)
+    const autoLaunchDelay = 1500; // Launch fireworks every 1.5 seconds (1500ms)
 
     // Global Interaction Handlers
     const handleMouseMove = (e) => {

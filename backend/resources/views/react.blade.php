@@ -11,6 +11,7 @@
     
     <!-- AOS (Animate On Scroll) CSS -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -36,11 +37,15 @@
     <script id="laravel-company" type="application/json"><?php
         if (isset($currentCompany)) {
             echo json_encode([
-                'name' => $currentCompany->name
+                'name' => $currentCompany->name,
+                'logo' => $currentCompany->logo ?? ''
             ]);
         } else {
+            $name = \App\Models\Setting::get('store_name', 'Cracker Demo');
+            $logo = \App\Models\Setting::get('store_logo', '');
             echo json_encode([
-                'name' => 'Cracker Demo'
+                'name' => $name,
+                'logo' => $logo
             ]);
         }
     ?></script>
@@ -160,7 +165,7 @@
         100% { transform: translateX(-100%); }
       }
     </style>
-    <script type="module" crossorigin src="/build/assets/index-CDBg9IR0.js"></script>
+    <script type="module" crossorigin src="/build/assets/index-CceTc4vp.js"></script>
     <link rel="stylesheet" crossorigin href="/build/assets/index-Dwp_K-xG.css">
   </head>
   <body class="bg-slate-50 text-slate-800 font-sans">

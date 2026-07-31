@@ -692,6 +692,7 @@ class AdminApiController extends Controller
             'enable_promo_codes' => Setting::get('enable_promo_codes', 'yes'),
             'enable_tax_delivery' => Setting::get('enable_tax_delivery', 'no'),
             'enable_fireworks' => Setting::get('enable_fireworks', 'yes'),
+            'enable_aos' => Setting::get('enable_aos', 'yes'),
             'show_mrp' => Setting::get('show_mrp', 'yes'),
             'card_bg_color' => Setting::get('card_bg_color', '#FFFFFF'),
             'default_view_mode' => Setting::get('default_view_mode', 'flex'),
@@ -727,6 +728,7 @@ class AdminApiController extends Controller
             'enable_promo_codes' => 'required|in:yes,no',
             'enable_tax_delivery' => 'required|in:yes,no',
             'enable_fireworks' => 'required|in:yes,no',
+            'enable_aos' => 'nullable|in:yes,no',
             'show_mrp' => 'nullable|in:yes,no',
             'card_bg_color' => 'nullable|string|max:50',
             'default_view_mode' => 'nullable|in:flex,grid',
@@ -760,6 +762,7 @@ class AdminApiController extends Controller
         Setting::set('enable_promo_codes', $request->enable_promo_codes, 'text');
         Setting::set('enable_tax_delivery', $request->enable_tax_delivery, 'text');
         Setting::set('enable_fireworks', $request->enable_fireworks, 'text');
+        Setting::set('enable_aos', $request->enable_aos ?? 'yes', 'text');
         Setting::set('show_mrp', $request->show_mrp ?? 'yes', 'text');
         Setting::set('card_bg_color', $request->card_bg_color ?? '#FFFFFF', 'text');
         Setting::set('default_view_mode', $request->default_view_mode ?? 'flex', 'text');

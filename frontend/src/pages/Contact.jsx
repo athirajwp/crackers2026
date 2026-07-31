@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
 import { getImageUrl } from '../utils/imageUrl';
 import HeroSlider from '../components/HeroSlider';
@@ -9,16 +7,6 @@ import HeroSlider from '../components/HeroSlider';
 export default function Contact() {
   const { settings } = useStore();
   const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
-
-  useEffect(() => {
-    AOS.init({
-      duration: 900,
-      easing: 'ease-in-out',
-      once: false,
-      mirror: true,
-    });
-    AOS.refresh();
-  }, []);
 
   const contactBannerImages = [
     settings?.contact_banner_1 || settings?.contact_banner,
@@ -38,10 +26,10 @@ export default function Contact() {
 
       {/* 2. Main Content Section (Separated Container Layout) */}
       <section className="container mx-auto px-4 py-8 md:py-12 z-10 relative">
-        <div className="border border-[#E2DDD9] rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl space-y-12" style={cardBgStyle} data-aos="fade-up">
+        <div className="border border-[#E2DDD9] rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl space-y-12" style={cardBgStyle}>
 
           {/* Section Sub-Header Title */}
-          <div className="text-center space-y-3 max-w-2xl mx-auto" data-aos="fade-up">
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
             <span className="inline-flex items-center gap-2 bg-gold-50 border border-gold-300 text-gold-900 text-xs font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-sm">
               <i className="fa-solid fa-envelope text-gold-600"></i> Get In Touch
             </span>
@@ -57,7 +45,7 @@ export default function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
             {/* Left Column: Contact Details Card (lg:col-span-6) */}
-            <div className="lg:col-span-6 bg-white/90 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md" data-aos="fade-right" data-aos-delay="100">
+            <div className="lg:col-span-6 bg-white/90 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md">
 
               {/* Address */}
               <div className="flex items-start gap-4">
@@ -171,7 +159,7 @@ export default function Contact() {
             </div>
 
             {/* Right Column: Embedded Google Map (lg:col-span-6) */}
-            <div className="lg:col-span-6 bg-white border-2 border-slate-200 rounded-3xl overflow-hidden shadow-md min-h-[380px] flex flex-col" data-aos="fade-left" data-aos-delay="200">
+            <div className="lg:col-span-6 bg-white border-2 border-slate-200 rounded-3xl overflow-hidden shadow-md min-h-[380px] flex flex-col">
               {settings.store_map_iframe ? (
                 <div dangerouslySetInnerHTML={{ __html: settings.store_map_iframe }} className="w-full h-full min-h-[380px] flex-1 [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:min-h-[380px]" />
               ) : (
@@ -192,8 +180,8 @@ export default function Contact() {
           </div>
 
           {/* 3. Grid of Key Highlight Cards (Matching About Us Feature Style) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-200/60" data-aos="fade-up">
-            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-200/60">
+            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
               <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
                 <i className="fa-solid fa-clock text-lg text-crimson-600"></i>
@@ -205,7 +193,7 @@ export default function Contact() {
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
               <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
                 <i className="fa-solid fa-truck-fast text-lg text-crimson-600"></i>
@@ -216,7 +204,7 @@ export default function Contact() {
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
+            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
               <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
                 <i className="fa-solid fa-shield-halved text-lg text-crimson-600"></i>
@@ -230,7 +218,7 @@ export default function Contact() {
 
           {/* 4. Social Media Links Section */}
           {(settings.facebook_link || settings.instagram_link || settings.youtube_link || settings.whatsapp_link || settings.twitter_link) && (
-            <div className="border-t border-slate-200/60 pt-8 space-y-5" data-aos="fade-up">
+            <div className="border-t border-slate-200/60 pt-8 space-y-5">
               <div className="text-center space-y-1">
                 <span className="text-[11px] font-black text-crimson-600 uppercase tracking-widest block">Follow Us</span>
                 <h4 className="text-base font-black font-cinzel text-slate-900 tracking-tight">Connect With Us On Social Media</h4>
@@ -242,8 +230,6 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-[#1877F2] hover:bg-[#1565d8] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
-                    data-aos="zoom-in"
-                    data-aos-delay="100"
                   >
                     <i className="fa-brands fa-facebook text-base"></i>
                     <span>Facebook</span>
@@ -255,8 +241,6 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-br from-[#f09433] via-[#e6683c] via-[#dc2743] via-[#cc2366] to-[#bc1888] hover:opacity-95 text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
-                    data-aos="zoom-in"
-                    data-aos-delay="200"
                   >
                     <i className="fa-brands fa-instagram text-base"></i>
                     <span>Instagram</span>
@@ -268,8 +252,6 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-[#FF0000] hover:bg-[#cc0000] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
-                    data-aos="zoom-in"
-                    data-aos-delay="300"
                   >
                     <i className="fa-brands fa-youtube text-base"></i>
                     <span>YouTube</span>
@@ -281,8 +263,6 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-[#25D366] hover:bg-[#1da851] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
-                    data-aos="zoom-in"
-                    data-aos-delay="400"
                   >
                     <i className="fa-brands fa-whatsapp text-base"></i>
                     <span>WhatsApp</span>
@@ -294,8 +274,6 @@ export default function Contact() {
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-700 text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
-                    data-aos="zoom-in"
-                    data-aos-delay="500"
                   >
                     <i className="fa-brands fa-x-twitter text-base"></i>
                     <span>X / Twitter</span>

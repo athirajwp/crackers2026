@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { StoreProvider, useStore } from './context/StoreContext';
+import { getImageUrl } from './utils/imageUrl';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Storefront from './pages/Storefront';
@@ -37,17 +40,41 @@ import AdminSysProfile from './pages/admin_sys/AdminSysProfile';
 
 function PublicLayout() {
   const { loading, settings, checkoutOpen, totalQty } = useStore();
-  const [companyName, setCompanyName] = useState('Sivakasi Fireworks');
+  const [companyInfo, setCompanyInfo] = useState({ name: '', logo: '' });
 
   useEffect(() => {
+    if (settings?.enable_aos === 'no') {
+      AOS.init({ disable: true });
+    } else {
+      AOS.init({
+        disable: false,
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: false,
+        offset: 40,
+      });
+      AOS.refresh();
+    }
+
     const el = document.getElementById('laravel-company');
     if (el) {
       try {
         const data = JSON.parse(el.textContent);
-        if (data.name) setCompanyName(data.name);
+        if (data) {
+          setCompanyInfo({
+            name: data.name || '',
+            logo: data.logo || ''
+          });
+        }
       } catch (e) {}
     }
-  }, []);
+  }, [settings?.enable_aos]);
+
+  const displayName = settings?.store_name || companyInfo.name || 'Sivakasi Fireworks';
+  const logoPath = settings?.store_logo || companyInfo.logo || '';
+  const displayLogo = logoPath ? getImageUrl(logoPath) : null;
+
+
 
   if (loading) {
     const fireworkStyles = `
@@ -150,28 +177,6 @@ function PublicLayout() {
           <i className="fa-solid fa-star text-rose-300 absolute text-[10px] top-1/3 right-1/4 animate-pulse" style={{ animationDuration: '2s' }} />
           <i className="fa-solid fa-star text-emerald-300 absolute text-xs bottom-1/3 left-1/5 animate-pulse" style={{ animationDuration: '4s' }} />
           <i className="fa-solid fa-star text-blue-300 absolute text-[9px] top-[15%] right-1/3 animate-ping" style={{ animationDuration: '2.5s' }} />
-        </div>
-
-        {/* Content Box */}
-        <div className="text-center space-y-6 max-w-xl px-6 relative z-20">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-rose-500 to-amber-500 rounded-3xl shadow-lg shadow-amber-500/20 transform rotate-12 animate-pulse">
-            <i className="fa-solid fa-fire text-white text-4xl -rotate-12"></i>
-          </div>
-          <div className="space-y-2">
-            <h1 className="text-2xl md:text-3.5xl font-black tracking-tight uppercase bg-gradient-to-r from-amber-400 via-gold-500 to-amber-400 bg-clip-text text-transparent animate-pulse leading-tight">
-              {companyName}
-            </h1>
-            <p className="text-[10px] sm:text-xs font-black tracking-widest text-slate-450 uppercase">
-              Welcomes You to the Festive Celebration
-            </p>
-          </div>
-
-          <div className="flex items-center justify-center gap-3">
-            <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-ping" />
-            <span className="text-[10px] text-slate-500 font-extrabold tracking-widest uppercase">
-              Loading Storefront...
-            </span>
-          </div>
         </div>
       </div>
     );

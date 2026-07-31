@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
 
 export default function CategoryCarousel() {
@@ -98,19 +96,6 @@ export default function CategoryCarousel() {
     return () => clearInterval(timer);
   }, [totalPages]);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
-      once: false,
-      mirror: true,
-    });
-  }, []);
-
-  useEffect(() => {
-    AOS.refresh();
-  }, [activePage]);
-
   // Always return items per page, wrapping around if needed
   const getPageItems = (page) => {
     const startIdx = page * itemsPerPage;
@@ -123,7 +108,7 @@ export default function CategoryCarousel() {
     <section className="relative py-8 md:py-10 overflow-hidden select-none">
 
       <div className="container mx-auto px-4">
-        <div className="rounded-3xl p-4 sm:p-6 md:p-10 shadow-sm overflow-hidden relative" style={{background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)'}}>
+        <div className="rounded-3xl p-4 sm:p-6 md:p-10 shadow-sm overflow-hidden relative bg-white border border-slate-200/80" style={{ backgroundColor: '#ffffff' }}>
 
         {/* Background Soft Floating Gold Sparks */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
@@ -138,11 +123,11 @@ export default function CategoryCarousel() {
         <div className="relative z-10">
 
         {/* Section Header */}
-        <div className="text-center space-y-2 mb-6 md:mb-12">
-          <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900 font-sans" data-aos="fade-down" data-aos-duration="1000">
+        <div className="text-center space-y-2 mb-6 md:mb-12" data-aos="fade-up">
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight text-slate-900 font-sans">
             Shop Our <span className="text-crimson-600">Products</span>
           </h2>
-          <p className="text-[11px] md:text-sm text-slate-500 font-semibold tracking-wider" data-aos="fade-up" data-aos-duration="800" data-aos-delay="150">
+          <p className="text-[11px] md:text-sm text-slate-500 font-semibold tracking-wider">
             Click any category to start quick ordering
           </p>
         </div>
@@ -154,10 +139,10 @@ export default function CategoryCarousel() {
               key={`${activePage}-${idx}`}
               onClick={() => handleCategoryClick(item.slug)}
               data-aos="zoom-in"
-              data-aos-duration="800"
-              data-aos-delay={idx * 150}
+              data-aos-delay={(idx + 1) * 100}
               className="group cursor-pointer flex flex-col items-center transition-transform duration-500 hover:-translate-y-2"
             >
+
               {/* Circular Pod (20% Larger on mobile: 100px) */}
               <div className="relative w-[100px] h-[100px] sm:w-[118px] sm:h-[118px] md:w-[143px] md:h-[143px] bg-white rounded-full shadow-lg group-hover:shadow-2xl border-4 border-slate-200/80 group-hover:border-gold-400 flex items-center justify-center p-1 sm:p-2 transition-all duration-300 group-hover:scale-105 overflow-hidden mx-auto">
 
@@ -194,7 +179,7 @@ export default function CategoryCarousel() {
         </div>
 
         {/* Carousel Navigation Dots */}
-        <div className="flex items-center justify-center gap-3 mt-6 md:mt-8" data-aos="fade-up" data-aos-duration="800" data-aos-delay="400">
+        <div className="flex items-center justify-center gap-3 mt-6 md:mt-8">
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
