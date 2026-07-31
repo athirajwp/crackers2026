@@ -1157,100 +1157,94 @@ class AdminApiController extends Controller
      */
     public function reportsSales(Request $request)
     {
-        $period = $request->query('period', 'monthly'); // 'specific_date', 'daily', 'monthly', 'yearly'
-        $reqDate = $request->query('date'); // 'YYYY-MM-DD'
+        $period = $request->query('period', 'monthly');
+        $reqDate = $request->query('date');
         $reqYear = $request->query('year');
         $reqMonth = $request->query('month');
-        $status = $request->query('status', 'all'); // 'all', 'paid', 'pending'
+        $status = $request->query('status', 'all');
 
-        // 1. Get available years in DB
-        $availableYears = Order::select(DB::raw('YEAR(created_at) as yr'))
-            ->whereNotNull('created_at')
-            ->distinct()
-            ->orderBy('yr', 'desc')
-            ->pluck('yr')
+        // 1. Load ALL orders (with items) — filter in PHP for SQLite+MySQL compatibility
+        $allOrders = Order::with('items')->whereNotNull('created_at')->get();
+
+        // 1a. Get available years from PHP
+        $availableYears = $allOrders
+            ->map(fn($o) => (int) $o->created_at->format('Y'))
             ->filter()
-            ->map(fn($y) => (int)$y)
+            ->unique()
+            ->sortDesc()
             ->values()
             ->toArray();
 
         if (empty($availableYears)) {
-            $availableYears = [(int)date('Y')];
+            $availableYears = [(int) date('Y')];
         }
 
-        // Determine active year filter
-        $year = null;
+        // 1b. Determine active year
         if ($reqYear === 'all') {
             $year = 'all';
-        } elseif ($reqYear && in_array((int)$reqYear, $availableYears)) {
-            $year = (int)$reqYear;
+        } elseif ($reqYear && in_array((int) $reqYear, $availableYears)) {
+            $year = (int) $reqYear;
         } else {
-            // Default to most recent year with orders
             $year = reset($availableYears);
         }
 
-        // Determine active month filter
-        $month = $reqMonth ? (int)$reqMonth : (int)date('m');
+        // 1c. Determine active month
+        $month = $reqMonth ? (int) $reqMonth : (int) date('m');
 
-        // 2. Fetch Base Orders
-        $ordersQuery = Order::query()->with('items');
-        if ($status === 'paid') {
-            $ordersQuery->where('payment_status', 'paid');
-        } elseif ($status === 'pending') {
-            $ordersQuery->where('payment_status', 'pending');
-        }
+        // 2. Filter orders in PHP
+        $orders = $allOrders->filter(function ($o) use ($status, $period, $reqDate, $year, $month) {
+            // Status filter
+            if ($status === 'paid' && $o->payment_status !== 'paid') return false;
+            if ($status === 'pending' && $o->payment_status !== 'paid') {
+                // keep non-paid only
+            } elseif ($status === 'pending') return false;
 
-        if ($period === 'specific_date' && !empty($reqDate)) {
-            $ordersQuery->whereDate('created_at', $reqDate);
-        } elseif ($period === 'daily') {
-            if ($year !== 'all') {
-                $ordersQuery->whereYear('created_at', $year);
-            }
-            if ($month) {
-                $ordersQuery->whereMonth('created_at', $month);
-            }
-        } elseif ($period === 'monthly') {
-            if ($year !== 'all') {
-                $ordersQuery->whereYear('created_at', $year);
-            }
-        }
+            $dt = $o->created_at;
 
-        $orders = $ordersQuery->orderBy('created_at', 'asc')->get();
-
-        // 3. Process Breakdown Grouping in PHP for 100% database compatibility
-        $grouped = [];
-
-        foreach ($orders as $o) {
-            if (!$o->created_at) continue;
-
-            if ($period === 'specific_date') {
-                $key = $o->created_at->format('Y-m-d H:00');
-                $label = $o->created_at->format('h:00 A');
+            if ($period === 'specific_date' && !empty($reqDate)) {
+                return $dt->format('Y-m-d') === $reqDate;
             } elseif ($period === 'daily') {
-                $key = $o->created_at->format('Y-m-d');
-                $label = $o->created_at->format('d M Y (D)');
+                if ($year !== 'all' && (int) $dt->format('Y') !== $year) return false;
+                if ($month && (int) $dt->format('m') !== $month) return false;
+            } elseif ($period === 'monthly') {
+                if ($year !== 'all' && (int) $dt->format('Y') !== $year) return false;
+            }
+            // yearly: no filter, show all years
+
+            return true;
+        })->values();
+
+        // 3. Group breakdown in PHP
+        $grouped = [];
+        foreach ($orders as $o) {
+            $dt = $o->created_at;
+            if ($period === 'specific_date') {
+                $key   = $dt->format('Y-m-d H:00');
+                $label = $dt->format('h:00 A');
+            } elseif ($period === 'daily') {
+                $key   = $dt->format('Y-m-d');
+                $label = $dt->format('d M Y (D)');
             } elseif ($period === 'yearly') {
-                $key = $o->created_at->format('Y');
-                $label = 'Year ' . $o->created_at->format('Y');
+                $key   = $dt->format('Y');
+                $label = 'Year ' . $dt->format('Y');
             } else {
-                // monthly
-                $key = $o->created_at->format('Y-m');
-                $label = $o->created_at->format('F Y');
+                $key   = $dt->format('Y-m');
+                $label = $dt->format('F Y');
             }
 
             if (!isset($grouped[$key])) {
                 $grouped[$key] = [
-                    'label' => $label,
-                    'raw_key' => $key,
-                    'total_orders' => 0,
-                    'total_revenue' => 0.0,
+                    'label'            => $label,
+                    'raw_key'          => $key,
+                    'total_orders'     => 0,
+                    'total_revenue'    => 0.0,
                     'verified_revenue' => 0.0,
-                    'pending_revenue' => 0.0,
+                    'pending_revenue'  => 0.0,
                 ];
             }
 
-            $amount = (float)$o->net_amount;
-            $grouped[$key]['total_orders'] += 1;
+            $amount = (float) $o->net_amount;
+            $grouped[$key]['total_orders']++;
             $grouped[$key]['total_revenue'] += $amount;
             if ($o->payment_status === 'paid') {
                 $grouped[$key]['verified_revenue'] += $amount;
@@ -1261,63 +1255,57 @@ class AdminApiController extends Controller
 
         $breakdown = array_values($grouped);
 
-        // 4. Compute Overall Summary
-        $totalOrdersCount = count($orders);
-        $totalRev = $orders->sum('net_amount');
+        // 4. Overall summary
+        $totalRev    = $orders->sum('net_amount');
         $verifiedRev = $orders->where('payment_status', 'paid')->sum('net_amount');
-        $pendingRev = $orders->where('payment_status', 'pending')->sum('net_amount');
+        $pendingRev  = $orders->where('payment_status', '!=', 'paid')->sum('net_amount');
+        $totalCount  = $orders->count();
 
         $summary = [
-            'total_orders' => $totalOrdersCount,
-            'total_revenue' => (float)$totalRev,
-            'verified_revenue' => (float)$verifiedRev,
-            'pending_revenue' => (float)$pendingRev,
-            'avg_order_value' => $totalOrdersCount > 0 ? round((float)$totalRev / $totalOrdersCount, 2) : 0,
+            'total_orders'    => $totalCount,
+            'total_revenue'   => (float) $totalRev,
+            'verified_revenue'=> (float) $verifiedRev,
+            'pending_revenue' => (float) $pendingRev,
+            'avg_order_value' => $totalCount > 0 ? round((float) $totalRev / $totalCount, 2) : 0,
         ];
 
-        // 5. Compute Top Products
+        // 5. Top products
         $productSales = [];
         foreach ($orders as $o) {
             foreach ($o->items as $item) {
                 $pName = $item->product_name ?: 'Unnamed Product';
                 if (!isset($productSales[$pName])) {
-                    $productSales[$pName] = [
-                        'product_name' => $pName,
-                        'total_qty' => 0,
-                        'total_sales' => 0.0,
-                    ];
+                    $productSales[$pName] = ['product_name' => $pName, 'total_qty' => 0, 'total_sales' => 0.0];
                 }
-                $productSales[$pName]['total_qty'] += (int)$item->qty;
-                $productSales[$pName]['total_sales'] += (float)$item->total_price;
+                $productSales[$pName]['total_qty']   += (int) $item->qty;
+                $productSales[$pName]['total_sales'] += (float) $item->total_price;
             }
         }
-
         usort($productSales, fn($a, $b) => $b['total_sales'] <=> $a['total_sales']);
         $topProducts = array_slice($productSales, 0, 5);
 
         return response()->json([
-            'period' => $period,
-            'date' => $reqDate,
-            'year' => $year,
-            'month' => $month,
-            'summary' => $summary,
-            'breakdown' => $breakdown,
-            'top_products' => $topProducts,
+            'period'          => $period,
+            'date'            => $reqDate,
+            'year'            => $year,
+            'month'           => $month,
+            'summary'         => $summary,
+            'breakdown'       => $breakdown,
+            'top_products'    => $topProducts,
             'available_years' => $availableYears,
-            'orders' => $orders->map(function ($o) {
-                return [
-                    'id' => $o->id,
-                    'order_number' => $o->order_number,
-                    'name' => $o->name,
-                    'phone' => $o->phone,
-                    'net_amount' => (float)$o->net_amount,
-                    'payment_status' => $o->payment_status,
-                    'order_status' => $o->order_status,
-                    'created_at' => $o->created_at ? $o->created_at->format('d M Y, h:i A') : '',
-                ];
-            }),
+            'orders'          => $orders->map(fn($o) => [
+                'id'             => $o->id,
+                'order_number'   => $o->order_number,
+                'name'           => $o->name,
+                'phone'          => $o->phone,
+                'net_amount'     => (float) $o->net_amount,
+                'payment_status' => $o->payment_status,
+                'order_status'   => $o->order_status,
+                'created_at'     => $o->created_at ? $o->created_at->format('d M Y, h:i A') : '',
+            ]),
         ]);
     }
+
 
     /**
      * Customer Directory & Order History Insights.
