@@ -60,7 +60,7 @@ export default function CartFooter({ onCheckoutClick }) {
   const isCheckoutDisabled = enableMinOrder && totalNet < minOrderValue;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200/80 shadow-2xl py-2.5 backdrop-blur-md px-4 select-none">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200/80 shadow-2xl py-2.5 backdrop-blur-md px-4 select-none print:hidden">
       <div className="container mx-auto max-w-5xl flex flex-col lg:flex-row gap-3 items-center justify-between">
         
         {/* Cart details totals summary */}

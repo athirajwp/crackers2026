@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
+import { getImageUrl } from '../utils/imageUrl';
 
 export default function BestSellersSlider({ onPreviewProduct }) {
   const {
@@ -11,16 +12,27 @@ export default function BestSellersSlider({ onPreviewProduct }) {
     increaseQty,
     decreaseQty,
     updateQty,
+    scrollToAndHighlightProduct,
   } = useStore();
 
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < 640 : false
-  );
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
+    if (typeof window === 'undefined') return 6;
+    if (window.innerWidth < 640) return 3;
+    if (window.innerWidth < 1024) return 4;
+    return 6;
+  });
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
+      if (window.innerWidth < 640) {
+        setItemsPerPage(3);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerPage(4);
+      } else {
+        setItemsPerPage(6);
+      }
     };
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -40,9 +52,8 @@ export default function BestSellersSlider({ onPreviewProduct }) {
   );
 
   // Fallback to top products if no specific bestseller flag is set
-  const bestsellers = flaggedBestsellers.length >= 4 ? flaggedBestsellers : allProducts.slice(0, 12);
+  const bestsellers = flaggedBestsellers.length >= 6 ? flaggedBestsellers : allProducts.slice(0, 18);
 
-  const itemsPerPage = isMobile ? 3 : 4;
   const totalPages = Math.max(1, Math.ceil(bestsellers.length / itemsPerPage));
 
   const [activeSlide, setActiveSlide] = useState(0);
@@ -85,7 +96,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
   if (bestsellers.length === 0) return null;
 
   return (
-    <div className="w-full mb-5 select-none" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+    <div className="w-full mb-2.5 select-none" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
       <div 
         className="rounded-2xl border border-[#fde6d0] p-3 sm:p-4 md:p-5 shadow-xs relative overflow-hidden" 
         style={{ background: 'linear-gradient(135deg, #fff8f0 0%, #fdebd0 40%, #fef3e2 70%, #fff8f0 100%)' }}
@@ -118,7 +129,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
           )}
 
           {/* Products Grid */}
-          <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3 px-1 sm:px-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-1.5 sm:gap-3 px-1 sm:px-2">
           {getSlideItems(activeSlide).map((prod) => {
             const cartItem = cart[prod.id];
             const qty = cartItem ? cartItem.qty : 0;
@@ -126,15 +137,25 @@ export default function BestSellersSlider({ onPreviewProduct }) {
             const mrp = parseFloat(prod.mrp || 0);
             const sellingPrice = parseFloat(prod.selling_price || 0);
 
+            const imgSrc = getImageUrl(prod.image);
+
             return (
               <div
                 key={`${activeSlide}-${prod.id}`}
-                className={`bg-white border rounded-lg sm:rounded-xl p-1.5 sm:p-2.5 shadow-2xs hover:shadow-xs transition-all duration-300 flex flex-col justify-between relative group ${
+                onClick={() => prod.image && onPreviewProduct && onPreviewProduct(prod)}
+                className={`border rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between relative group cursor-pointer overflow-hidden min-h-[160px] sm:min-h-[200px] ${
                   qty > 0 ? 'border-crimson-500 ring-2 ring-crimson-500/20' : 'border-slate-200/80 hover:border-gold-400'
                 }`}
+                style={{
+                  backgroundImage: imgSrc ? `url("${imgSrc}")` : 'none',
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundColor: '#ffffff'
+                }}
               >
                 {/* Top Badges */}
-                <div className="flex items-center justify-between gap-0.5 mb-1">
+                <div className="flex items-center justify-between gap-0.5 z-10">
                   <span className="bg-gradient-to-r from-crimson-600 to-crimson-700 text-white text-[7px] sm:text-[8.5px] font-black px-1 sm:px-1.5 py-0.5 rounded uppercase tracking-tight sm:tracking-wider shadow-2xs flex items-center gap-0.5 truncate">
                     <i className="fa-solid fa-fire text-[6.5px] sm:text-[7.5px] text-gold-400"></i> <span className="hidden sm:inline">Most Sold</span><span className="sm:hidden">Hot</span>
                   </span>
@@ -145,73 +166,59 @@ export default function BestSellersSlider({ onPreviewProduct }) {
                   )}
                 </div>
 
-                {/* Product Image Block */}
-                <div
-                  onClick={() => prod.image && onPreviewProduct && onPreviewProduct(prod)}
-                  className="w-full h-16 sm:h-28 bg-slate-50 rounded-md sm:rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden mb-1 sm:mb-2 cursor-pointer group-hover:bg-amber-50/30 transition-colors relative"
-                >
-                  {prod.image ? (
-                    <img
-                      src={`/${prod.image}`}
-                      alt={prod.name}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.style.display = 'none';
-                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
-                      }}
-                      className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-300 filter drop-shadow-2xs"
-                    />
-                  ) : null}
-                  <div
-                    className={`${prod.image ? 'hidden' : 'flex'} w-full h-full items-center justify-center text-amber-500`}
-                  >
-                    <i className="fa-solid fa-fire-burner text-lg sm:text-2xl"></i>
-                  </div>
-                </div>
+                {/* Middle Spacer for full background image display */}
+                <div className="flex-1 min-h-[40px] sm:min-h-[60px]"></div>
 
-                {/* Product Info */}
-                <div className="mb-1 sm:mb-2">
-                  <h4 className="font-black text-[9.5px] sm:text-xs text-slate-900 leading-tight sm:leading-snug line-clamp-1 hover:text-crimson-600 transition-colors">
+                {/* Product Title & Quick Add Controls Overlay */}
+                <div className="z-10 bg-white/90 backdrop-blur-xs p-1 rounded-md sm:rounded-lg border border-slate-100/60 shadow-2xs space-y-1">
+                  <h4 className="font-black text-[9.5px] sm:text-xs text-slate-900 leading-tight line-clamp-1">
                     {prod.name}
                   </h4>
-                </div>
 
-                {/* Quick Add / Quantity Controls */}
-                <div className="pt-1 border-t border-slate-100">
-                  {qty === 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => increaseQty(prod)}
-                      className="w-full bg-crimson-600 hover:bg-crimson-700 active:scale-98 text-white font-extrabold text-[9px] sm:text-[11px] py-1 px-1 sm:py-1.5 sm:px-2 rounded sm:rounded-lg transition-all shadow-2xs flex items-center justify-center gap-0.5"
-                    >
-                      <i className="fa-solid fa-plus text-[8px] sm:text-[9px]"></i>
-                      <span className="truncate">Add</span>
-                    </button>
-                  ) : (
-                    <div className="flex items-center justify-between bg-crimson-50 border border-crimson-200 rounded sm:rounded-lg p-0.5">
+                  {/* Quick Add / Quantity Controls */}
+                  <div className="flex justify-center">
+                    {qty === 0 ? (
                       <button
                         type="button"
-                        onClick={() => decreaseQty(prod.id)}
-                        className="w-4 h-4 sm:w-6 sm:h-6 bg-white text-crimson-700 border border-crimson-200 rounded flex items-center justify-center hover:bg-crimson-600 hover:text-white transition-colors active:scale-95 shadow-2xs"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          increaseQty(prod);
+                          scrollToAndHighlightProduct(prod);
+                        }}
+                        className="bg-crimson-600 hover:bg-crimson-700 active:scale-95 text-white font-extrabold text-[8px] sm:text-[9.5px] py-0.5 px-2.5 sm:py-1 sm:px-3 rounded-full transition-all shadow-2xs flex items-center justify-center gap-0.5 leading-none"
                       >
-                        <i className="fa-solid fa-minus text-[7px] sm:text-[9px]"></i>
+                        <i className="fa-solid fa-plus text-[7px] sm:text-[8px]"></i>
+                        <span>Add</span>
                       </button>
-                      <input
-                        type="number"
-                        min="0"
-                        value={qty}
-                        onChange={(e) => updateQty(prod, parseInt(e.target.value) || 0)}
-                        className="w-5 sm:w-8 text-center font-black text-[9.5px] sm:text-xs text-crimson-900 bg-transparent focus:outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => increaseQty(prod)}
-                        className="w-4 h-4 sm:w-6 sm:h-6 bg-crimson-600 text-white rounded flex items-center justify-center hover:bg-crimson-700 transition-colors active:scale-95 shadow-2xs"
+                    ) : (
+                      <div 
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center justify-between bg-crimson-50 border border-crimson-200 rounded-full p-0.5 gap-1"
                       >
-                        <i className="fa-solid fa-plus text-[7px] sm:text-[9px]"></i>
-                      </button>
-                    </div>
-                  )}
+                        <button
+                          type="button"
+                          onClick={() => decreaseQty(prod.id)}
+                          className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 bg-white text-crimson-700 border border-crimson-200 rounded-full flex items-center justify-center hover:bg-crimson-600 hover:text-white transition-colors active:scale-95 shadow-2xs"
+                        >
+                          <i className="fa-solid fa-minus text-[6.5px] sm:text-[7.5px]"></i>
+                        </button>
+                        <input
+                          type="number"
+                          min="0"
+                          value={qty}
+                          onChange={(e) => updateQty(prod, parseInt(e.target.value) || 0)}
+                          className="w-4 sm:w-6 text-center font-black text-[8.5px] sm:text-[10px] text-crimson-900 bg-transparent focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => increaseQty(prod)}
+                          className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 bg-crimson-600 text-white rounded-full flex items-center justify-center hover:bg-crimson-700 transition-colors active:scale-95 shadow-2xs"
+                        >
+                          <i className="fa-solid fa-plus text-[6.5px] sm:text-[7.5px]"></i>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -233,7 +240,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
 
         {/* Carousel Dots */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-1.5 mt-3.5 relative z-10">
+          <div className="flex items-center justify-center gap-1.5 mt-2.5 relative z-10">
             {Array.from({ length: totalPages }).map((_, i) => (
               <button
                 key={i}

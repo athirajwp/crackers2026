@@ -1,4 +1,5 @@
 import React from 'react';
+import BestSellersSlider from '../components/BestSellersSlider';
 import ProductTable from '../components/ProductTable';
 import CartFooter from '../components/CartFooter';
 import CheckoutDrawer from '../components/CheckoutDrawer';
@@ -112,8 +113,13 @@ export default function QuickOrder() {
         </div>
       </div>
 
-      {/* 2. Product Catalog Table Section */}
-      <div className="pt-2">
+      {/* 2. Most Sold Products Slider — Right below Sticky Nav Bar */}
+      <div className="container mx-auto px-4 pt-2.5 sm:pt-3.5 select-none">
+        <BestSellersSlider />
+      </div>
+
+      {/* 3. Product Catalog Table Section */}
+      <div className="pt-0">
         <ProductTable />
       </div>
 

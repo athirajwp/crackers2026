@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
+import { getImageUrl } from '../utils/imageUrl';
 
 export default function PriceList() {
   const { categories, settings, loading } = useStore();
@@ -139,29 +140,76 @@ export default function PriceList() {
         style={cardBgStyle}
       >
         {/* Header Branding (Visible on Print and Screen) */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[#E2DDD9] pb-6 mb-6 gap-4">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-crimson-700 leading-none font-cinzel">
-              {settings.store_name}
-            </h1>
-            <p className="text-[10px] text-slate-500 tracking-widest uppercase font-bold mt-1.5">
-              Premium Sivakasi Fireworks Wholesale Price List
-            </p>
-          </div>
+        <div className="border-b border-[#E2DDD9] pb-6 mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            
+            {/* Left: Company Logo & Title Block */}
+            <div className="flex items-center gap-4">
+              {/* Company Logo */}
+              {settings.store_logo ? (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white border border-slate-200 p-2 flex items-center justify-center shadow-xs flex-shrink-0">
+                  <img
+                    src={getImageUrl(settings.store_logo)}
+                    alt={settings.store_name || "Company Logo"}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-crimson-600 via-crimson-700 to-crimson-900 text-white flex items-center justify-center shadow-md flex-shrink-0 border border-crimson-500">
+                  <i className="fa-solid fa-fire-flame-curved text-2xl sm:text-3xl text-gold-400"></i>
+                </div>
+              )}
 
-          <div className="text-xs text-slate-500 font-semibold space-y-1">
-            <div>
-              <i className="fa-solid fa-phone text-crimson-600 mr-1.5 text-[10px]"></i>
-              <strong>Phone:</strong> {[settings.store_phone, settings.store_phone_2, settings.store_phone_3, settings.store_phone_4].filter(Boolean).join(', ')}
+              {/* Title & Tagline */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-crimson-700 leading-none font-cinzel">
+                    {settings.store_name}
+                  </h1>
+                  <span className="bg-amber-100 border border-amber-300 text-amber-900 text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider shadow-2xs">
+                    Wholesale Price List
+                  </span>
+                </div>
+                <p className="text-[10px] text-slate-500 tracking-widest uppercase font-bold">
+                  Premium Sivakasi Fireworks Wholesale Registry
+                </p>
+                <div className="flex items-center gap-2 pt-0.5">
+                  <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-extrabold px-2 py-0.5 rounded-md">
+                    <i className="fa-solid fa-circle-check text-emerald-600 mr-1"></i>
+                    Flat {settings.discount_percent}% Wholesale Discount
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <i className="fa-solid fa-envelope text-crimson-600 mr-1.5 text-[10px]"></i>
-              <strong>Email:</strong> {settings.store_email}
+
+            {/* Right: Contact Information Box */}
+            <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-3.5 sm:p-4 text-xs text-slate-600 space-y-1.5 min-w-[260px] shadow-2xs">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-crimson-100 text-crimson-700 flex items-center justify-center flex-shrink-0">
+                  <i className="fa-solid fa-phone text-[10px]"></i>
+                </div>
+                <span className="font-bold text-slate-800">
+                  {[settings.store_phone, settings.store_phone_2, settings.store_whatsapp].filter(Boolean).join(', ') || '+91 9998887776'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center flex-shrink-0">
+                  <i className="fa-solid fa-envelope text-[10px]"></i>
+                </div>
+                <span className="font-semibold text-slate-700 truncate max-w-[220px]">
+                  {settings.store_email || 'crackerdemo@gmail.com'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center flex-shrink-0">
+                  <i className="fa-solid fa-location-dot text-[10px]"></i>
+                </div>
+                <span className="font-semibold text-slate-700 line-clamp-1">
+                  {settings.store_address || 'Virudhunagar to Sivakasi Main Road, Sivakasi'}
+                </span>
+              </div>
             </div>
-            <div>
-              <i className="fa-solid fa-map-marker-alt text-crimson-600 mr-1.5 text-[10px]"></i>
-              <strong>Address:</strong> {settings.store_address}
-            </div>
+
           </div>
         </div>
 

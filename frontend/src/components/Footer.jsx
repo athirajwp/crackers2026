@@ -13,7 +13,7 @@ export default function Footer() {
   const licenseNo = settings?.license_no || '----';
 
   return (
-    <footer className="relative bg-[#0B132B] text-white select-none border-t border-slate-800 mt-auto pt-14 pb-8 overflow-hidden">
+    <footer className="relative bg-[#0B132B] text-white select-none border-t border-slate-800 mt-auto pt-14 pb-8 overflow-hidden print:hidden">
       {/* Soft Background Festive Glow */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
 

@@ -33,6 +33,15 @@ export default function AdminBranding() {
     slider_image_2: null,
     slider_image_3: null,
     aboutus_image_1: null,
+    page_header_banner: null,
+    about_banner: null,
+    about_banner_1: null,
+    about_banner_2: null,
+    about_banner_3: null,
+    contact_banner: null,
+    contact_banner_1: null,
+    contact_banner_2: null,
+    contact_banner_3: null,
     gallery_image_1: null,
     gallery_image_2: null,
     gallery_image_3: null,
@@ -68,6 +77,15 @@ export default function AdminBranding() {
             slider_image_2: data.settings.slider_image_2,
             slider_image_3: data.settings.slider_image_3,
             aboutus_image_1: data.settings.aboutus_image_1,
+            page_header_banner: data.settings.page_header_banner,
+            about_banner: data.settings.about_banner || data.settings.about_banner_1,
+            about_banner_1: data.settings.about_banner_1 || data.settings.about_banner,
+            about_banner_2: data.settings.about_banner_2,
+            about_banner_3: data.settings.about_banner_3,
+            contact_banner: data.settings.contact_banner || data.settings.contact_banner_1,
+            contact_banner_1: data.settings.contact_banner_1 || data.settings.contact_banner,
+            contact_banner_2: data.settings.contact_banner_2,
+            contact_banner_3: data.settings.contact_banner_3,
           };
           for (let i = 1; i <= 10; i++) {
             paths[`gallery_image_${i}`] = data.settings[`gallery_image_${i}`];
@@ -520,6 +538,175 @@ export default function AdminBranding() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Page Header Promotion Banners (About Us & Contact Us Banners) */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
+              About Us Page Slider Banners
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                { key: 'about_banner', label: 'About Us Banner #1' },
+                { key: 'about_banner_2', label: 'About Us Banner #2' },
+                { key: 'about_banner_3', label: 'About Us Banner #3' },
+              ].map((item) => (
+                <div key={item.key} className="space-y-3">
+                  <label className="text-[9px] font-black text-slate-450 uppercase tracking-widest block">
+                    {item.label}
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name={item.key}
+                    onChange={handleFileChange}
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-1.5 text-xs font-semibold outline-none transition-all"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => saveImageSlot(item.key)}
+                      disabled={savingSlots[item.key]}
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                    >
+                      {savingSlots[item.key] ? 'Saving...' : 'Save Banner'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeImageSlot(item.key)}
+                      disabled={!imagePaths[item.key] || savingSlots[item.key]}
+                      className="flex-1 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  {imagePaths[item.key] && (
+                    <div className="w-full h-24 bg-slate-100 border border-slate-200 rounded-xl overflow-hidden shadow-inner">
+                      <img
+                        src={getImageUrl(imagePaths[item.key])}
+                        alt={item.label}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  {!imagePaths[item.key] && (
+                    <div className="w-full h-24 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-[10px] text-slate-400 font-bold">
+                      No Banner Set
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pt-4 pb-3">
+              Contact Us Page Slider Banners
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                { key: 'contact_banner', label: 'Contact Us Banner #1' },
+                { key: 'contact_banner_2', label: 'Contact Us Banner #2' },
+                { key: 'contact_banner_3', label: 'Contact Us Banner #3' },
+              ].map((item) => (
+                <div key={item.key} className="space-y-3">
+                  <label className="text-[9px] font-black text-slate-450 uppercase tracking-widest block">
+                    {item.label}
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name={item.key}
+                    onChange={handleFileChange}
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-1.5 text-xs font-semibold outline-none transition-all"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => saveImageSlot(item.key)}
+                      disabled={savingSlots[item.key]}
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                    >
+                      {savingSlots[item.key] ? 'Saving...' : 'Save Banner'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeImageSlot(item.key)}
+                      disabled={!imagePaths[item.key] || savingSlots[item.key]}
+                      className="flex-1 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  {imagePaths[item.key] && (
+                    <div className="w-full h-24 bg-slate-100 border border-slate-200 rounded-xl overflow-hidden shadow-inner">
+                      <img
+                        src={getImageUrl(imagePaths[item.key])}
+                        alt={item.label}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  {!imagePaths[item.key] && (
+                    <div className="w-full h-24 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-[10px] text-slate-400 font-bold">
+                      No Banner Set
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pt-4 pb-3">
+              Fallback / General Page Header Banner
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                { key: 'page_header_banner', label: 'Default Page Header Banner' },
+              ].map((item) => (
+                <div key={item.key} className="space-y-3">
+                  <label className="text-[9px] font-black text-slate-450 uppercase tracking-widest block">
+                    {item.label}
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name={item.key}
+                    onChange={handleFileChange}
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-1.5 text-xs font-semibold outline-none transition-all"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => saveImageSlot(item.key)}
+                      disabled={savingSlots[item.key]}
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                    >
+                      {savingSlots[item.key] ? 'Saving...' : 'Save Banner'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeImageSlot(item.key)}
+                      disabled={!imagePaths[item.key] || savingSlots[item.key]}
+                      className="flex-1 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  {imagePaths[item.key] && (
+                    <div className="w-full h-24 bg-slate-100 border border-slate-200 rounded-xl overflow-hidden shadow-inner">
+                      <img
+                        src={getImageUrl(imagePaths[item.key])}
+                        alt={item.label}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  {!imagePaths[item.key] && (
+                    <div className="w-full h-24 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-[10px] text-slate-400 font-bold">
+                      Default Banner
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 

@@ -156,6 +156,15 @@ class StorefrontApiController extends Controller
 
         $settings['slider_image_1'] = $slider1;
         $settings['aboutus_image_1'] = $aboutImg1;
+        $settings['page_header_banner'] = Setting::get('page_header_banner', '');
+        $settings['about_banner'] = Setting::get('about_banner', '');
+        $settings['about_banner_1'] = Setting::get('about_banner_1', '');
+        $settings['about_banner_2'] = Setting::get('about_banner_2', '');
+        $settings['about_banner_3'] = Setting::get('about_banner_3', '');
+        $settings['contact_banner'] = Setting::get('contact_banner', '');
+        $settings['contact_banner_1'] = Setting::get('contact_banner_1', '');
+        $settings['contact_banner_2'] = Setting::get('contact_banner_2', '');
+        $settings['contact_banner_3'] = Setting::get('contact_banner_3', '');
 
         $galleryDir = public_path('img/gallery');
         $galleryFiles = [];

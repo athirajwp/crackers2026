@@ -85,8 +85,8 @@ export default function Header() {
   ];
 
   return (
-    <>
-      {/* ROW 1: Top Marquee & Admin Bar */}
+    <header className="print:hidden">
+      {/* ROW 1: Top Notification Bar */}
       <div className="bg-crimson-600 text-slate-100 text-[10px] sm:text-xs py-2 font-bold shadow-sm select-none border-b border-crimson-700">
         <div className="container mx-auto px-4 flex justify-between items-center gap-4">
           <div className="flex-grow overflow-hidden relative">
@@ -101,12 +101,6 @@ export default function Header() {
                 ))}
               </div>
             </marquee>
-          </div>
-          <div className="flex items-center gap-4 flex-shrink-0">
-            <a href={`/admin/login${location.search}`} target="_blank" rel="noreferrer" className="hover:text-gold-500 transition-colors flex items-center gap-1.5 whitespace-nowrap">
-              <i className="fa-solid fa-user-shield text-gold-500"></i>
-              <span>Admin Portal Login</span>
-            </a>
           </div>
         </div>
       </div>
@@ -274,15 +268,6 @@ export default function Header() {
             {/* Left: Social Media Links */}
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <a
-                href={`https://wa.me/${settings.store_whatsapp || settings.store_phone || '919998887776'}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="WhatsApp"
-              >
-                <i className="fa-brands fa-whatsapp text-xs"></i>
-              </a>
-              <a
                 href={settings.instagram_url || 'https://instagram.com'}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -364,15 +349,6 @@ export default function Header() {
             {/* Desktop Social Media Icons */}
             <div className="flex items-center gap-2 border-l border-crimson-500/80 pl-4 py-2">
               <a
-                href={`https://wa.me/${settings.store_whatsapp || settings.store_phone || '919998887776'}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-7 h-7 rounded-lg bg-emerald-500/90 hover:bg-emerald-500 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
-                title="WhatsApp"
-              >
-                <i className="fa-brands fa-whatsapp text-xs"></i>
-              </a>
-              <a
                 href={settings.instagram_url || 'https://instagram.com'}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -434,6 +410,6 @@ export default function Header() {
           ))}
         </div>
       )}
-    </>
+    </header>
   );
 }

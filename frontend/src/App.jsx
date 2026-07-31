@@ -192,7 +192,7 @@ function PublicLayout() {
 
       {/* Left Floating Action Contact Buttons (Call & WhatsApp) — 10% larger, hidden when cart/checkout active */}
       {!checkoutOpen && totalQty === 0 && (
-        <div className="fixed left-4 bottom-5 z-40 flex flex-col gap-2.5 select-none">
+        <div className="fixed left-4 bottom-5 z-40 flex flex-col gap-2.5 select-none print:hidden">
           {/* Call Button */}
           <a
             href={`tel:${settings.store_phone || ''}`}

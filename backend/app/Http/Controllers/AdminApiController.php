@@ -826,7 +826,9 @@ class AdminApiController extends Controller
             'terms_conditions', 'about_us',
             'about_us_badge', 'about_us_title',
             'slider_image_1', 'slider_image_2', 'slider_image_3',
-            'aboutus_image_1',
+            'aboutus_image_1', 'page_header_banner', 
+            'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
+            'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3',
             'store_logo', 'store_favicon',
             'license_name', 'license_no', 'store_map_iframe',
             'marquee_alert_1', 'marquee_alert_2', 'marquee_alert_3', 'marquee_alert_4', 'marquee_alert_5', 'marquee_alert_6',
@@ -862,7 +864,12 @@ class AdminApiController extends Controller
 
     public function updateBranding(Request $request)
     {
-        $imageFields = ['store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3', 'aboutus_image_1'];
+        $imageFields = [
+            'store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3',
+            'aboutus_image_1', 'page_header_banner', 
+            'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
+            'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3'
+        ];
         for ($i = 1; $i <= 10; $i++) {
             $imageFields[] = "gallery_image_{$i}";
         }
@@ -893,7 +900,10 @@ class AdminApiController extends Controller
         }
 
         $excludeFields = [
-            'store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3', 'aboutus_image_1'
+            'store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3',
+            'aboutus_image_1', 'page_header_banner', 
+            'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
+            'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3'
         ];
         for ($i = 1; $i <= 10; $i++) {
             $excludeFields[] = "gallery_image_{$i}";
@@ -922,7 +932,12 @@ class AdminApiController extends Controller
             }
         }
 
-        $imageFields = ['store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3', 'aboutus_image_1'];
+        $imageFields = [
+            'store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3',
+            'aboutus_image_1', 'page_header_banner', 
+            'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
+            'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3'
+        ];
         for ($i = 1; $i <= 10; $i++) {
             $imageFields[] = "gallery_image_{$i}";
         }

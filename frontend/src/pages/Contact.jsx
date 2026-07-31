@@ -1,58 +1,72 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { useStore } from '../context/StoreContext';
+import { getImageUrl } from '../utils/imageUrl';
+import HeroSlider from '../components/HeroSlider';
 
 export default function Contact() {
   const { settings } = useStore();
   const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
 
+  useEffect(() => {
+    AOS.init({
+      duration: 900,
+      easing: 'ease-in-out',
+      once: false,
+      mirror: true,
+    });
+    AOS.refresh();
+  }, []);
+
+  const contactBannerImages = [
+    settings?.contact_banner_1 || settings?.contact_banner,
+    settings?.contact_banner_2,
+    settings?.contact_banner_3,
+    settings?.page_header_banner,
+    settings?.slider_image_1,
+    settings?.slider_image_2,
+    settings?.slider_image_3,
+  ].filter(Boolean);
+
   return (
     <div className="relative text-slate-800 select-none bg-transparent pb-16">
-      {/* 1. Dark Hero Page Banner with Breadcrumb */}
-      <section className="relative bg-crimson-600 py-16 border-b border-crimson-700 shadow-inner">
-        <div className="container mx-auto px-4 text-center space-y-3 relative z-10">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
-            Contact Us
-          </h2>
-          <div className="flex justify-center items-center gap-2 text-xs font-extrabold text-slate-350 uppercase tracking-widest">
-            <Link to="/" className="hover:text-gold-500 transition-colors">Home</Link>
-            <i className="fa-solid fa-chevron-right text-[8px] text-slate-450"></i>
-            <span className="text-gold-500">Contact</span>
-          </div>
-        </div>
-      </section>
 
-      {/* 2. Main Content Section */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="border border-[#E2DDD9] rounded-3xl p-6 md:p-10 shadow-sm space-y-10" style={cardBgStyle}>
+      {/* 1. Home Page Style Banner Image Slider */}
+      <HeroSlider customImages={contactBannerImages} />
 
-          {/* Section Title */}
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="inline-flex items-center gap-1.5 bg-gold-50 border border-gold-200 text-gold-800 text-[10px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full shadow-sm">
+      {/* 2. Main Content Section (Separated Container Layout) */}
+      <section className="container mx-auto px-4 py-8 md:py-12 z-10 relative">
+        <div className="border border-[#E2DDD9] rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl space-y-12" style={cardBgStyle} data-aos="fade-up">
+
+          {/* Section Sub-Header Title */}
+          <div className="text-center space-y-3 max-w-2xl mx-auto" data-aos="fade-up">
+            <span className="inline-flex items-center gap-2 bg-gold-50 border border-gold-300 text-gold-900 text-xs font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-sm">
               <i className="fa-solid fa-envelope text-gold-600"></i> Get In Touch
             </span>
-            <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight">
-              How to Contact Us
-            </h3>
-            <p className="text-xs md:text-sm text-slate-500 leading-relaxed font-medium">
-              Have questions about our products, pricing, or delivery? We'd love to hear from you. Reach out to us through any of the channels below.
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-cinzel text-slate-900 tracking-tight">
+              We Are Here To Help You
+            </h2>
+            <p className="text-xs md:text-sm text-slate-500 leading-relaxed font-semibold">
+              Reach out to us directly through phone, WhatsApp, or visit our licensed Sivakasi store location.
             </p>
           </div>
 
-          {/* Two-Column: Contact Info + Google Map */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          {/* Two-Column Layout: Contact Details & Embedded Google Map */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
-            {/* Left Column: Contact Details Card */}
-            <div className="bg-white/80 border border-[#E2DDD9] rounded-2xl p-6 md:p-8 space-y-6">
+            {/* Left Column: Contact Details Card (lg:col-span-6) */}
+            <div className="lg:col-span-6 bg-white/90 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-md" data-aos="fade-right" data-aos-delay="100">
 
               {/* Address */}
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <i className="fa-solid fa-location-dot text-lg text-crimson-600"></i>
+                <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i className="fa-solid fa-location-dot text-xl text-crimson-600"></i>
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Our Address</h4>
-                  <p className="text-xs md:text-sm text-slate-500 font-semibold leading-relaxed">
+                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Our Address</h4>
+                  <p className="text-xs md:text-sm text-slate-600 font-semibold leading-relaxed">
                     {settings.store_address || 'Virudhunagar to Sivakasi Main Road, Sivakasi, Tamil Nadu - 626189'}
                   </p>
                 </div>
@@ -60,34 +74,34 @@ export default function Contact() {
 
               {/* Phone */}
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <i className="fa-solid fa-phone text-lg text-crimson-600"></i>
+                <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i className="fa-solid fa-phone text-xl text-crimson-600"></i>
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Phone Numbers</h4>
-                  <div className="text-xs md:text-sm text-slate-500 font-semibold leading-relaxed space-y-1">
+                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Phone Numbers</h4>
+                  <div className="text-xs md:text-sm text-slate-600 font-semibold leading-relaxed space-y-1">
                     {settings.store_phone && (
-                      <a href={`tel:${settings.store_phone}`} className="hover:text-gold-600 transition-colors block">
+                      <a href={`tel:${settings.store_phone}`} className="hover:text-crimson-600 transition-colors block">
                         {settings.store_phone}
                       </a>
                     )}
                     {settings.store_phone_2 && (
-                      <a href={`tel:${settings.store_phone_2}`} className="hover:text-gold-600 transition-colors block">
+                      <a href={`tel:${settings.store_phone_2}`} className="hover:text-crimson-600 transition-colors block">
                         {settings.store_phone_2}
                       </a>
                     )}
                     {settings.store_phone_3 && (
-                      <a href={`tel:${settings.store_phone_3}`} className="hover:text-gold-600 transition-colors block">
+                      <a href={`tel:${settings.store_phone_3}`} className="hover:text-crimson-600 transition-colors block">
                         {settings.store_phone_3}
                       </a>
                     )}
                     {settings.store_phone_4 && (
-                      <a href={`tel:${settings.store_phone_4}`} className="hover:text-gold-600 transition-colors block">
+                      <a href={`tel:${settings.store_phone_4}`} className="hover:text-crimson-600 transition-colors block">
                         {settings.store_phone_4}
                       </a>
                     )}
                     {!settings.store_phone && !settings.store_phone_2 && !settings.store_phone_3 && !settings.store_phone_4 && (
-                      <a href="tel:+919998887776" className="hover:text-gold-600 transition-colors block">
+                      <a href="tel:+919998887776" className="hover:text-crimson-600 transition-colors block">
                         +91 9998887776
                       </a>
                     )}
@@ -97,17 +111,17 @@ export default function Contact() {
 
               {/* WhatsApp */}
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <i className="fa-brands fa-whatsapp text-lg text-white"></i>
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i className="fa-brands fa-whatsapp text-2xl text-emerald-600"></i>
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">WhatsApp Booking</h4>
-                  <p className="text-xs md:text-sm text-slate-500 font-semibold leading-relaxed">
+                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">WhatsApp Direct Booking</h4>
+                  <p className="text-xs md:text-sm text-slate-600 font-semibold leading-relaxed">
                     <a
                       href={`https://wa.me/${settings.store_whatsapp || '919998887776'}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="hover:text-emerald-600 transition-colors"
+                      className="hover:text-emerald-600 transition-colors font-mono font-bold"
                     >
                       +{settings.store_whatsapp || '91 9998887776'}
                     </a>
@@ -117,106 +131,109 @@ export default function Contact() {
 
               {/* Email */}
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <i className="fa-solid fa-envelope text-lg text-crimson-600"></i>
+                <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <i className="fa-solid fa-envelope text-xl text-crimson-600"></i>
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Email Address</h4>
-                  <p className="text-xs md:text-sm text-slate-500 font-semibold leading-relaxed">
-                    <a href={`mailto:${settings.store_email}`} className="hover:text-gold-600 transition-colors">
+                  <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Email Address</h4>
+                  <p className="text-xs md:text-sm text-slate-600 font-semibold leading-relaxed">
+                    <a href={`mailto:${settings.store_email}`} className="hover:text-crimson-600 transition-colors">
                       {settings.store_email || 'crackershop@gmail.com'}
                     </a>
                   </p>
                 </div>
               </div>
 
-              {/* License Info */}
+              {/* License Info Card */}
               {(settings.license_name || settings.license_no) && (
                 <div className="border-t border-slate-200 pt-5 mt-2">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gold-500 flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <i className="fa-solid fa-scale-balanced text-lg text-crimson-600"></i>
+                    <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <i className="fa-solid fa-scale-balanced text-xl text-crimson-600"></i>
                     </div>
                     <div className="space-y-1">
-                      <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">License Details</h4>
+                      <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Statutory License Details</h4>
                       {settings.license_name && (
-                        <p className="text-xs text-slate-500 font-semibold">
-                          Name: <strong className="text-slate-800 font-black">{settings.license_name}</strong>
+                        <p className="text-xs text-slate-600 font-semibold">
+                          Name: <strong className="text-slate-900 font-black">{settings.license_name}</strong>
                         </p>
                       )}
                       {settings.license_no && (
-                        <p className="text-xs text-slate-500 font-semibold">
-                          No: <strong className="text-slate-800 font-black font-mono">{settings.license_no}</strong>
+                        <p className="text-xs text-slate-600 font-semibold">
+                          No: <strong className="text-slate-900 font-black font-mono">{settings.license_no}</strong>
                         </p>
                       )}
                     </div>
                   </div>
                 </div>
               )}
+
             </div>
 
-            {/* Right Column: Embedded Google Map */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden shadow-sm min-h-[350px]">
+            {/* Right Column: Embedded Google Map (lg:col-span-6) */}
+            <div className="lg:col-span-6 bg-white border-2 border-slate-200 rounded-3xl overflow-hidden shadow-md min-h-[380px] flex flex-col" data-aos="fade-left" data-aos-delay="200">
               {settings.store_map_iframe ? (
-                <div dangerouslySetInnerHTML={{ __html: settings.store_map_iframe }} className="w-full h-full min-h-[350px] [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:min-h-[350px]" />
+                <div dangerouslySetInnerHTML={{ __html: settings.store_map_iframe }} className="w-full h-full min-h-[380px] flex-1 [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:min-h-[380px]" />
               ) : (
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31484.78768782782!2d77.78440079999999!3d9.4475475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b06cee41fe51a8d%3A0xe964a2754897f1f!2sSivakasi%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1717830000000!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
-                  style={{ border: 0, minHeight: '350px' }}
+                  style={{ border: 0, minHeight: '380px' }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Store Location Map"
+                  className="w-full h-full flex-1"
                 ></iframe>
               )}
             </div>
+
           </div>
 
-          {/* Bottom: Working Hours & Quick CTA */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-100">
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-md transition-shadow relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gold-500"></div>
-              <div className="w-10 h-10 rounded-xl bg-gold-500 flex items-center justify-center mb-4 text-crimson-600">
-                <i className="fa-solid fa-clock text-sm"></i>
+          {/* 3. Grid of Key Highlight Cards (Matching About Us Feature Style) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-200/60" data-aos="fade-up">
+            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
+              <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
+                <i className="fa-solid fa-clock text-lg text-crimson-600"></i>
               </div>
-              <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2">Working Hours</h4>
-              <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">Working Hours</h4>
+              <p className="text-xs text-slate-500 leading-relaxed font-semibold">
                 Monday – Saturday: 9:00 AM to 8:00 PM<br />
                 Sunday: 10:00 AM to 6:00 PM
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-md transition-shadow relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gold-500"></div>
-              <div className="w-10 h-10 rounded-xl bg-gold-500 flex items-center justify-center mb-4 text-crimson-600">
-                <i className="fa-solid fa-truck-fast text-sm"></i>
+            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
+              <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
+                <i className="fa-solid fa-truck-fast text-lg text-crimson-600"></i>
               </div>
-              <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2">Delivery Area</h4>
-              <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
-                We deliver across Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, and Telangana via trusted lorry transport.
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">Delivery Coverage</h4>
+              <p className="text-xs text-slate-500 leading-relaxed font-semibold">
+                We deliver across Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, and Telangana via trusted transport carriers.
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-md transition-shadow relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gold-500"></div>
-              <div className="w-10 h-10 rounded-xl bg-gold-500 flex items-center justify-center mb-4 text-crimson-600">
-                <i className="fa-solid fa-shield-halved text-sm"></i>
+            <div className="bg-white border border-slate-200 rounded-2.5xl p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden group hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-crimson-600"></div>
+              <div className="w-12 h-12 rounded-2xl bg-gold-50 border border-gold-200 flex items-center justify-center mb-4 text-crimson-600 shadow-sm group-hover:scale-110 transition-transform">
+                <i className="fa-solid fa-shield-halved text-lg text-crimson-600"></i>
               </div>
-              <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2">Safe & Legal</h4>
-              <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
-                All products are PESO certified and comply with Supreme Court guidelines for safe and legal fireworks.
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-2">Safe & PESO Certified</h4>
+              <p className="text-xs text-slate-500 leading-relaxed font-semibold">
+                All products are PESO certified and comply strictly with Supreme Court safety guidelines for fireworks.
               </p>
             </div>
           </div>
 
-          {/* Social Media Links */}
+          {/* 4. Social Media Links Section */}
           {(settings.facebook_link || settings.instagram_link || settings.youtube_link || settings.whatsapp_link || settings.twitter_link) && (
-            <div className="border-t border-slate-100 pt-8 space-y-5">
+            <div className="border-t border-slate-200/60 pt-8 space-y-5" data-aos="fade-up">
               <div className="text-center space-y-1">
-                <span className="text-[10px] font-black text-crimson-600 uppercase tracking-widest">Follow Us</span>
-                <h4 className="text-sm font-black text-slate-800 tracking-tight">Connect on Social Media</h4>
+                <span className="text-[11px] font-black text-crimson-600 uppercase tracking-widest block">Follow Us</span>
+                <h4 className="text-base font-black font-cinzel text-slate-900 tracking-tight">Connect With Us On Social Media</h4>
               </div>
               <div className="flex flex-wrap justify-center gap-4">
                 {settings.facebook_link && (
@@ -224,7 +241,9 @@ export default function Contact() {
                     href={settings.facebook_link}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-[#1877F2] hover:bg-[#1565d8] text-white text-xs font-black uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                    className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-[#1877F2] hover:bg-[#1565d8] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
+                    data-aos="zoom-in"
+                    data-aos-delay="100"
                   >
                     <i className="fa-brands fa-facebook text-base"></i>
                     <span>Facebook</span>
@@ -235,7 +254,9 @@ export default function Contact() {
                     href={settings.instagram_link}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-gradient-to-br from-[#f09433] via-[#e6683c] via-[#dc2743] via-[#cc2366] to-[#bc1888] hover:opacity-90 text-white text-xs font-black uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                    className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-br from-[#f09433] via-[#e6683c] via-[#dc2743] via-[#cc2366] to-[#bc1888] hover:opacity-95 text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
+                    data-aos="zoom-in"
+                    data-aos-delay="200"
                   >
                     <i className="fa-brands fa-instagram text-base"></i>
                     <span>Instagram</span>
@@ -246,7 +267,9 @@ export default function Contact() {
                     href={settings.youtube_link}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-[#FF0000] hover:bg-[#cc0000] text-white text-xs font-black uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                    className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-[#FF0000] hover:bg-[#cc0000] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
+                    data-aos="zoom-in"
+                    data-aos-delay="300"
                   >
                     <i className="fa-brands fa-youtube text-base"></i>
                     <span>YouTube</span>
@@ -257,7 +280,9 @@ export default function Contact() {
                     href={settings.whatsapp_link}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-[#25D366] hover:bg-[#1da851] text-white text-xs font-black uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                    className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-[#25D366] hover:bg-[#1da851] text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
+                    data-aos="zoom-in"
+                    data-aos-delay="400"
                   >
                     <i className="fa-brands fa-whatsapp text-base"></i>
                     <span>WhatsApp</span>
@@ -268,7 +293,9 @@ export default function Contact() {
                     href={settings.twitter_link}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-slate-900 hover:bg-slate-700 text-white text-xs font-black uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
+                    className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-700 text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
+                    data-aos="zoom-in"
+                    data-aos-delay="500"
                   >
                     <i className="fa-brands fa-x-twitter text-base"></i>
                     <span>X / Twitter</span>

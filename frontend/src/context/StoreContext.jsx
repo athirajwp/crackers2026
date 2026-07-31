@@ -323,6 +323,46 @@ export const StoreProvider = ({ children }) => {
     }
   });
 
+  const [highlightedProductId, setHighlightedProductId] = useState(null);
+
+  const scrollToAndHighlightProduct = (prod) => {
+    if (!prod || !prod.id) return;
+
+    // Reset category filter if it would hide this product
+    if (prod.categorySlug && activeCategory !== 'all' && activeCategory !== prod.categorySlug) {
+      setActiveCategory('all');
+    }
+
+    // Clear search filter if it excludes this product
+    if (searchQuery && prod.name && !prod.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+      setSearchQuery('');
+    }
+
+    // Set highlight ID
+    setHighlightedProductId(prod.id);
+
+    // Smooth scroll to product element
+    setTimeout(() => {
+      const element =
+        document.getElementById(`product-${prod.id}`) ||
+        document.getElementById(`product-card-${prod.id}`) ||
+        document.getElementById(`product-row-${prod.id}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        const tableSection = document.getElementById('quick-order');
+        if (tableSection) {
+          tableSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }, 150);
+
+    // Remove highlight after 3 seconds
+    setTimeout(() => {
+      setHighlightedProductId((prev) => (prev === prod.id ? null : prev));
+    }, 3000);
+  };
+
   const value = {
     categories,
     settings,
@@ -356,6 +396,8 @@ export const StoreProvider = ({ children }) => {
     setViewMode,
     changeViewMode,
     totalFilteredProductsCount,
+    highlightedProductId,
+    scrollToAndHighlightProduct,
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

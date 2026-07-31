@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
-import BestSellersSlider from './BestSellersSlider';
+import { getImageUrl } from '../utils/imageUrl';
 
 export default function ProductTable() {
   const {
@@ -15,6 +15,7 @@ export default function ProductTable() {
     searchQuery,
     setSearchQuery,
     viewMode,
+    highlightedProductId,
   } = useStore();
 
   const [popProduct, setPopProduct] = useState(null);
@@ -69,14 +70,11 @@ export default function ProductTable() {
   const cardBgStyle = { backgroundColor: settings?.card_bg_color || '#FFFFFF' };
 
   return (
-    <section id="quick-order" className="container mx-auto px-4 py-8 select-none">
-      {/* 1. Most Sold Products Slider */}
-      <BestSellersSlider onPreviewProduct={(prod) => setPopProduct({ prod, catName: prod.categoryName || 'Bestsellers' })} />
-
-      {/* 2. Main Quick Order Table & Category Sidebar Layout */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+    <section id="quick-order" className="container mx-auto px-4 pt-2 pb-4 select-none">
+      {/* Main Quick Order Table & Category Sidebar Layout */}
+      <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 lg:gap-8 items-start">
         {/* Mobile Custom Theme-Synced Categories Dropdown (Visible on Mobile & Tablet < 1024px) */}
-      <div className="block lg:hidden w-full select-none mb-3 relative z-30">
+      <div className="block lg:hidden w-full select-none mb-2.5 relative z-30">
         <div
           onClick={() => setMobileCategoryOpen(!mobileCategoryOpen)}
           className="w-full bg-gradient-to-r from-crimson-700 via-crimson-600 to-crimson-800 text-white border border-crimson-700 rounded-2xl p-3.5 shadow-md flex items-center justify-between cursor-pointer active:scale-[0.99] transition-all"
@@ -252,7 +250,15 @@ export default function ProductTable() {
                           const rowTotal = qty * parseFloat(prod.selling_price);
 
                           return (
-                            <tr key={prod.id} className={`border-b border-slate-100/90 transition-colors ${qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'}`}>
+                            <tr
+                              key={prod.id}
+                              id={`product-${prod.id}`}
+                              className={`border-b border-slate-100/90 transition-all duration-300 ${
+                                highlightedProductId === prod.id
+                                  ? 'bg-amber-100/90 ring-2 ring-amber-400 font-bold animate-pulse shadow-md z-20'
+                                  : qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'
+                              }`}
+                            >
                               {/* Product Info */}
                               <td className="py-3.5 px-3 sm:px-4">
                                 <div className="flex flex-col gap-1.5">
@@ -262,16 +268,25 @@ export default function ProductTable() {
                                   {/* Image + Info below title */}
                                   <div className="flex items-center gap-3">
                                     {/* Left Image */}
-                                    <div 
-                                      className={`flex w-10 h-10 rounded-lg bg-white border border-crimson-200/60 shadow-sm items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${prod.image ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
-                                      onClick={prod.image ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
-                                    >
-                                      {prod.image ? (
-                                        <img src={`/${prod.image}`} alt={prod.name} className="object-cover w-full h-full" />
-                                      ) : (
-                                        <i className="fa-solid fa-sparkles text-sm text-crimson-450/40"></i>
-                                      )}
-                                    </div>
+                                     {(() => {
+                                       const imgSrc = getImageUrl(prod.image);
+                                       return (
+                                         <div 
+                                           className={`flex w-10 h-10 rounded-lg bg-white border border-crimson-200/60 shadow-sm items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${imgSrc ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                                           onClick={imgSrc ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
+                                           style={imgSrc ? {
+                                             backgroundImage: `url("${imgSrc}")`,
+                                             backgroundSize: 'contain',
+                                             backgroundPosition: 'center',
+                                             backgroundRepeat: 'no-repeat'
+                                           } : {}}
+                                         >
+                                           {!imgSrc && (
+                                             <i className="fa-solid fa-sparkles text-sm text-crimson-450/40"></i>
+                                           )}
+                                         </div>
+                                       );
+                                     })()}
                                     
                                     {/* Right Specs */}
                                     <div className="flex flex-col items-start gap-1">
@@ -385,7 +400,15 @@ export default function ProductTable() {
                       const rowTotal = qty * parseFloat(prod.selling_price);
 
                       return (
-                        <div key={prod.id} className={`p-3 sm:p-4 flex flex-col gap-2 transition-colors border-b border-slate-150 last:border-b-0 ${qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'}`}>
+                        <div
+                          key={prod.id}
+                          id={`product-${prod.id}`}
+                          className={`p-3 sm:p-4 flex flex-col gap-2 transition-all duration-300 border-b border-slate-150 last:border-b-0 ${
+                            highlightedProductId === prod.id
+                              ? 'bg-amber-100/90 ring-2 ring-amber-400 font-bold animate-pulse shadow-md z-20'
+                              : qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'
+                          }`}
+                        >
                           {/* Title on top */}
                           <h4 className={`font-extrabold text-[11px] sm:text-xs leading-normal whitespace-nowrap truncate ${qty > 0 ? 'text-crimson-950 font-black' : 'text-slate-900'}`}>{prod.name}</h4>
                           
@@ -394,16 +417,25 @@ export default function ProductTable() {
                             
                             {/* Image + Specs */}
                             <div className="flex items-center gap-2 min-w-0">
-                              <div 
-                                className={`flex w-9 h-9 rounded-lg bg-white border border-crimson-200/60 shadow-sm items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${prod.image ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
-                                onClick={prod.image ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
-                              >
-                                {prod.image ? (
-                                  <img src={`/${prod.image}`} alt={prod.name} className="object-cover w-full h-full" />
-                                ) : (
-                                  <i className="fa-solid fa-sparkles text-xs text-crimson-450/40"></i>
-                                )}
-                              </div>
+                              {(() => {
+                                const imgSrc = getImageUrl(prod.image);
+                                return (
+                                  <div 
+                                    className={`flex w-9 h-9 rounded-lg bg-white border border-crimson-200/60 shadow-sm items-center justify-center text-slate-400 overflow-hidden flex-shrink-0 ${imgSrc ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                                    onClick={imgSrc ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
+                                    style={imgSrc ? {
+                                      backgroundImage: `url("${imgSrc}")`,
+                                      backgroundSize: 'contain',
+                                      backgroundPosition: 'center',
+                                      backgroundRepeat: 'no-repeat'
+                                    } : {}}
+                                  >
+                                    {!imgSrc && (
+                                      <i className="fa-solid fa-sparkles text-xs text-crimson-450/40"></i>
+                                    )}
+                                  </div>
+                                );
+                              })()}
                               <div className="flex flex-col items-start min-w-0">
                                 <span className="text-[7.5px] font-extrabold text-crimson-700 bg-crimson-50/90 border border-crimson-200/70 px-1 py-0.5 rounded uppercase tracking-wider truncate max-w-[65px] leading-tight mb-0.5">{cat.name}</span>
                                 <span className="text-[8.5px] font-semibold text-slate-600 bg-slate-100/80 border border-slate-200 px-1.5 py-0.5 rounded-lg shadow-sm whitespace-nowrap leading-none">
@@ -470,7 +502,7 @@ export default function ProductTable() {
           </div>
         ) : (
           /* Grid View Layout */
-          <div className="space-y-8">
+          <div className="space-y-4">
             {categories.map((cat) => {
               if (!shouldShowCategory(cat.slug)) return null;
 
@@ -481,7 +513,7 @@ export default function ProductTable() {
               if (filteredProducts.length === 0) return null;
 
               return (
-                <div key={cat.id} className="space-y-4">
+                <div key={cat.id} className="space-y-2.5">
                   {/* Category Section Header */}
                   <div
                     onClick={() => toggleCategoryCollapse(cat.slug)}
@@ -510,38 +542,46 @@ export default function ProductTable() {
                         return (
                           <div
                             key={prod.id}
+                            id={`product-${prod.id}`}
                             style={qty > 0 ? undefined : cardBgStyle}
-                            className={`border rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between hover:shadow-md transition-all duration-200 relative overflow-hidden group ${
-                              qty > 0 ? 'border-crimson-300 ring-1 ring-crimson-200/50 bg-crimson-50/20' : 'border-slate-200'
+                            className={`border rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between hover:shadow-md transition-all duration-300 relative overflow-hidden group ${
+                              highlightedProductId === prod.id
+                                ? 'ring-4 ring-gold-500 bg-amber-50/90 border-gold-400 scale-[1.03] shadow-xl animate-pulse z-20'
+                                : qty > 0 ? 'border-crimson-300 ring-1 ring-crimson-200/50 bg-crimson-50/20' : 'border-slate-200'
                             }`}
                           >
                             {/* Upper Card Area: Image + Details */}
                             <div className="space-y-1.5 sm:space-y-2">
                               {/* Image Container with Hover Effect */}
-                              <div 
-                                className={`w-full h-36 sm:h-40 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center overflow-hidden relative ${prod.image ? 'cursor-pointer hover:opacity-95 transition-opacity' : ''}`}
-                                onClick={prod.image ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
-                              >
-                                {prod.image ? (
-                                  <img
-                                    src={`/${prod.image}`}
-                                    alt={prod.name}
-                                    className="object-contain w-full h-full p-1.5 group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                ) : (
-                                  <i className="fa-solid fa-sparkles text-2xl text-crimson-450/30"></i>
-                                )}
+                              {(() => {
+                                const imgSrc = getImageUrl(prod.image);
+                                return (
+                                  <div 
+                                    className={`w-full h-36 sm:h-40 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center overflow-hidden relative ${imgSrc ? 'cursor-pointer hover:opacity-95 transition-opacity' : ''}`}
+                                    onClick={imgSrc ? () => setPopProduct({ prod, catName: cat.name }) : undefined}
+                                    style={imgSrc ? {
+                                      backgroundImage: `url("${imgSrc}")`,
+                                      backgroundSize: 'contain',
+                                      backgroundPosition: 'center',
+                                      backgroundRepeat: 'no-repeat'
+                                    } : {}}
+                                  >
+                                    {!imgSrc && (
+                                      <i className="fa-solid fa-sparkles text-2xl text-crimson-450/30"></i>
+                                    )}
 
-                                {/* Category Label Overlay */}
-                                <span className="absolute top-1.5 left-1.5 text-[7px] sm:text-[8px] font-black text-slate-700 bg-white/90 backdrop-blur border border-slate-250 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                                  {cat.name}
-                                </span>
+                                    {/* Category Label Overlay */}
+                                    <span className="absolute top-1.5 left-1.5 text-[7px] sm:text-[8px] font-black text-slate-700 bg-white/90 backdrop-blur border border-slate-250 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                                      {cat.name}
+                                    </span>
 
-                                {/* Pack size Label Overlay */}
-                                <span className="absolute top-1.5 right-1.5 text-[7px] sm:text-[8.5px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200 px-1.5 py-0.5 rounded-lg font-mono">
-                                  {prod.pack_size}
-                                </span>
-                              </div>
+                                    {/* Pack size Label Overlay */}
+                                    <span className="absolute top-1.5 right-1.5 text-[7px] sm:text-[8.5px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200 px-1.5 py-0.5 rounded-lg font-mono">
+                                      {prod.pack_size}
+                                    </span>
+                                  </div>
+                                );
+                              })()}
 
                               {/* Title & Info */}
                               <div className="pt-0.5">
@@ -640,13 +680,24 @@ export default function ProductTable() {
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                 
                 {/* Left Column: Image */}
-                <div className="md:col-span-5 bg-slate-50 border border-slate-150 p-2.5 rounded-2xl flex items-center justify-center h-64 md:h-80 overflow-hidden shadow-inner">
-                  <img 
-                    src={`/${prod.image}`} 
-                    alt={prod.name} 
-                    className="max-w-full max-h-full object-contain rounded-xl"
-                  />
-                </div>
+                {(() => {
+                  const modalImgSrc = getImageUrl(popProduct?.prod?.image);
+                  return (
+                    <div 
+                      className="md:col-span-5 bg-slate-50 border border-slate-150 p-2.5 rounded-2xl flex items-center justify-center h-64 md:h-80 overflow-hidden shadow-inner relative"
+                      style={modalImgSrc ? {
+                        backgroundImage: `url("${modalImgSrc}")`,
+                        backgroundSize: 'contain',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                      } : {}}
+                    >
+                      {!modalImgSrc && (
+                        <i className="fa-solid fa-sparkles text-4xl text-crimson-450/30"></i>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {/* Right Column: Detailed Info & Cart Selectors */}
                 <div className="md:col-span-7 space-y-4 text-left">

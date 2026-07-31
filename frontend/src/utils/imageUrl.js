@@ -7,8 +7,9 @@ export const getImageUrl = (path, fallback = '') => {
     return fallback;
   }
   const cleanPath = path.trim();
-  if (cleanPath.startsWith('data:') || cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
-    return cleanPath;
+  let formatted = cleanPath;
+  if (!cleanPath.startsWith('data:') && !cleanPath.startsWith('http://') && !cleanPath.startsWith('https://')) {
+    formatted = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
   }
-  return cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+  return encodeURI(formatted);
 };

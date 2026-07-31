@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
+import { getImageUrl } from '../utils/imageUrl';
 
-export default function HeroSlider() {
+export default function HeroSlider({ customImages = null }) {
   const { settings } = useStore();
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -12,13 +13,17 @@ export default function HeroSlider() {
   ];
 
   // Resolve slider images
-  const sliders = [
-    settings.slider_image_1,
-    settings.slider_image_2,
-    settings.slider_image_3,
+  const defaultSliders = [
+    settings?.slider_image_1,
+    settings?.slider_image_2,
+    settings?.slider_image_3,
   ].filter(Boolean);
 
-  const activeSliders = sliders.length > 0 ? sliders : fallbackSliders;
+  const baseSliders = (customImages && customImages.length > 0)
+    ? customImages.filter(Boolean)
+    : defaultSliders;
+
+  const activeSliders = baseSliders.length > 0 ? baseSliders : fallbackSliders;
 
   useEffect(() => {
     if (activeSliders.length <= 1) return;
@@ -36,16 +41,8 @@ export default function HeroSlider() {
     setActiveSlide((prev) => (prev - 1 + activeSliders.length) % activeSliders.length);
   };
 
-  const formatImageSrc = (src) => {
-    if (!src) return '';
-    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) {
-      return src;
-    }
-    return '/' + src;
-  };
-
   return (
-    <section className="relative overflow-hidden z-10 select-none w-full">
+    <section className="relative overflow-hidden z-10 select-none w-full border-b border-slate-200">
       <div className="relative w-full aspect-[21/9] sm:aspect-[21/8] md:aspect-[3/1] min-h-[180px] sm:min-h-[260px] md:min-h-[360px] lg:min-h-[440px] overflow-hidden group">
         {activeSliders.map((slide, index) => (
           <div
@@ -58,7 +55,7 @@ export default function HeroSlider() {
             style={{ display: activeSlide === index ? 'block' : 'none' }}
           >
             <img
-              src={formatImageSrc(slide)}
+              src={getImageUrl(slide)}
               alt={`Promotional Slide ${index + 1}`}
               className="w-full h-full object-cover"
             />
@@ -70,13 +67,15 @@ export default function HeroSlider() {
             {/* Left & Right Arrow Navigation */}
             <button
               onClick={prevSlide}
-              className="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 w-8 h-8 md:w-11 md:h-11 bg-white/25 hover:bg-white/45 active:bg-white/60 text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:scale-105 z-20"
+              aria-label="Previous slide"
+              className="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 w-8 h-8 md:w-11 md:h-11 bg-white/25 hover:bg-white/45 active:bg-white/60 text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:scale-105 z-20 shadow-md"
             >
               <i className="fa-solid fa-chevron-left text-xs md:text-sm"></i>
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-3 md:right-5 top-1/2 -translate-y-1/2 w-8 h-8 md:w-11 md:h-11 bg-white/25 hover:bg-white/45 active:bg-white/60 text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:scale-105 z-20"
+              aria-label="Next slide"
+              className="absolute right-3 md:right-5 top-1/2 -translate-y-1/2 w-8 h-8 md:w-11 md:h-11 bg-white/25 hover:bg-white/45 active:bg-white/60 text-white rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-300 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:scale-105 z-20 shadow-md"
             >
               <i className="fa-solid fa-chevron-right text-xs md:text-sm"></i>
             </button>

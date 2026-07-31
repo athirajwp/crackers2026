@@ -19,7 +19,7 @@ export default function StickyQuickOrderButton() {
   const bottomClass = totalQty > 0 ? 'bottom-20 sm:bottom-24' : 'bottom-4 sm:bottom-6';
 
   return (
-    <div className={`fixed right-3 sm:right-6 ${bottomClass} z-40 transition-all duration-300 select-none`}>
+    <div className={`fixed right-3 sm:right-6 ${bottomClass} z-40 transition-all duration-300 select-none print:hidden`}>
       <Link
         to="/quick-order"
         className="group block relative"
