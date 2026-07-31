@@ -11,3 +11,6 @@
 .env
 .env.backup
 .env.production
+
+# Never overwrite the production database with local dev data
+/database/database.sqlite
