@@ -247,12 +247,12 @@ export default function About() {
                   onClick={() => setActiveImage(src)}
                   data-aos="zoom-in"
                   data-aos-delay={(idx % 3) * 100 + 100}
-                  className="group relative bg-white border-2 border-slate-100 hover:border-gold-400 rounded-2xl md:rounded-3xl p-2 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 cursor-pointer overflow-hidden"
+                  className="group relative rounded-2xl md:rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 cursor-pointer overflow-hidden"
                 >
 
                   <div className="absolute -inset-1 bg-gradient-to-r from-gold-500 to-crimson-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-500 pointer-events-none"></div>
 
-                  <div className="relative w-full h-40 sm:h-48 md:h-[210px] overflow-hidden rounded-xl md:rounded-2xl bg-slate-100">
+                  <div className="relative w-full h-40 sm:h-48 md:h-[210px] overflow-hidden rounded-2xl md:rounded-3xl bg-slate-100">
                     <img 
                       src={src.startsWith('http') || src.startsWith('data:') ? src : getImageUrl(src)} 
                       alt={`Gallery view ${idx + 1}`} 
@@ -310,7 +310,7 @@ export default function About() {
           onClick={() => setActiveImage(null)}
         >
           <div 
-            className="relative bg-white border border-slate-200 rounded-3xl p-3 max-w-4xl max-h-[90vh] shadow-2xl select-none cursor-default animate-scale-up flex items-center justify-center overflow-hidden"
+            className="relative rounded-3xl max-w-4xl max-h-[90vh] shadow-2xl select-none cursor-default animate-scale-up flex items-center justify-center overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -322,7 +322,7 @@ export default function About() {
             <img 
               src={activeImage.startsWith('http') || activeImage.startsWith('data:') ? activeImage : getImageUrl(activeImage)} 
               alt="Gallery Zoomed" 
-              className="max-w-full max-h-[80vh] object-contain rounded-2xl"
+              className="max-w-full max-h-[85vh] object-contain rounded-3xl shadow-2xl"
             />
           </div>
         </div>
