@@ -33,11 +33,3 @@ jobs:
             -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/
 
-      - name: Run post-deploy commands on server
-        env:
-          DEPLOY_HOST: ${{ secrets.HOSTINGER_HOST }}
-          DEPLOY_PORT: ${{ secrets.HOSTINGER_PORT }}
-          DEPLOY_USER: ${{ secrets.HOSTINGER_USER }}
-          DEPLOY_PATH: ${{ secrets.HOSTINGER_PATH }}
-        run: |
-          ssh -o StrictHostKeyChecking=no -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" "cd $DEPLOY_PATH/backend && php artisan config:clear && php artisan view:clear && php artisan cache:clear"
