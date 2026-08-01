@@ -164,17 +164,17 @@ export default function AdminInvoice() {
       <style>{printStyles}</style>
       <div className="invoice-container">
         {/* Header */}
-        <table className="header-table">
+        <table className="header-table" style={{ width: '100%', tableLayout: 'fixed' }}>
           <tbody>
             <tr>
-              <td style={{ width: '40%', verticalAlign: 'middle' }}>
+              <td style={{ width: '38%', verticalAlign: 'middle' }}>
                 <div className="header-brand font-cinzel">{settings.store_name}</div>
                 <div style={{ fontSize: '10px', marginTop: '3px' }}>
                   {settings.store_address}<br />
                   Phone: {settings.store_phone} | Email: {settings.store_email}
                 </div>
               </td>
-              <td style={{ width: '25%', textAlign: 'center', verticalAlign: 'middle' }}>
+              <td style={{ width: '32%', textAlign: 'center', verticalAlign: 'middle' }}>
                 {settings.store_logo && (
                   <img
                     src={settings.store_logo.startsWith('data:') || settings.store_logo.startsWith('http') ? settings.store_logo : `/${settings.store_logo}`}
@@ -183,7 +183,7 @@ export default function AdminInvoice() {
                   />
                 )}
               </td>
-              <td className="header-details" style={{ width: '35%', verticalAlign: 'middle', textAlign: 'right' }}>
+              <td className="header-details" style={{ width: '30%', verticalAlign: 'middle', textAlign: 'right' }}>
                 <div style={{ fontSize: '14px', fontWeight: 'bold' }}>ESTIMATE INVOICE</div>
                 <div style={{ marginTop: '5px' }}>
                   <strong>Invoice No:</strong> {order.order_number}<br />

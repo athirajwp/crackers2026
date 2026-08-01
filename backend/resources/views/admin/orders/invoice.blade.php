@@ -141,16 +141,16 @@
     <div class="invoice-container">
         
         <!-- Header -->
-        <table class="header-table">
+        <table class="header-table" style="width: 100%; table-layout: fixed;">
             <tr>
-                <td style="width: 40%; vertical-align: middle;">
+                <td style="width: 38%; vertical-align: middle;">
                     <div class="header-brand">{{ strtoupper(App\Models\Setting::get('store_name', 'Cracker Demo')) }}</div>
                     <div style="font-size: 10px; margin-top: 3px;">
                         {{ App\Models\Setting::get('store_address', 'Virudhunagar to Sivakasi Main Road, Sivakasi') }}<br>
                         Phone: {{ App\Models\Setting::get('store_phone', '+91 9998887776') }} | Email: {{ App\Models\Setting::get('store_email', 'store@example.com') }}
                     </div>
                 </td>
-                <td style="width: 25%; text-align: center; vertical-align: middle;">
+                <td style="width: 32%; text-align: center; vertical-align: middle;">
                     @php
                         $storeLogo = App\Models\Setting::get('store_logo', '');
                     @endphp
@@ -158,7 +158,7 @@
                         <img src="{{ \Illuminate\Support\Str::startsWith($storeLogo, ['http', 'data:']) ? $storeLogo : asset($storeLogo) }}" style="max-height: 90px; max-width: 250px; object-fit: contain; margin: 0 auto; display: block;" alt="Logo">
                     @endif
                 </td>
-                <td class="header-details" style="width: 35%; vertical-align: middle; text-align: right;">
+                <td class="header-details" style="width: 30%; vertical-align: middle; text-align: right;">
                     <div style="font-size: 14px; font-weight: bold;">ESTIMATE INVOICE</div>
                     <div style="margin-top: 5px;">
                         <strong>Invoice No:</strong> {{ $order->order_number }}<br>
