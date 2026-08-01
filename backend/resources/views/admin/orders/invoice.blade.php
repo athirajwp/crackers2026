@@ -153,9 +153,25 @@
                 <td style="width: 32%; text-align: center; vertical-align: middle;">
                     @php
                         $storeLogo = App\Models\Setting::get('store_logo', '');
+                        $logoSrc = '';
+                        if ($storeLogo) {
+                            if (\Illuminate\Support\Str::startsWith($storeLogo, ['http', 'data:'])) {
+                                $logoSrc = $storeLogo;
+                            } elseif (file_exists(public_path($storeLogo))) {
+                                try {
+                                    $imageData = base64_encode(file_get_contents(public_path($storeLogo)));
+                                    $mime = mime_content_type(public_path($storeLogo)) ?: 'image/png';
+                                    $logoSrc = "data:{$mime};base64,{$imageData}";
+                                } catch (\Exception $e) {
+                                    $logoSrc = asset($storeLogo);
+                                }
+                            } else {
+                                $logoSrc = asset($storeLogo);
+                            }
+                        }
                     @endphp
-                    @if($storeLogo)
-                        <img src="{{ \Illuminate\Support\Str::startsWith($storeLogo, ['http', 'data:']) ? $storeLogo : asset($storeLogo) }}" style="max-height: 90px; max-width: 250px; object-fit: contain; margin: 0 auto; display: block;" alt="Logo">
+                    @if($logoSrc)
+                        <img src="{{ $logoSrc }}" style="max-height: 90px; max-width: 250px; object-fit: contain; margin: 0 auto; display: block;" alt="Logo">
                     @endif
                 </td>
                 <td class="header-details" style="width: 30%; vertical-align: middle; text-align: right;">
