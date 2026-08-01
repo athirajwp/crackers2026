@@ -16,6 +16,11 @@ class Product extends Model
         'image',
         'sort_order',
         'status',
+        'is_bestseller',
+    ];
+
+    protected $casts = [
+        'is_bestseller' => 'boolean',
     ];
 
     /**

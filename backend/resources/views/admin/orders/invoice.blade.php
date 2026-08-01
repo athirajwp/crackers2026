@@ -143,20 +143,22 @@
         <!-- Header -->
         <table class="header-table">
             <tr>
-                <td>
-                    @php
-                        $storeLogo = App\Models\Setting::get('store_logo', '');
-                    @endphp
-                    @if(extension_loaded('gd') && $storeLogo && file_exists(public_path($storeLogo)))
-                        <img src="{{ public_path($storeLogo) }}" style="max-height: 50px; max-width: 180px; margin-bottom: 5px; object-fit: contain;" alt="Logo"><br>
-                    @endif
+                <td style="width: 40%; vertical-align: middle;">
                     <div class="header-brand">{{ strtoupper(App\Models\Setting::get('store_name', 'Cracker Demo')) }}</div>
                     <div style="font-size: 10px; margin-top: 3px;">
                         {{ App\Models\Setting::get('store_address', 'Virudhunagar to Sivakasi Main Road, Sivakasi') }}<br>
                         Phone: {{ App\Models\Setting::get('store_phone', '+91 9998887776') }} | Email: {{ App\Models\Setting::get('store_email', 'store@example.com') }}
                     </div>
                 </td>
-                <td class="header-details">
+                <td style="width: 25%; text-align: center; vertical-align: middle;">
+                    @php
+                        $storeLogo = App\Models\Setting::get('store_logo', '');
+                    @endphp
+                    @if($storeLogo)
+                        <img src="{{ \Illuminate\Support\Str::startsWith($storeLogo, ['http', 'data:']) ? $storeLogo : asset($storeLogo) }}" style="max-height: 90px; max-width: 250px; object-fit: contain; margin: 0 auto; display: block;" alt="Logo">
+                    @endif
+                </td>
+                <td class="header-details" style="width: 35%; vertical-align: middle; text-align: right;">
                     <div style="font-size: 14px; font-weight: bold;">ESTIMATE INVOICE</div>
                     <div style="margin-top: 5px;">
                         <strong>Invoice No:</strong> {{ $order->order_number }}<br>

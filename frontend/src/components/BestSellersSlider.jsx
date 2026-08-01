@@ -49,8 +49,8 @@ export default function BestSellersSlider({ onPreviewProduct }) {
     (p) => p.is_bestseller || p.is_featured || p.is_popular || p.featured || (p.sales_count && p.sales_count > 0)
   );
 
-  // Fallback to top products if no specific bestseller flag is set
-  const bestsellers = flaggedBestsellers.length >= 6 ? flaggedBestsellers : allProducts.slice(0, 18);
+  // Fallback to top products if no specific bestseller flag is set by admin
+  const bestsellers = flaggedBestsellers.length > 0 ? flaggedBestsellers : allProducts.slice(0, 18);
 
   const totalPages = Math.max(1, Math.ceil(bestsellers.length / itemsPerPage));
 
@@ -82,7 +82,7 @@ export default function BestSellersSlider({ onPreviewProduct }) {
     return bestsellers.slice(startIdx, startIdx + itemsPerPage);
   };
 
-  if (bestsellers.length === 0) return null;
+  if (settings?.enable_most_sold === 'no' || bestsellers.length === 0) return null;
 
   return (
     <div className="w-full mb-2.5 select-none">
@@ -131,7 +131,13 @@ export default function BestSellersSlider({ onPreviewProduct }) {
             return (
               <div
                 key={`${activeSlide}-${prod.id}`}
-                onClick={() => prod.image && onPreviewProduct && onPreviewProduct(prod)}
+                onClick={() => {
+                  if (onPreviewProduct && prod.image) {
+                    onPreviewProduct(prod);
+                  } else {
+                    scrollToAndHighlightProduct(prod);
+                  }
+                }}
                 className={`border rounded-lg sm:rounded-xl p-1.5 sm:p-2 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between relative group cursor-pointer overflow-hidden min-h-[160px] sm:min-h-[200px] ${
                   qty > 0 ? 'border-crimson-500 ring-2 ring-crimson-500/20' : 'border-slate-200/80 hover:border-gold-400'
                 }`}

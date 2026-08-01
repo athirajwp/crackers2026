@@ -225,6 +225,7 @@ Route::prefix('api/admin')->group(function () {
         Route::get('/products', [AdminApiController::class, 'products']);
         Route::post('/products/store', [AdminApiController::class, 'storeProduct']);
         Route::post('/products/{id}/update', [AdminApiController::class, 'updateProduct']);
+        Route::post('/products/{id}/toggle-bestseller', [AdminApiController::class, 'toggleBestsellerProduct']);
         Route::delete('/products/{id}/destroy', [AdminApiController::class, 'destroyProduct']);
         Route::post('/products/import', [AdminApiController::class, 'importProducts']);
         Route::get('/products/export', [AdminApiController::class, 'exportProductTemplate']);

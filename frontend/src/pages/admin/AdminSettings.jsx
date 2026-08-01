@@ -39,6 +39,7 @@ export default function AdminSettings() {
     enable_tax_delivery: 'no',
     enable_fireworks: 'yes',
     enable_aos: 'yes',
+    enable_most_sold: 'yes',
     show_mrp: 'yes',
     card_bg_color: '#FFFFFF',
     default_view_mode: 'flex',
@@ -519,17 +520,17 @@ export default function AdminSettings() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                    Enable Scroll Animations (AOS)
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1">
+                    <i className="fa-solid fa-fire text-amber-500"></i> Enable Most Sold Products Section (Slider)
                   </label>
                   <select
-                    name="enable_aos"
-                    value={formData.enable_aos || 'yes'}
+                    name="enable_most_sold"
+                    value={formData.enable_most_sold || 'yes'}
                     onChange={handleChange}
                     className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-bold outline-none transition-all"
                   >
-                    <option value="yes">Yes (Enabled)</option>
-                    <option value="no">No (Disabled)</option>
+                    <option value="yes">ON (Show Most Sold Products Slider on Storefront)</option>
+                    <option value="no">OFF (Hide Most Sold Products Section Completely)</option>
                   </select>
                 </div>
 

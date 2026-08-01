@@ -174,7 +174,7 @@ class AdminApiController extends Controller
             'pack_size' => 'required|string|max:255',
             'mrp' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
-            'sort_order' => 'required|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'status' => 'required|in:active,inactive',
         ]);
@@ -198,9 +198,10 @@ class AdminApiController extends Controller
             'pack_size' => $request->pack_size,
             'mrp' => $request->mrp,
             'selling_price' => $request->selling_price,
-            'sort_order' => $request->sort_order,
+            'sort_order' => $request->filled('sort_order') ? (int) $request->sort_order : 999,
             'image' => $imagePath,
             'status' => $request->status,
+            'is_bestseller' => filter_var($request->is_bestseller, FILTER_VALIDATE_BOOLEAN),
         ]);
 
         return response()->json(['success' => true, 'product' => $product]);
@@ -215,7 +216,7 @@ class AdminApiController extends Controller
             'pack_size' => 'required|string|max:255',
             'mrp' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
-            'sort_order' => 'required|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'status' => 'required|in:active,inactive',
         ]);
@@ -237,18 +238,37 @@ class AdminApiController extends Controller
             $imagePath = $uploadDir . '/' . $imageName;
         }
 
-        $product->update([
+        $updateData = [
             'category_id' => $request->category_id,
             'name' => $request->name,
             'pack_size' => $request->pack_size,
             'mrp' => $request->mrp,
             'selling_price' => $request->selling_price,
-            'sort_order' => $request->sort_order,
+            'sort_order' => $request->filled('sort_order') ? (int) $request->sort_order : 999,
             'image' => $imagePath,
             'status' => $request->status,
-        ]);
+        ];
+
+        if ($request->has('is_bestseller')) {
+            $updateData['is_bestseller'] = filter_var($request->is_bestseller, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $product->update($updateData);
 
         return response()->json(['success' => true, 'product' => $product]);
+    }
+
+    public function toggleBestsellerProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+        $product->is_bestseller = !$product->is_bestseller;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'is_bestseller' => (bool) $product->is_bestseller,
+            'message' => $product->is_bestseller ? 'Added to Most Sold Products!' : 'Removed from Most Sold Products!',
+        ]);
     }
 
     public function destroyProduct($id)
@@ -538,7 +558,7 @@ class AdminApiController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => 'nullable|string|max:20',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.qty' => 'required|integer|min:1',
@@ -585,16 +605,22 @@ class AdminApiController extends Controller
                 $notes = trim("Payment Mode: {$paymentMethod}\n" . $notes);
             }
 
+            $phone = !empty($request->phone) ? $request->phone : 'Counter Sale';
+            $city = !empty($request->city) ? $request->city : 'Sivakasi';
+            $address = !empty($request->address) ? $request->address : 'Counter Billing';
+            $state = !empty($request->state) ? $request->state : 'Tamil Nadu';
+            $pincode = !empty($request->pincode) ? $request->pincode : '626123';
+
             $order = Order::create([
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'whatsapp' => $request->whatsapp ?? $request->phone,
-                'email' => $request->email ?? '',
-                'address' => $request->address ?? '',
-                'landmark' => $request->landmark ?? '',
-                'city' => $request->city ?? '',
-                'state' => $request->state ?? '',
-                'pincode' => $request->pincode ?? '',
+                'name' => $request->name ?: 'Counter Customer',
+                'phone' => $phone,
+                'whatsapp' => $request->whatsapp ?: $phone,
+                'email' => $request->email ?: '',
+                'address' => $address,
+                'landmark' => $request->landmark ?: '',
+                'city' => $city,
+                'state' => $state,
+                'pincode' => $pincode,
                 'subtotal' => $subtotal,
                 'discount_amount' => $discountAmount,
                 'net_amount' => $netAmount,
@@ -638,6 +664,7 @@ class AdminApiController extends Controller
 
         $settings = [
             'store_name' => Setting::get('store_name', 'Cracker Demo'),
+            'store_logo' => Setting::get('store_logo', ''),
             'store_address' => Setting::get('store_address', 'Virudhunagar to Sivakasi Main Road, Sivakasi'),
             'store_phone' => Setting::get('store_phone', '+91 9998887776'),
             'store_email' => Setting::get('store_email', 'store@example.com'),

@@ -167,14 +167,23 @@ export default function AdminInvoice() {
         <table className="header-table">
           <tbody>
             <tr>
-              <td>
+              <td style={{ width: '40%', verticalAlign: 'middle' }}>
                 <div className="header-brand font-cinzel">{settings.store_name}</div>
                 <div style={{ fontSize: '10px', marginTop: '3px' }}>
                   {settings.store_address}<br />
                   Phone: {settings.store_phone} | Email: {settings.store_email}
                 </div>
               </td>
-              <td className="header-details">
+              <td style={{ width: '25%', textAlign: 'center', verticalAlign: 'middle' }}>
+                {settings.store_logo && (
+                  <img
+                    src={settings.store_logo.startsWith('data:') || settings.store_logo.startsWith('http') ? settings.store_logo : `/${settings.store_logo}`}
+                    alt={settings.store_name}
+                    style={{ maxHeight: '90px', maxWidth: '250px', objectFit: 'contain', margin: '0 auto', display: 'block' }}
+                  />
+                )}
+              </td>
+              <td className="header-details" style={{ width: '35%', verticalAlign: 'middle', textAlign: 'right' }}>
                 <div style={{ fontSize: '14px', fontWeight: 'bold' }}>ESTIMATE INVOICE</div>
                 <div style={{ marginTop: '5px' }}>
                   <strong>Invoice No:</strong> {order.order_number}<br />

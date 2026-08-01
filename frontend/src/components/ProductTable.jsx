@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
 import { getImageUrl } from '../utils/imageUrl';
 
@@ -22,6 +22,25 @@ export default function ProductTable() {
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
   const [collapsedCategories, setCollapsedCategories] = useState(new Set());
+
+  // Auto-expand category if highlighted product is inside it
+  useEffect(() => {
+    if (highlightedProductId && categories) {
+      for (const cat of categories) {
+        if ((cat.products || []).some((p) => p.id === highlightedProductId)) {
+          setCollapsedCategories((prev) => {
+            if (prev.has(cat.slug)) {
+              const next = new Set(prev);
+              next.delete(cat.slug);
+              return next;
+            }
+            return prev;
+          });
+          break;
+        }
+      }
+    }
+  }, [highlightedProductId, categories]);
 
   const toggleCategoryCollapse = (slug) => {
     const newCollapsed = new Set(collapsedCategories);
@@ -252,8 +271,9 @@ export default function ProductTable() {
                           return (
                             <tr
                               key={prod.id}
-                              id={`product-${prod.id}`}
-                              className={`border-b border-slate-100/90 transition-all duration-300 ${
+                              id={`product-row-${prod.id}`}
+                              data-product-id={prod.id}
+                              className={`border-b border-slate-100/90 transition-all duration-300 scroll-mt-24 sm:scroll-mt-28 ${
                                 highlightedProductId === prod.id
                                   ? 'bg-amber-100/90 ring-2 ring-amber-400 font-bold animate-pulse shadow-md z-20'
                                   : qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'
@@ -402,8 +422,9 @@ export default function ProductTable() {
                       return (
                         <div
                           key={prod.id}
-                          id={`product-${prod.id}`}
-                          className={`p-3 sm:p-4 flex flex-col gap-2 transition-all duration-300 border-b border-slate-150 last:border-b-0 ${
+                          id={`product-mobile-${prod.id}`}
+                          data-product-id={prod.id}
+                          className={`p-3 sm:p-4 flex flex-col gap-2 transition-all duration-300 border-b border-slate-150 last:border-b-0 scroll-mt-24 sm:scroll-mt-28 ${
                             highlightedProductId === prod.id
                               ? 'bg-amber-100/90 ring-2 ring-amber-400 font-bold animate-pulse shadow-md z-20'
                               : qty > 0 ? 'bg-crimson-50/20' : 'hover:bg-crimson-50/30'
@@ -542,9 +563,10 @@ export default function ProductTable() {
                         return (
                           <div
                             key={prod.id}
-                            id={`product-${prod.id}`}
+                            id={`product-grid-${prod.id}`}
+                            data-product-id={prod.id}
                             style={qty > 0 ? undefined : cardBgStyle}
-                            className={`border rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between hover:shadow-md transition-all duration-300 relative overflow-hidden group ${
+                            className={`border rounded-2xl p-2.5 sm:p-3 flex flex-col justify-between hover:shadow-md transition-all duration-300 relative overflow-hidden group scroll-mt-24 sm:scroll-mt-28 ${
                               highlightedProductId === prod.id
                                 ? 'ring-4 ring-gold-500 bg-amber-50/90 border-gold-400 scale-[1.03] shadow-xl animate-pulse z-20'
                                 : qty > 0 ? 'border-crimson-300 ring-1 ring-crimson-200/50 bg-crimson-50/20' : 'border-slate-200'

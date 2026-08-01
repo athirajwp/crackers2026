@@ -328,8 +328,15 @@ export const StoreProvider = ({ children }) => {
   const scrollToAndHighlightProduct = (prod) => {
     if (!prod || !prod.id) return;
 
+    // Resolve category slug if missing on product object
+    let catSlug = prod.categorySlug;
+    if (!catSlug && categories) {
+      const foundCat = categories.find((c) => (c.products || []).some((p) => p.id === prod.id));
+      if (foundCat) catSlug = foundCat.slug;
+    }
+
     // Reset category filter if it would hide this product
-    if (prod.categorySlug && activeCategory !== 'all' && activeCategory !== prod.categorySlug) {
+    if (catSlug && activeCategory !== 'all' && activeCategory !== catSlug) {
       setActiveCategory('all');
     }
 
@@ -341,21 +348,34 @@ export const StoreProvider = ({ children }) => {
     // Set highlight ID
     setHighlightedProductId(prod.id);
 
-    // Smooth scroll to product element
-    setTimeout(() => {
-      const element =
-        document.getElementById(`product-${prod.id}`) ||
-        document.getElementById(`product-card-${prod.id}`) ||
-        document.getElementById(`product-row-${prod.id}`);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Smooth scroll to visible product element with retry loop
+    const tryScroll = (attemptsLeft = 6) => {
+      const elements = document.querySelectorAll(
+        `[data-product-id="${prod.id}"], #product-mobile-${prod.id}, #product-row-${prod.id}, #product-grid-${prod.id}, #product-${prod.id}, #product-card-${prod.id}`
+      );
+
+      let targetElement = null;
+      for (const el of elements) {
+        // Find element that is currently visible in DOM layout
+        if (el.offsetParent !== null || el.offsetWidth > 0 || el.offsetHeight > 0) {
+          targetElement = el;
+          break;
+        }
+      }
+
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (attemptsLeft > 0) {
+        setTimeout(() => tryScroll(attemptsLeft - 1), 100);
       } else {
         const tableSection = document.getElementById('quick-order');
         if (tableSection) {
           tableSection.scrollIntoView({ behavior: 'smooth' });
         }
       }
-    }, 150);
+    };
+
+    setTimeout(() => tryScroll(6), 100);
 
     // Remove highlight after 3 seconds
     setTimeout(() => {

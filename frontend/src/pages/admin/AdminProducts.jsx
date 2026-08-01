@@ -19,6 +19,7 @@ export default function AdminProducts() {
   const [importResult, setImportResult] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'most_sold', 'active', 'inactive'
   
   const [formData, setFormData] = useState({
     category_id: '',
@@ -28,6 +29,7 @@ export default function AdminProducts() {
     selling_price: 0,
     sort_order: 0,
     status: 'active',
+    is_bestseller: false,
   });
 
   const fetchData = () => {
@@ -60,8 +62,9 @@ export default function AdminProducts() {
       pack_size: '',
       mrp: 0,
       selling_price: 0,
-      sort_order: products.length + 10,
+      sort_order: '',
       status: 'active',
+      is_bestseller: false,
     });
     setImageFile(null);
     setModalOpen(true);
@@ -75,11 +78,45 @@ export default function AdminProducts() {
       pack_size: product.pack_size,
       mrp: product.mrp,
       selling_price: product.selling_price,
-      sort_order: product.sort_order,
+      sort_order: product.sort_order ?? '',
       status: product.status,
+      is_bestseller: Boolean(product.is_bestseller),
     });
     setImageFile(null);
     setModalOpen(true);
+  };
+
+  const handleToggleBestseller = async (product) => {
+    try {
+      // Optimistic state update
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? { ...p, is_bestseller: !p.is_bestseller } : p))
+      );
+
+      const res = await fetch(`/api/admin/products/${product.id}/toggle-bestseller`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        fetchData();
+        Swal.fire({ icon: 'error', title: 'Error', text: data.message || 'Failed to update Most Sold status.' });
+      } else {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+        Toast.fire({
+          icon: 'success',
+          title: data.is_bestseller ? 'Added to Most Sold Products!' : 'Removed from Most Sold Products!',
+        });
+      }
+    } catch (err) {
+      fetchData();
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Network error.' });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -95,8 +132,11 @@ export default function AdminProducts() {
     postData.append('pack_size', formData.pack_size);
     postData.append('mrp', formData.mrp);
     postData.append('selling_price', formData.selling_price);
-    postData.append('sort_order', formData.sort_order);
+    if (formData.sort_order !== '' && formData.sort_order !== null && formData.sort_order !== undefined) {
+      postData.append('sort_order', formData.sort_order);
+    }
     postData.append('status', formData.status);
+    postData.append('is_bestseller', formData.is_bestseller ? '1' : '0');
     if (imageFile) {
       postData.append('image', imageFile);
     }
@@ -104,7 +144,9 @@ export default function AdminProducts() {
     try {
       const res = await fetch(url, {
         method: 'POST',
-        // Do NOT set Content-Type header here; browser needs to assign multipart boundaries
+        headers: {
+          'Accept': 'application/json',
+        },
         body: postData,
       });
 
@@ -256,12 +298,18 @@ export default function AdminProducts() {
 
   const filteredProducts = products.filter((p) => {
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return true;
-    return (
+    const matchesSearch =
+      !q ||
       p.name.toLowerCase().includes(q) ||
       p.pack_size.toLowerCase().includes(q) ||
-      p.category?.name.toLowerCase().includes(q)
-    );
+      p.category?.name.toLowerCase().includes(q);
+
+    if (!matchesSearch) return false;
+
+    if (statusFilter === 'most_sold') return Boolean(p.is_bestseller);
+    if (statusFilter === 'active') return p.status === 'active';
+    if (statusFilter === 'inactive') return p.status === 'inactive';
+    return true;
   });
 
   return (
@@ -307,9 +355,57 @@ export default function AdminProducts() {
 
         {/* Product list container */}
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          {/* Search Bar */}
-          <div className="mb-5 flex flex-col sm:flex-row gap-4 items-center justify-between">
-            <div className="relative w-full sm:max-w-xs group">
+          {/* Filter Tabs & Search Bar */}
+          <div className="mb-5 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200/80 w-full md:w-auto">
+              <button
+                type="button"
+                onClick={() => setStatusFilter('all')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  statusFilter === 'all'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                All ({products.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatusFilter('most_sold')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
+                  statusFilter === 'most_sold'
+                    ? 'bg-amber-500 text-slate-950 shadow-xs'
+                    : 'text-amber-700 hover:bg-amber-100/50'
+                }`}
+              >
+                <i className="fa-solid fa-fire text-amber-600"></i>
+                <span>Most Sold ({products.filter((p) => p.is_bestseller).length})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatusFilter('active')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  statusFilter === 'active'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-emerald-700 hover:bg-emerald-50'
+                }`}
+              >
+                Active ({products.filter((p) => p.status === 'active').length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatusFilter('inactive')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  statusFilter === 'inactive'
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Inactive ({products.filter((p) => p.status === 'inactive').length})
+              </button>
+            </div>
+
+            <div className="relative w-full md:max-w-xs group">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-crimson-500 transition-colors">
                 <i className="fa-solid fa-magnifying-glass text-xs"></i>
               </div>
@@ -329,9 +425,6 @@ export default function AdminProducts() {
                 </button>
               )}
             </div>
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              {filteredProducts.length} of {products.length} products
-            </div>
           </div>
 
           {loading ? (
@@ -347,6 +440,7 @@ export default function AdminProducts() {
                     <th className="py-3 px-4 w-16">Image</th>
                     <th className="py-3 px-4">Product Details</th>
                     <th className="py-3 px-4">Category</th>
+                    <th className="py-3 px-4 text-center">Most Sold</th>
                     <th className="py-3 px-4 text-right">MRP (₹)</th>
                     <th className="py-3 px-4 text-right">Offer Price (₹)</th>
                     <th className="py-3 px-4 text-center">Status</th>
@@ -370,7 +464,14 @@ export default function AdminProducts() {
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="font-bold text-slate-800 text-sm">{product.name}</div>
+                        <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                          <span>{product.name}</span>
+                          {Boolean(product.is_bestseller) && (
+                            <span className="bg-amber-100 text-amber-800 border border-amber-300 text-[8px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5" title="Most Sold Product">
+                              <i className="fa-solid fa-fire text-amber-500 text-[9px]"></i> Most Sold
+                            </span>
+                          )}
+                        </div>
                         <span className="text-[10px] text-slate-400 font-mono font-bold">
                           Size/Pack: {product.pack_size}
                         </span>
@@ -379,6 +480,21 @@ export default function AdminProducts() {
                         <span className="bg-slate-100 text-slate-655 border border-slate-200 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider">
                           {product.category?.name || 'Uncategorized'}
                         </span>
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleBestseller(product)}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9.5px] font-black uppercase tracking-wider transition-all border ${
+                            product.is_bestseller
+                              ? 'bg-amber-500 text-slate-950 border-amber-400 hover:bg-amber-400 shadow-xs'
+                              : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300'
+                          }`}
+                          title={product.is_bestseller ? 'Click to remove from Most Sold Products' : 'Click to pick as Most Sold Product'}
+                        >
+                          <i className={`fa-solid fa-fire ${product.is_bestseller ? 'text-slate-950 animate-pulse' : 'text-slate-400'}`}></i>
+                          <span>{product.is_bestseller ? 'Most Sold' : 'Pick +'}</span>
+                        </button>
                       </td>
                       <td className="py-3 px-4 text-right line-through text-slate-400 font-mono font-bold">
                         ₹{parseFloat(product.mrp).toFixed(2)}
@@ -493,16 +609,16 @@ export default function AdminProducts() {
 
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Sort Index
+                      Sort Index <span className="text-slate-300 font-semibold">(Optional)</span>
                     </label>
                     <input
                       type="number"
-                      required
                       value={formData.sort_order}
                       onChange={(e) =>
-                        setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })
+                        setFormData({ ...formData, sort_order: e.target.value })
                       }
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                      placeholder="Optional (e.g. 1, 2, 10)"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all placeholder:text-slate-400"
                     />
                   </div>
                 </div>
@@ -570,6 +686,30 @@ export default function AdminProducts() {
                       <option value="inactive">Inactive (Hidden)</option>
                     </select>
                   </div>
+                </div>
+
+                {/* Most Sold Toggle Switch */}
+                <div className="bg-amber-50/60 border border-amber-200/80 p-3 rounded-2xl flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-sm shadow-2xs">
+                      <i className="fa-solid fa-fire"></i>
+                    </div>
+                    <div>
+                      <label htmlFor="is_bestseller" className="text-xs font-black text-slate-900 cursor-pointer block leading-tight">
+                        Most Sold Product (Best Sellers Slider)
+                      </label>
+                      <span className="text-[10px] font-semibold text-slate-500 block leading-tight">
+                        Display this product in the top featured "Most Sold PRODUCTS" slider
+                      </span>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    id="is_bestseller"
+                    checked={formData.is_bestseller}
+                    onChange={(e) => setFormData({ ...formData, is_bestseller: e.target.checked })}
+                    className="w-5 h-5 text-amber-500 rounded border-amber-300 focus:ring-amber-400 cursor-pointer"
+                  />
                 </div>
 
                 <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">

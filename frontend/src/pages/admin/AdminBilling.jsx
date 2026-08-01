@@ -165,7 +165,10 @@ export default function AdminBilling() {
     try {
       const res = await fetch('/api/admin/orders/create-billing', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: JSON.stringify(payload),
       });
 
@@ -190,7 +193,7 @@ export default function AdminBilling() {
         }
         clearBill();
       } else {
-        if (Swal) Swal.fire('Error', data.error || 'Failed to create bill', 'error');
+        if (Swal) Swal.fire('Error', data.message || data.error || 'Failed to create bill', 'error');
       }
     } catch (err) {
       setSubmitting(false);
@@ -276,51 +279,55 @@ export default function AdminBilling() {
                   return (
                     <div
                       key={prod.id}
-                      className={`p-2 rounded-lg border transition-all flex items-center justify-between gap-2 ${
+                      className={`p-2.5 rounded-xl border transition-all flex flex-col justify-between gap-2.5 ${
                         isInCart
                           ? 'bg-crimson-50/70 border-crimson-300 shadow-xs'
                           : 'bg-white border-slate-200 hover:border-slate-300'
                       }`}
                     >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-9 h-9 rounded-md bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0 flex items-center justify-center p-0.5">
+                      {/* Top: Product Image & Details */}
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden flex-shrink-0 flex items-center justify-center p-0.5">
                           {prod.image ? (
                             <img src={getImageUrl(prod.image)} alt={prod.name} className="w-full h-full object-contain" />
                           ) : (
                             <i className="fa-solid fa-fire text-slate-300 text-xs"></i>
                           )}
                         </div>
-                        <div className="min-w-0">
-                          <h4 className="text-[11px] font-extrabold text-slate-900 truncate leading-tight">{prod.name}</h4>
-                          <p className="text-[9px] text-slate-500 font-semibold leading-none mt-0.5">{prod.pack_size || 'Standard'}</p>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="text-[11px] font-black text-crimson-600">₹{sellingPrice}</span>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-[11.5px] font-extrabold text-slate-900 truncate leading-tight">{prod.name}</h4>
+                          <p className="text-[9.5px] text-slate-500 font-semibold leading-none mt-0.5">{prod.pack_size || 'Standard'}</p>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="text-xs font-black text-crimson-600">₹{sellingPrice}</span>
                             {parseFloat(prod.mrp) > sellingPrice && (
-                              <span className="text-[9px] text-slate-400 line-through font-bold">₹{prod.mrp}</span>
+                              <span className="text-[9.5px] text-slate-400 line-through font-bold">₹{prod.mrp}</span>
                             )}
                           </div>
                         </div>
                       </div>
 
-                      {/* Always-visible vertical qty control */}
+                      {/* Bottom: Horizontal Quantity Selector (- Qty +) */}
                       {(() => {
                         const cartItem = billItems.find((i) => i.product_id === prod.id);
                         const qty = cartItem ? cartItem.qty : 0;
                         return (
-                          <div className={`flex flex-col items-center border rounded-md bg-white overflow-hidden flex-shrink-0 ${isInCart ? 'border-crimson-300' : 'border-slate-300'}`}>
-                            <button
-                              type="button"
-                              onClick={() => addToBill(prod)}
-                              className={`w-6 h-5 font-black text-xs flex items-center justify-center leading-none transition-colors ${isInCart ? 'hover:bg-crimson-50 text-crimson-700' : 'hover:bg-slate-100 text-slate-700'}`}
-                            >+</button>
-                            <span className={`w-6 h-5 text-center text-[11px] font-black flex items-center justify-center border-y ${isInCart ? 'text-crimson-700 border-crimson-200' : 'text-slate-500 border-slate-200'}`}>
-                              {qty}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => isInCart && updateQty(prod.id, qty - 1)}
-                              className={`w-6 h-5 font-black text-xs flex items-center justify-center leading-none transition-colors ${isInCart ? 'hover:bg-crimson-50 text-crimson-700' : 'text-slate-300 cursor-default'}`}
-                            >−</button>
+                          <div className="flex items-center justify-between pt-2 border-t border-slate-100/90 mt-0.5">
+                            <span className="text-[9.5px] font-extrabold text-slate-400 uppercase tracking-wider">Qty:</span>
+                            <div className={`flex items-center border rounded-lg bg-white overflow-hidden ${isInCart ? 'border-crimson-300' : 'border-slate-300'}`}>
+                              <button
+                                type="button"
+                                onClick={() => isInCart && updateQty(prod.id, qty - 1)}
+                                className={`w-7 h-6 font-black text-xs flex items-center justify-center transition-colors ${isInCart ? 'hover:bg-crimson-50 text-crimson-700' : 'text-slate-300 cursor-default'}`}
+                              >−</button>
+                              <span className={`w-8 h-6 text-center text-[11px] font-black flex items-center justify-center border-x ${isInCart ? 'text-crimson-700 border-crimson-200 bg-crimson-50/60' : 'text-slate-600 border-slate-200'}`}>
+                                {qty}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => addToBill(prod)}
+                                className={`w-7 h-6 font-black text-xs flex items-center justify-center transition-colors ${isInCart ? 'hover:bg-crimson-50 text-crimson-700' : 'hover:bg-slate-100 text-slate-700'}`}
+                              >+</button>
+                            </div>
                           </div>
                         );
                       })()}
