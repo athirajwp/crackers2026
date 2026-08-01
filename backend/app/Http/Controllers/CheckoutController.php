@@ -179,20 +179,22 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Non-blocking order invoice email dispatch
+            // Non-blocking order invoice email dispatch via background Artisan process
             try {
-                $adminEmail = Setting::get('store_email', config('mail.from.address'));
-                $customerEmail = $order->email;
-                $order->load('items');
+                $artisanPath = base_path('artisan');
+                $defaultConn = config('database.default');
+                $tenantDb = config("database.connections.{$defaultConn}.database");
+                $tenantOption = !empty($tenantDb) ? ' --tenant-db=' . escapeshellarg($tenantDb) : '';
+                $orderId = (int) $order->id;
+                $phpBinary = defined('PHP_BINARY') && !empty(PHP_BINARY) ? PHP_BINARY : 'php';
 
-                if (!empty($adminEmail)) {
-                    @\Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
-                }
-                if (!empty($customerEmail)) {
-                    @\Illuminate\Support\Facades\Mail::to($customerEmail)->send(new \App\Mail\CustomerOrderMail($order));
+                if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
+                    pclose(popen("start /B \"\" \"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > NUL 2>&1", "r"));
+                } else {
+                    exec("\"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > /dev/null 2>&1 &");
                 }
             } catch (\Throwable $e) {
-                Log::error('Order email dispatch notice: ' . $e->getMessage());
+                Log::error('Order email background launch failed: ' . $e->getMessage());
             }
 
             return response()->json([
