@@ -592,35 +592,18 @@ export default function AdminProducts() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Pack Details / Size
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.pack_size}
-                      onChange={(e) => setFormData({ ...formData, pack_size: e.target.value })}
-                      placeholder="e.g. 10 Box, 1 Box, 5 Pcs"
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Sort Index <span className="text-slate-300 font-semibold">(Optional)</span>
-                    </label>
-                    <input
-                      type="number"
-                      value={formData.sort_order}
-                      onChange={(e) =>
-                        setFormData({ ...formData, sort_order: e.target.value })
-                      }
-                      placeholder="Optional (e.g. 1, 2, 10)"
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all placeholder:text-slate-400"
-                    />
-                  </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                    Pack Details / Size
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.pack_size}
+                    onChange={(e) => setFormData({ ...formData, pack_size: e.target.value })}
+                    placeholder="e.g. 10 Box, 1 Box, 5 Pcs"
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
