@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class AdminApiController extends Controller
 {
@@ -192,17 +193,41 @@ class AdminApiController extends Controller
             $imagePath = $uploadDir . '/' . $imageName;
         }
 
-        $product = Product::create([
+        // Auto-heal missing columns if tenant database schema has not executed recent migrations
+        if (!Schema::hasColumn('products', 'is_bestseller')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->boolean('is_bestseller')->default(false);
+                });
+            } catch (\Exception $e) {}
+        }
+        if (!Schema::hasColumn('products', 'sort_order')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->integer('sort_order')->nullable()->default(999);
+                });
+            } catch (\Exception $e) {}
+        }
+
+        $productData = [
             'category_id' => $request->category_id,
             'name' => $request->name,
             'pack_size' => $request->pack_size,
             'mrp' => $request->mrp,
             'selling_price' => $request->selling_price,
-            'sort_order' => $request->filled('sort_order') ? (int) $request->sort_order : 999,
             'image' => $imagePath,
             'status' => $request->status,
-            'is_bestseller' => filter_var($request->is_bestseller, FILTER_VALIDATE_BOOLEAN),
-        ]);
+        ];
+
+        if (Schema::hasColumn('products', 'sort_order')) {
+            $productData['sort_order'] = $request->filled('sort_order') ? (int) $request->sort_order : 999;
+        }
+
+        if (Schema::hasColumn('products', 'is_bestseller') && $request->has('is_bestseller')) {
+            $productData['is_bestseller'] = filter_var($request->is_bestseller, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $product = Product::create($productData);
 
         return response()->json(['success' => true, 'product' => $product]);
     }
@@ -238,18 +263,37 @@ class AdminApiController extends Controller
             $imagePath = $uploadDir . '/' . $imageName;
         }
 
+        // Auto-heal missing columns if tenant database schema has not executed recent migrations
+        if (!Schema::hasColumn('products', 'is_bestseller')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->boolean('is_bestseller')->default(false);
+                });
+            } catch (\Exception $e) {}
+        }
+        if (!Schema::hasColumn('products', 'sort_order')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->integer('sort_order')->nullable()->default(999);
+                });
+            } catch (\Exception $e) {}
+        }
+
         $updateData = [
             'category_id' => $request->category_id,
             'name' => $request->name,
             'pack_size' => $request->pack_size,
             'mrp' => $request->mrp,
             'selling_price' => $request->selling_price,
-            'sort_order' => $request->filled('sort_order') ? (int) $request->sort_order : 999,
             'image' => $imagePath,
             'status' => $request->status,
         ];
 
-        if ($request->has('is_bestseller')) {
+        if (Schema::hasColumn('products', 'sort_order') && $request->filled('sort_order')) {
+            $updateData['sort_order'] = (int) $request->sort_order;
+        }
+
+        if (Schema::hasColumn('products', 'is_bestseller') && $request->has('is_bestseller')) {
             $updateData['is_bestseller'] = filter_var($request->is_bestseller, FILTER_VALIDATE_BOOLEAN);
         }
 
@@ -261,6 +305,15 @@ class AdminApiController extends Controller
     public function toggleBestsellerProduct(Request $request, $id)
     {
         $product = Product::findOrFail($id);
+
+        if (!Schema::hasColumn('products', 'is_bestseller')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->boolean('is_bestseller')->default(false);
+                });
+            } catch (\Exception $e) {}
+        }
+
         $product->is_bestseller = !$product->is_bestseller;
         $product->save();
 
