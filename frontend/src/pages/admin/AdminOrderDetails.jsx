@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
 
 const Swal = window.Swal;
 
 export default function AdminOrderDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
@@ -85,6 +86,56 @@ export default function AdminOrderDetails() {
       });
     } finally {
       setUpdating(false);
+    }
+  };
+
+  const handleDeleteOrder = () => {
+    if (!Swal) {
+      if (window.confirm(`Are you sure you want to delete order "${data?.order?.order_number}"?`)) {
+        deleteOrderRequest();
+      }
+      return;
+    }
+
+    Swal.fire({
+      title: 'Delete Booking Order?',
+      text: `Are you sure you want to permanently delete order "${data?.order?.order_number}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e51d1d',
+      cancelButtonColor: '#475569',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteOrderRequest();
+      }
+    });
+  };
+
+  const deleteOrderRequest = async () => {
+    try {
+      const res = await fetch(`/api/admin/orders/${id}`, {
+        method: 'DELETE',
+      });
+      const resData = await res.json();
+      if (res.ok && resData.success !== false) {
+        if (Swal) {
+          Swal.fire('Deleted!', 'Order has been deleted.', 'success');
+        }
+        navigate('/admin/orders');
+      } else {
+        if (Swal) {
+          Swal.fire('Failed!', resData.error || 'Could not delete order.', 'error');
+        } else {
+          alert(resData.error || 'Could not delete order.');
+        }
+      }
+    } catch (err) {
+      if (Swal) {
+        Swal.fire('Error!', 'Failed to delete order due to network issue.', 'error');
+      } else {
+        alert('Failed to delete order.');
+      }
     }
   };
 
@@ -173,6 +224,13 @@ export default function AdminOrderDetails() {
             >
               <i className="fa-solid fa-file-invoice text-crimson-600"></i> View Retail Invoice
             </Link>
+            <button
+              type="button"
+              onClick={handleDeleteOrder}
+              className="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 hover:text-rose-700 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
+            >
+              <i className="fa-solid fa-trash-can text-sm"></i> Delete Order
+            </button>
           </div>
         </div>
 

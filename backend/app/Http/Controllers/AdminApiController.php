@@ -730,6 +730,26 @@ class AdminApiController extends Controller
         ]);
     }
 
+    public function destroyOrder($id)
+    {
+        try {
+            $order = Order::findOrFail($id);
+            $order->items()->delete();
+            $order->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Order Destroy Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to delete order: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function updateOrderStatus(Request $request, $id)
     {
         $order = Order::findOrFail($id);

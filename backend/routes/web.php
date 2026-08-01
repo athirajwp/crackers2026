@@ -235,6 +235,8 @@ Route::prefix('api/admin')->group(function () {
         Route::get('/orders/{id}', [AdminApiController::class, 'order']);
         Route::post('/orders/{id}/status', [AdminApiController::class, 'updateOrderStatus']);
         Route::post('/orders/{id}/items', [AdminApiController::class, 'updateOrderItems']);
+        Route::delete('/orders/{id}', [AdminApiController::class, 'destroyOrder']);
+        Route::delete('/orders/{id}/destroy', [AdminApiController::class, 'destroyOrder']);
         
         Route::get('/settings', [AdminApiController::class, 'settings']);
         Route::post('/settings/update', [AdminApiController::class, 'updateSettings']);

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
 
+const Swal = window.Swal;
+
 export default function AdminOrders() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeStatus = searchParams.get('status') || 'all';
@@ -31,6 +33,56 @@ export default function AdminOrders() {
   useEffect(() => {
     fetchOrders();
   }, [activeStatus]);
+
+  const handleDeleteOrder = (order) => {
+    if (!Swal) {
+      if (window.confirm(`Are you sure you want to delete order "${order.order_number}"?`)) {
+        deleteOrderRequest(order.id);
+      }
+      return;
+    }
+
+    Swal.fire({
+      title: 'Delete Order?',
+      text: `Are you sure you want to permanently delete order "${order.order_number}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e51d1d',
+      cancelButtonColor: '#475569',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteOrderRequest(order.id);
+      }
+    });
+  };
+
+  const deleteOrderRequest = async (orderId) => {
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (res.ok && data.success !== false) {
+        if (Swal) {
+          Swal.fire('Deleted!', 'Order has been deleted.', 'success');
+        }
+        fetchOrders();
+      } else {
+        if (Swal) {
+          Swal.fire('Failed!', data.error || 'Could not delete order.', 'error');
+        } else {
+          alert(data.error || 'Could not delete order.');
+        }
+      }
+    } catch (err) {
+      if (Swal) {
+        Swal.fire('Error!', 'Failed to delete order due to network issue.', 'error');
+      } else {
+        alert('Failed to delete order.');
+      }
+    }
+  };
 
   const handleStatusChange = (status) => {
     if (status === 'all') {
@@ -198,13 +250,23 @@ export default function AdminOrders() {
                         )}
                       </td>
                       <td className="py-3.5 px-4 text-center">
-                        <Link
-                          to={`/admin/orders/${order.id}`}
-                          className="inline-flex items-center justify-center bg-slate-50 hover:bg-slate-100 border border-slate-200 w-8 h-8 rounded-lg text-slate-650 hover:text-slate-900 transition-all shadow-sm active:scale-95"
-                          title="Manage Booking"
-                        >
-                          <i className="fa-solid fa-arrow-right text-xs"></i>
-                        </Link>
+                        <div className="flex items-center justify-center gap-1.5">
+                          <Link
+                            to={`/admin/orders/${order.id}`}
+                            className="inline-flex items-center justify-center bg-slate-50 hover:bg-slate-100 border border-slate-200 w-8 h-8 rounded-lg text-slate-650 hover:text-slate-900 transition-all shadow-sm active:scale-95"
+                            title="Manage Booking"
+                          >
+                            <i className="fa-solid fa-arrow-right text-xs"></i>
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteOrder(order)}
+                            className="inline-flex items-center justify-center bg-rose-50 hover:bg-rose-100 border border-rose-200 w-8 h-8 rounded-lg text-rose-600 hover:text-rose-700 transition-all shadow-sm active:scale-95"
+                            title="Delete Order"
+                          >
+                            <i className="fa-solid fa-trash-can text-xs"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
