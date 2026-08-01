@@ -8,6 +8,7 @@ export default function StickyQuickOrderButton() {
 
   // Hide the floating Shop Now button when already on the Quick Order page
   if (
+    location.pathname === '/' ||
     location.pathname === '/quick-order' ||
     location.pathname === '/quick_order' ||
     location.pathname === '/quick-purchase'

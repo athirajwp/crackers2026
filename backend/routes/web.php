@@ -201,6 +201,8 @@ Route::get('/view-logs', function () {
 
 // 3. Public Storefront & Booking Routes (handled by React Client-side routing)
 Route::get('/', function () { return view('react'); })->name('home');
+Route::get('/home', function () { return view('react'); });
+Route::get('/quick-order', function () { return view('react'); });
 Route::get('/checkout/success/{order_number}', function () { return view('react'); })->name('checkout.success');
 Route::get('/about', function () { return view('react'); })->name('about');
 Route::get('/terms', function () { return view('react'); })->name('terms');

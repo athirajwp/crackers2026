@@ -89,6 +89,11 @@ class StorefrontApiController extends Controller
             'slider_image_2' => Setting::get('slider_image_2', ''),
             'slider_image_3' => Setting::get('slider_image_3', ''),
 
+            // Quick Order banner images
+            'quick_order_banner_1' => Setting::get('quick_order_banner_1', ''),
+            'quick_order_banner_2' => Setting::get('quick_order_banner_2', ''),
+            'quick_order_banner_3' => Setting::get('quick_order_banner_3', ''),
+
             // Marquee alerts
             'marquee_alert_1' => Setting::get('marquee_alert_1', 'Special Offer: 60% Discount on all items!'),
             'marquee_alert_2' => Setting::get('marquee_alert_2', 'Free Delivery on orders above Rs. 5000!'),

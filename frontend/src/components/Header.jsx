@@ -30,7 +30,13 @@ export default function Header() {
     );
   }
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === '/home') return location.pathname === '/home';
+    if (path === '/quick-order' || path === '/') {
+      return location.pathname === '/' || location.pathname === '/quick-order' || location.pathname === '/quick_order' || location.pathname === '/quick-purchase';
+    }
+    return location.pathname === path;
+  };
 
   const formatCurrency = (val) => {
     return parseFloat(val || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -76,7 +82,7 @@ export default function Header() {
   };
 
   const navLinks = [
-    { to: '/', label: 'Home', icon: 'fa-house', isLink: true },
+    { to: '/home', label: 'Home', icon: 'fa-house', isLink: true },
     { to: '/quick-order', label: 'Quick Order', icon: 'fa-list-check', isLink: true },
     { to: '/price-list', label: 'Price List', icon: 'fa-tags', isLink: true },
     { to: '/track', label: 'Track Order', icon: 'fa-truck-fast', isLink: true },

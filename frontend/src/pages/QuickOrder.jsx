@@ -1,4 +1,5 @@
 import React from 'react';
+import HeroSlider from '../components/HeroSlider';
 import BestSellersSlider from '../components/BestSellersSlider';
 import ProductTable from '../components/ProductTable';
 import CartFooter from '../components/CartFooter';
@@ -7,6 +8,7 @@ import { useStore } from '../context/StoreContext';
 
 export default function QuickOrder() {
   const {
+    settings,
     loading,
     checkoutOpen,
     setCheckoutOpen,
@@ -34,6 +36,16 @@ export default function QuickOrder() {
 
   return (
     <div className="relative text-slate-800 animate-fade-in">
+
+      {/* Quick Order Banner Slider (Visible ONLY if banner images uploaded via Admin) */}
+      <HeroSlider
+        customImages={[
+          settings?.quick_order_banner_1,
+          settings?.quick_order_banner_2,
+          settings?.quick_order_banner_3,
+        ]}
+        hideIfEmpty={true}
+      />
 
       {/* 1. Sticky Yellow Search & Filter Bar — Top of Quick Order Page */}
       <div className="sticky top-0 z-30 bg-gold-500 shadow-lg select-none border-b-2 border-gold-600">

@@ -133,7 +133,8 @@ function App() {
         <Routes>
           {/* Public Pages Layout */}
           <Route element={<PublicLayout />}>
-            <Route path="/" element={<Storefront />} />
+            <Route path="/" element={<QuickOrder />} />
+            <Route path="/home" element={<Storefront />} />
             <Route path="/quick-order" element={<QuickOrder />} />
             <Route path="/quick_order" element={<QuickOrder />} />
             <Route path="/quick-purchase" element={<QuickOrder />} />

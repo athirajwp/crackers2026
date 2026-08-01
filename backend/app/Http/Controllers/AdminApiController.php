@@ -1056,6 +1056,7 @@ class AdminApiController extends Controller
             'about_us_card2_title', 'about_us_card2_desc',
             'about_us_card3_title', 'about_us_card3_desc',
             'slider_image_1', 'slider_image_2', 'slider_image_3',
+            'quick_order_banner_1', 'quick_order_banner_2', 'quick_order_banner_3',
             'aboutus_image_1', 'page_header_banner', 
             'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
             'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3',
@@ -1103,6 +1104,7 @@ class AdminApiController extends Controller
     {
         $imageFields = [
             'store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3',
+            'quick_order_banner_1', 'quick_order_banner_2', 'quick_order_banner_3',
             'aboutus_image_1', 'page_header_banner', 
             'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
             'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3'
@@ -1138,6 +1140,7 @@ class AdminApiController extends Controller
 
         $excludeFields = [
             'store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3',
+            'quick_order_banner_1', 'quick_order_banner_2', 'quick_order_banner_3',
             'aboutus_image_1', 'page_header_banner', 
             'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
             'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3'
@@ -1171,6 +1174,7 @@ class AdminApiController extends Controller
 
         $imageFields = [
             'store_logo', 'store_favicon', 'slider_image_1', 'slider_image_2', 'slider_image_3',
+            'quick_order_banner_1', 'quick_order_banner_2', 'quick_order_banner_3',
             'aboutus_image_1', 'page_header_banner', 
             'about_banner', 'about_banner_1', 'about_banner_2', 'about_banner_3',
             'contact_banner', 'contact_banner_1', 'contact_banner_2', 'contact_banner_3'

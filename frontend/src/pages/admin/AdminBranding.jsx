@@ -34,6 +34,9 @@ export default function AdminBranding() {
     slider_image_1: null,
     slider_image_2: null,
     slider_image_3: null,
+    quick_order_banner_1: null,
+    quick_order_banner_2: null,
+    quick_order_banner_3: null,
     aboutus_image_1: null,
     page_header_banner: null,
     about_banner: null,
@@ -78,6 +81,9 @@ export default function AdminBranding() {
             slider_image_1: data.settings.slider_image_1,
             slider_image_2: data.settings.slider_image_2,
             slider_image_3: data.settings.slider_image_3,
+            quick_order_banner_1: data.settings.quick_order_banner_1,
+            quick_order_banner_2: data.settings.quick_order_banner_2,
+            quick_order_banner_3: data.settings.quick_order_banner_3,
             aboutus_image_1: data.settings.aboutus_image_1,
             page_header_banner: data.settings.page_header_banner,
             about_banner: data.settings.about_banner || data.settings.about_banner_1,
@@ -535,6 +541,69 @@ export default function AdminBranding() {
                           alt=""
                           className="w-full h-full object-cover"
                         />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Quick Order Page Banner Images */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-3 gap-2">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Quick Order Page Banners (Carousel)
+              </h3>
+              <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
+                <i className="fa-solid fa-circle-info mr-1 text-amber-600"></i> If no banner is uploaded, the banner slider will NOT be shown on the Quick Order page.
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[1, 2, 3].map((idx) => {
+                const key = `quick_order_banner_${idx}`;
+                return (
+                  <div key={idx} className="space-y-3">
+                    <label className="text-[9px] font-black text-slate-450 uppercase tracking-widest block">
+                      Quick Order Banner #{idx}
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      name={key}
+                      onChange={handleFileChange}
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-1.5 text-xs font-semibold outline-none transition-all"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => saveImageSlot(key)}
+                        disabled={savingSlots[key]}
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                      >
+                        {savingSlots[key] ? 'Saving...' : 'Save Slot'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeImageSlot(key)}
+                        disabled={!imagePaths[key] || savingSlots[key]}
+                        className="flex-1 bg-rose-600 hover:bg-rose-500 disabled:bg-slate-100 disabled:border-slate-200 disabled:text-slate-400 text-white font-extrabold py-2 rounded-xl text-[10px] uppercase tracking-wider transition-all"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    {imagePaths[key] && (
+                      <div className="w-full h-32 bg-slate-100 border border-slate-200 rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
+                        <img
+                          src={getImageUrl(imagePaths[key])}
+                          alt={`Quick Order Banner ${idx}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    {!imagePaths[key] && (
+                      <div className="w-full h-32 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex items-center justify-center text-[10px] text-slate-400 font-bold">
+                        No Banner Uploaded
                       </div>
                     )}
                   </div>
