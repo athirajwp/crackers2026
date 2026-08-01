@@ -11,6 +11,14 @@ export default function AdminSysCompany() {
   const [editingCompany, setEditingCompany] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Reset password modal state
+  const [resetPwdModalOpen, setResetPwdModalOpen] = useState(false);
+  const [resetPwdCompany, setResetPwdCompany] = useState(null);
+  const [resetPwdValue, setResetPwdValue] = useState('');
+  const [resetPwdConfirm, setResetPwdConfirm] = useState('');
+  const [resetPwdSubmitting, setResetPwdSubmitting] = useState(false);
+  const [showResetPwd, setShowResetPwd] = useState(false);
+
   const initialForm = {
     code: '',
     name: '',
@@ -207,6 +215,49 @@ export default function AdminSysCompany() {
     }
   };
 
+  const handleOpenResetPwd = (comp) => {
+    setResetPwdCompany(comp);
+    setResetPwdValue('');
+    setResetPwdConfirm('');
+    setShowResetPwd(false);
+    setResetPwdModalOpen(true);
+  };
+
+  const handleResetPwdSubmit = async (e) => {
+    e.preventDefault();
+    if (resetPwdValue.length < 6) {
+      if (Swal) Swal.fire('Error', 'Password must be at least 6 characters.', 'error');
+      return;
+    }
+    if (resetPwdValue !== resetPwdConfirm) {
+      if (Swal) Swal.fire('Error', 'Passwords do not match.', 'error');
+      return;
+    }
+    setResetPwdSubmitting(true);
+    try {
+      const res = await fetch(`/api/admin_sys/companies/${resetPwdCompany.id}/reset-admin-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ password: resetPwdValue }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResetPwdModalOpen(false);
+        if (Swal) {
+          Swal.fire({ title: 'Password Reset!', text: data.message || 'Admin password has been reset.', icon: 'success', timer: 2500, showConfirmButton: false });
+        }
+      } else {
+        let errorText = data.message || 'Failed to reset password.';
+        if (data.errors) errorText = Object.values(data.errors).flat().join('\n');
+        if (Swal) Swal.fire('Failed', errorText, 'error');
+      }
+    } catch (err) {
+      if (Swal) Swal.fire('Error', 'Network error while resetting password.', 'error');
+    } finally {
+      setResetPwdSubmitting(false);
+    }
+  };
+
   const filteredCompanies = companies.filter((c) => {
     const q = searchQuery.toLowerCase().trim();
     if (!q) return true;
@@ -387,6 +438,13 @@ export default function AdminSysCompany() {
                           <i className="fa-solid fa-pen-to-square text-xs"></i>
                         </button>
                         <button
+                          onClick={() => handleOpenResetPwd(company)}
+                          className="w-8 h-8 rounded-xl bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 transition-colors shadow-sm"
+                          title="Reset Admin Password"
+                        >
+                          <i className="fa-solid fa-key text-xs"></i>
+                        </button>
+                        <button
                           onClick={() => handleDelete(company)}
                           className="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 transition-colors shadow-sm"
                           title="Delete Company"
@@ -561,6 +619,100 @@ export default function AdminSysCompany() {
                   className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl shadow"
                 >
                   {submitting ? 'Saving...' : editingCompany ? 'Update Company' : 'Register & Create Database'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Reset Admin Password Modal */}
+      {resetPwdModalOpen && resetPwdCompany && (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="flex justify-between items-center border-b border-slate-150 pb-4">
+              <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+                <i className="fa-solid fa-key text-violet-500"></i>
+                Reset Admin Password
+              </h3>
+              <button
+                onClick={() => setResetPwdModalOpen(false)}
+                className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div className="bg-violet-50 border border-violet-200 rounded-xl p-4 text-xs text-violet-800 font-semibold space-y-1">
+              <div className="flex items-center gap-2">
+                <i className="fa-solid fa-building text-violet-500"></i>
+                <span className="font-black">{resetPwdCompany.name}</span>
+              </div>
+              <p className="text-violet-600 text-[11px] leading-relaxed">
+                Set a new admin panel password for this company. The admin will use this password to log in to their dashboard.
+              </p>
+            </div>
+
+            <form onSubmit={handleResetPwdSubmit} className="space-y-4 text-xs">
+              <div className="space-y-1.5">
+                <label className="font-extrabold text-slate-700 block">New Password</label>
+                <div className="relative">
+                  <input
+                    type={showResetPwd ? 'text' : 'password'}
+                    required
+                    minLength={6}
+                    value={resetPwdValue}
+                    onChange={(e) => setResetPwdValue(e.target.value)}
+                    placeholder="Enter new password (min 6 chars)"
+                    className={`w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 pr-10 font-bold text-slate-800 outline-none focus:border-violet-500 ${showResetPwd ? 'tracking-normal' : 'tracking-widest'}`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowResetPwd(!showResetPwd)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    <i className={`fa-solid ${showResetPwd ? 'fa-eye-slash' : 'fa-eye'} text-xs`}></i>
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-extrabold text-slate-700 block">Confirm Password</label>
+                <input
+                  type={showResetPwd ? 'text' : 'password'}
+                  required
+                  minLength={6}
+                  value={resetPwdConfirm}
+                  onChange={(e) => setResetPwdConfirm(e.target.value)}
+                  placeholder="Re-enter new password"
+                  className={`w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 font-bold text-slate-800 outline-none focus:border-violet-500 ${showResetPwd ? 'tracking-normal' : 'tracking-widest'}`}
+                />
+              </div>
+
+              {resetPwdValue && resetPwdConfirm && resetPwdValue !== resetPwdConfirm && (
+                <p className="text-rose-600 text-[11px] font-bold flex items-center gap-1">
+                  <i className="fa-solid fa-circle-exclamation"></i> Passwords do not match
+                </p>
+              )}
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-150">
+                <button
+                  type="button"
+                  onClick={() => setResetPwdModalOpen(false)}
+                  className="px-5 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={resetPwdSubmitting || !resetPwdValue || resetPwdValue !== resetPwdConfirm}
+                  className="px-6 py-2.5 bg-violet-600 hover:bg-violet-500 text-white font-black rounded-xl shadow disabled:opacity-50 flex items-center gap-2"
+                >
+                  {resetPwdSubmitting ? (
+                    <><i className="fa-solid fa-spinner animate-spin"></i> Resetting...</>
+                  ) : (
+                    <><i className="fa-solid fa-key"></i> Reset Password</>
+                  )}
                 </button>
               </div>
             </form>

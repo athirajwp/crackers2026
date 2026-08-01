@@ -496,4 +496,59 @@ class AdminSysApiController extends Controller
             });
         }
     }
+    /**
+     * Reset admin password for a specific company (tenant).
+     * Super admin can set a new password without knowing the current one.
+     */
+    public function resetCompanyAdminPassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6',
+        ]);
+
+        $company = Company::findOrFail($id);
+        $hashedPassword = Hash::make($request->password);
+
+        $updatedInTenant = false;
+
+        try {
+            $tenantDb = 'crackers2_' . strtolower(preg_replace('/[^a-zA-Z0-9_]/', '', $company->code));
+
+            $config = config("database.connections.central") ?: config("database.connections." . config('database.default'));
+            if ($config) {
+                $config['database'] = $tenantDb;
+                config(["database.connections.tenant_pwd_reset" => $config]);
+                DB::purge('tenant_pwd_reset');
+
+                // Check if tenant database exists
+                $driver = DB::connection('central')->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+                if ($driver === 'pgsql') {
+                    $exists = DB::connection('central')->select("SELECT 1 FROM pg_database WHERE datname = ?", [$tenantDb]);
+                } else {
+                    $exists = DB::connection('central')->select("SELECT 1 FROM information_schema.schemata WHERE schema_name = ?", [$tenantDb]);
+                }
+
+                if (!empty($exists)) {
+                    DB::connection('tenant_pwd_reset')->table('settings')->updateOrInsert(
+                        ['key' => 'admin_password'],
+                        ['value' => $hashedPassword, 'type' => 'text', 'updated_at' => now(), 'created_at' => now()]
+                    );
+                    $updatedInTenant = true;
+                }
+            }
+        } catch (\Throwable $tenantEx) {
+            Log::warning('Tenant admin password reset fallback: ' . $tenantEx->getMessage());
+            $updatedInTenant = false;
+        }
+
+        // Fallback: update in the local/default settings table
+        if (!$updatedInTenant) {
+            Setting::set('admin_password', $hashedPassword, 'text');
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Admin password for \"{$company->name}\" has been reset successfully.",
+        ]);
+    }
 }

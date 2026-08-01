@@ -271,6 +271,7 @@ Route::prefix('api/admin_sys')->group(function () {
 
         Route::get('/profile', [\App\Http\Controllers\AdminSysApiController::class, 'profile']);
         Route::post('/profile/update', [\App\Http\Controllers\AdminSysApiController::class, 'updateProfile']);
+        Route::post('/companies/{id}/reset-admin-password', [\App\Http\Controllers\AdminSysApiController::class, 'resetCompanyAdminPassword']);
     });
 });
 

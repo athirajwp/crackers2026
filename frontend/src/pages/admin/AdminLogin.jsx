@@ -113,6 +113,14 @@ export default function AdminLogin() {
             )}
           </button>
         </form>
+
+        {/* Forgot Password hint */}
+        <div className="text-center pt-2">
+          <p className="text-[10px] text-slate-500 font-semibold">
+            <i className="fa-solid fa-circle-info mr-1"></i>
+            Forgot your password? Contact your <strong className="text-slate-400">Super Admin</strong> to reset it.
+          </p>
+        </div>
       </div>
 
       <a
