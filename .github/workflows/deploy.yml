@@ -19,7 +19,13 @@ jobs:
           ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}
 
       - name: Deploy via rsync (preserves uploads & database)
+        env:
+          DEPLOY_USER: ${{ secrets.HOSTINGER_USER }}
+          DEPLOY_HOST: ${{ secrets.HOSTINGER_HOST }}
+          DEPLOY_PORT: ${{ secrets.HOSTINGER_PORT }}
+          DEPLOY_PATH: ${{ secrets.HOSTINGER_PATH }}
         run: |
+          CLEAN_PATH="$(echo -n "$DEPLOY_PATH" | tr -d '\r\n')"
           rsync -avz --progress \
             --exclude='.git' \
             --exclude='.github' \
@@ -30,6 +36,6 @@ jobs:
             --exclude='backend/database/database.sqlite' \
             --exclude='backend/storage/logs' \
             --exclude='backend/.env' \
-            -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -o StrictHostKeyChecking=no" \
-            ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/
+            -e "ssh -p $DEPLOY_PORT -o StrictHostKeyChecking=no" \
+            ./ "${DEPLOY_USER}@${DEPLOY_HOST}:${CLEAN_PATH}/"
 
