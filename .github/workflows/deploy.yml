@@ -37,11 +37,7 @@ jobs:
             -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/
 
+
       - name: Run post-deploy commands on server
         run: |
-          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "
-            cd ${{ secrets.HOSTINGER_PATH }}/backend &&
-            php artisan config:clear &&
-            php artisan view:clear &&
-            php artisan cache:clear
-          "
+          ssh -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} "cd ${{ secrets.HOSTINGER_PATH }}/backend && php artisan config:clear && php artisan view:clear && php artisan cache:clear"
