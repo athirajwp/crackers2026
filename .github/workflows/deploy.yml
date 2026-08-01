@@ -18,10 +18,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}
 
-      - name: Add Hostinger to known hosts
-        run: |
-          ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
-
       - name: Deploy via rsync (preserves uploads & database)
         run: |
           rsync -avz --progress \
@@ -34,7 +30,7 @@ jobs:
             --exclude='backend/database/database.sqlite' \
             --exclude='backend/storage/logs' \
             --exclude='backend/.env' \
-            -e "ssh -p ${{ secrets.HOSTINGER_PORT }}" \
+            -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/
 
       - name: Run post-deploy commands on server
@@ -44,4 +40,4 @@ jobs:
           DEPLOY_USER: ${{ secrets.HOSTINGER_USER }}
           DEPLOY_PATH: ${{ secrets.HOSTINGER_PATH }}
         run: |
-          ssh -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" "cd $DEPLOY_PATH/backend && php artisan config:clear && php artisan view:clear && php artisan cache:clear"
+          ssh -o StrictHostKeyChecking=no -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" "cd $DEPLOY_PATH/backend && php artisan config:clear && php artisan view:clear && php artisan cache:clear"
