@@ -54,6 +54,10 @@ class CustomerOrderMail extends Mailable
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.orders.invoice', [
             'order' => $this->order,
             'is_email_or_pdf' => true,
+        ])->setPaper('a4', 'portrait')->setOptions([
+            'isRemoteEnabled' => false,
+            'isHtml5ParserEnabled' => true,
+            'isFontSubsettingEnabled' => true,
         ]);
 
         return [

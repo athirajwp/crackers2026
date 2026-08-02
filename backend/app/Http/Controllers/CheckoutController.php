@@ -185,9 +185,21 @@ class CheckoutController extends Controller
             ]);
 
             // Flush HTTP response to user's browser immediately (Instant <200ms checkout!)
-            if (function_exists('fastcgi_finish_request')) {
+            @ignore_user_abort(true);
+            while (@ob_get_level() > 0) {
+                @ob_end_flush();
+            }
+            @flush();
+
+            if (\function_exists('fastcgi_finish_request')) {
                 $jsonResponse->send();
-                fastcgi_finish_request();
+                \fastcgi_finish_request();
+            } else {
+                header('Connection: close');
+                header('Content-Encoding: none');
+                header('Content-Length: ' . strlen($jsonResponse->getContent()));
+                $jsonResponse->send();
+                @flush();
             }
 
             // Send emails after user connection is closed so customer never waits for SMTP/PDF generation
