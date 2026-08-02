@@ -18,6 +18,7 @@ import Fireworks from './components/Fireworks';
 import StickyQuickOrderButton from './components/StickyQuickOrderButton';
 import CheckoutDrawer from './components/CheckoutDrawer';
 import LoadingScreen from './components/LoadingScreen';
+import DisclaimerModal from './components/DisclaimerModal';
 
 // Admin imports
 import AdminLogin from './pages/admin/AdminLogin';
@@ -122,6 +123,7 @@ function PublicLayout() {
       <StickyQuickOrderButton />
       <Footer />
       <CheckoutDrawer isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      <DisclaimerModal />
     </div>
   );
 }
