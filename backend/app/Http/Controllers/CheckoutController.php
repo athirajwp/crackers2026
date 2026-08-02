@@ -179,44 +179,33 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Order invoice email dispatch (Background CLI or Direct Fallback for Hostinger)
+            $jsonResponse = response()->json([
+                'success' => true,
+                'redirect' => route('checkout.success', ['order_number' => $order->order_number])
+            ]);
+
+            // Flush HTTP response to user's browser immediately (Instant <200ms checkout!)
+            if (function_exists('fastcgi_finish_request')) {
+                $jsonResponse->send();
+                fastcgi_finish_request();
+            }
+
+            // Send emails after user connection is closed so customer never waits for SMTP/PDF generation
             try {
-                $artisanPath = base_path('artisan');
-                $defaultConn = config('database.default');
-                $tenantDb = config("database.connections.{$defaultConn}.database");
-                $tenantOption = !empty($tenantDb) ? ' --tenant-db=' . escapeshellarg($tenantDb) : '';
-                $orderId = (int) $order->id;
-                $phpBinary = defined('PHP_BINARY') && !empty(PHP_BINARY) ? PHP_BINARY : 'php';
+                $adminEmail = \App\Models\Setting::get('store_email', config('mail.from.address'));
+                $order->load('items');
 
-                $launched = false;
-                if (\function_exists('popen') && strncasecmp(PHP_OS, 'WIN', 3) === 0) {
-                    @pclose(@popen("start /B \"\" \"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > NUL 2>&1", "r"));
-                    $launched = true;
-                } else if (\function_exists('exec')) {
-                    @\exec("\"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > /dev/null 2>&1 &");
-                    $launched = true;
+                if (!empty($adminEmail)) {
+                    \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
                 }
-
-                // If background process couldn't be launched (e.g. exec disabled by Hostinger), send directly
-                if (!$launched) {
-                    $adminEmail = \App\Models\Setting::get('store_email', config('mail.from.address'));
-                    $order->load('items');
-
-                    if (!empty($adminEmail)) {
-                        \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
-                    }
-                    if (!empty($order->email)) {
-                        \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\CustomerOrderMail($order));
-                    }
+                if (!empty($order->email)) {
+                    \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\CustomerOrderMail($order));
                 }
             } catch (\Throwable $e) {
                 Log::error('Order email dispatch failed: ' . $e->getMessage());
             }
 
-            return response()->json([
-                'success' => true,
-                'redirect' => route('checkout.success', ['order_number' => $order->order_number])
-            ]);
+            return $jsonResponse;
 
         } catch (\Throwable $exception) {
             try {
