@@ -179,7 +179,7 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Non-blocking order invoice email dispatch via background Artisan process
+            // Order invoice email dispatch (Background CLI or Direct Fallback for Hostinger)
             try {
                 $artisanPath = base_path('artisan');
                 $defaultConn = config('database.default');
@@ -188,13 +188,29 @@ class CheckoutController extends Controller
                 $orderId = (int) $order->id;
                 $phpBinary = defined('PHP_BINARY') && !empty(PHP_BINARY) ? PHP_BINARY : 'php';
 
-                if (strncasecmp(PHP_OS, 'WIN', 3) === 0) {
-                    pclose(popen("start /B \"\" \"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > NUL 2>&1", "r"));
-                } else {
-                    exec("\"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > /dev/null 2>&1 &");
+                $launched = false;
+                if (\function_exists('popen') && strncasecmp(PHP_OS, 'WIN', 3) === 0) {
+                    @pclose(@popen("start /B \"\" \"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > NUL 2>&1", "r"));
+                    $launched = true;
+                } else if (\function_exists('exec')) {
+                    @\exec("\"" . $phpBinary . "\" \"" . $artisanPath . "\" order:send-email {$orderId}{$tenantOption} > /dev/null 2>&1 &");
+                    $launched = true;
+                }
+
+                // If background process couldn't be launched (e.g. exec disabled by Hostinger), send directly
+                if (!$launched) {
+                    $adminEmail = \App\Models\Setting::get('store_email', config('mail.from.address'));
+                    $order->load('items');
+
+                    if (!empty($adminEmail)) {
+                        \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
+                    }
+                    if (!empty($order->email)) {
+                        \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\CustomerOrderMail($order));
+                    }
                 }
             } catch (\Throwable $e) {
-                Log::error('Order email background launch failed: ' . $e->getMessage());
+                Log::error('Order email dispatch failed: ' . $e->getMessage());
             }
 
             return response()->json([
