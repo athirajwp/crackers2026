@@ -333,7 +333,7 @@ export default function Header() {
                     className="w-7 h-7 rounded-lg bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
                     title="Twitter"
                   >
-                    <i className="fa-brands fa-x-twitter text-xs"></i>
+                    <i className="fa-brands fa-x-twitter fa-twitter text-xs"></i>
                   </a>
                 )}
               </div>
@@ -444,7 +444,7 @@ export default function Header() {
                     className="w-7 h-7 rounded-lg bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center transition-all shadow-xs hover:scale-110"
                     title="Twitter"
                   >
-                    <i className="fa-brands fa-x-twitter text-xs"></i>
+                    <i className="fa-brands fa-x-twitter fa-twitter text-xs"></i>
                   </a>
                 )}
               </div>

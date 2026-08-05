@@ -102,12 +102,12 @@ export default function Contact() {
                   <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">WhatsApp Direct Booking</h4>
                   <p className="text-xs md:text-sm text-slate-600 font-semibold leading-relaxed">
                     <a
-                      href={`https://wa.me/${settings.store_whatsapp || '919998887776'}`}
+                      href={`https://wa.me/${(settings.store_whatsapp || '919998887776').replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noreferrer"
                       className="hover:text-emerald-600 transition-colors font-mono font-bold"
                     >
-                      +{settings.store_whatsapp || '91 9998887776'}
+                      {'+' + (settings.store_whatsapp || '91 9998887776').replace(/^\++/g, '')}
                     </a>
                   </p>
                 </div>
@@ -236,7 +236,7 @@ export default function Contact() {
                     rel="noreferrer"
                     className="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-700 text-white text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105 active:scale-95"
                   >
-                    <i className="fa-brands fa-x-twitter text-base"></i>
+                    <i className="fa-brands fa-x-twitter fa-twitter text-base"></i>
                     <span>X / Twitter</span>
                   </a>
                 )}

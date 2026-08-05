@@ -156,9 +156,19 @@ class AdminApiController extends Controller
         $products = Product::with('category')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->orderBy('categories.sort_order', 'asc')
-            ->orderBy('products.name', 'asc')
             ->select('products.*')
-            ->get();
+            ->get()
+            ->sort(function ($a, $b) {
+                if ($a->category_id !== $b->category_id) {
+                    return ($a->category->sort_order ?? 999) <=> ($b->category->sort_order ?? 999);
+                }
+                $codeA = (is_numeric($a->product_code) && intval($a->product_code) > 0) ? intval($a->product_code) : 99999;
+                $codeB = (is_numeric($b->product_code) && intval($b->product_code) > 0) ? intval($b->product_code) : 99999;
+                if ($codeA === $codeB) {
+                    return strcmp($a->name, $b->name);
+                }
+                return $codeA <=> $codeB;
+            })->values();
         $categories = Category::all();
 
         return response()->json([
@@ -171,6 +181,7 @@ class AdminApiController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'product_code' => 'nullable|string|max:100',
             'name' => 'required|string|max:255',
             'pack_size' => 'required|string|max:255',
             'mrp' => 'required|numeric|min:0',
@@ -194,6 +205,13 @@ class AdminApiController extends Controller
         }
 
         // Auto-heal missing columns if tenant database schema has not executed recent migrations
+        if (!Schema::hasColumn('products', 'product_code')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->string('product_code')->nullable();
+                });
+            } catch (\Exception $e) {}
+        }
         if (!Schema::hasColumn('products', 'is_bestseller')) {
             try {
                 Schema::table('products', function ($table) {
@@ -211,6 +229,7 @@ class AdminApiController extends Controller
 
         $productData = [
             'category_id' => $request->category_id,
+            'product_code' => $request->product_code,
             'name' => $request->name,
             'pack_size' => $request->pack_size,
             'mrp' => $request->mrp,
@@ -237,6 +256,7 @@ class AdminApiController extends Controller
         $product = Product::findOrFail($id);
         $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'product_code' => 'nullable|string|max:100',
             'name' => 'required|string|max:255',
             'pack_size' => 'required|string|max:255',
             'mrp' => 'required|numeric|min:0',
@@ -264,6 +284,13 @@ class AdminApiController extends Controller
         }
 
         // Auto-heal missing columns if tenant database schema has not executed recent migrations
+        if (!Schema::hasColumn('products', 'product_code')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->string('product_code')->nullable();
+                });
+            } catch (\Exception $e) {}
+        }
         if (!Schema::hasColumn('products', 'is_bestseller')) {
             try {
                 Schema::table('products', function ($table) {
@@ -281,6 +308,7 @@ class AdminApiController extends Controller
 
         $updateData = [
             'category_id' => $request->category_id,
+            'product_code' => $request->product_code,
             'name' => $request->name,
             'pack_size' => $request->pack_size,
             'mrp' => $request->mrp,
@@ -691,6 +719,9 @@ class AdminApiController extends Controller
             OrderItem::insert($itemsData);
 
             DB::commit();
+
+            // Dispatch emails asynchronously in detached background process (<10ms non-blocking)
+            CheckoutController::dispatchOrderEmailsAsync($order->id);
 
             return response()->json([
                 'success' => true,

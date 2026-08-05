@@ -287,7 +287,7 @@
     </script>
     
     <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <!-- Alpine.js CDN for Reactive Micro-Interactions -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -411,13 +411,13 @@
                 </a>
                 
                 <!-- Desktop WhatsApp Button -->
-                <a href="https://wa.me/{{ App\Models\Setting::get('store_whatsapp', '919998887776') }}" target="_blank" class="hidden sm:flex bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-full text-xs font-extrabold items-center gap-1.5 shadow-sm hover:scale-105 transition-all">
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', App\Models\Setting::get('store_whatsapp', '919998887776')) }}" target="_blank" class="hidden sm:flex bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-full text-xs font-extrabold items-center gap-1.5 shadow-sm hover:scale-105 transition-all">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                     <span>WhatsApp Booking</span>
                 </a>
                 
                 <!-- Mobile Compact WhatsApp Button (Icon only) -->
-                <a href="https://wa.me/{{ App\Models\Setting::get('store_whatsapp', '919998887776') }}" target="_blank" class="sm:hidden flex bg-emerald-600 hover:bg-emerald-500 text-white w-8 h-8 rounded-xl items-center justify-center shadow-sm hover:scale-105 transition-all" title="WhatsApp Booking">
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', App\Models\Setting::get('store_whatsapp', '919998887776')) }}" target="_blank" class="sm:hidden flex bg-emerald-600 hover:bg-emerald-500 text-white w-8 h-8 rounded-xl items-center justify-center shadow-sm hover:scale-105 transition-all" title="WhatsApp Booking">
                     <i class="fa-brands fa-whatsapp text-base"></i>
                 </a>
                 
@@ -500,10 +500,10 @@
                             <a href="{{ $yt }}" target="_blank" class="hover:text-crimson-600 transition-all hover:scale-110" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
                         @endif
                         @if($tw = App\Models\Setting::get('twitter_link'))
-                            <a href="{{ $tw }}" target="_blank" class="hover:text-crimson-600 transition-all hover:scale-110" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="{{ $tw }}" target="_blank" class="hover:text-crimson-600 transition-all hover:scale-110" title="Twitter"><i class="fa-brands fa-x-twitter fa-twitter"></i></a>
                         @endif
                         @php
-                            $waLink = App\Models\Setting::get('whatsapp_link') ?: 'https://wa.me/' . App\Models\Setting::get('store_whatsapp', '919998887776');
+                            $waLink = App\Models\Setting::get('whatsapp_link') ?: 'https://wa.me/' . preg_replace('/[^0-9]/', '', App\Models\Setting::get('store_whatsapp', '919998887776'));
                         @endphp
                         <a href="{{ $waLink }}" target="_blank" class="hover:text-crimson-600 transition-all hover:scale-110" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
                     </div>

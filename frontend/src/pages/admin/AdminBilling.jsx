@@ -55,6 +55,10 @@ export default function AdminBilling() {
       prod.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
       (prod.product_code && prod.product_code.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCat && matchesSearch;
+  }).sort((a, b) => {
+    const codeA = (!isNaN(a.product_code) && parseInt(a.product_code, 10) > 0) ? parseInt(a.product_code, 10) : 99999;
+    const codeB = (!isNaN(b.product_code) && parseInt(b.product_code, 10) > 0) ? parseInt(b.product_code, 10) : 99999;
+    return codeA - codeB;
   });
 
   // Add product to bill
@@ -295,7 +299,14 @@ export default function AdminBilling() {
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <h4 className="text-[11.5px] font-extrabold text-slate-900 truncate leading-tight">{prod.name}</h4>
+                          <h4 className="text-[11.5px] font-extrabold text-slate-900 truncate leading-tight flex items-center gap-1">
+                            {prod.product_code && (
+                              <span className="text-[8.5px] font-mono font-black bg-slate-100 border border-slate-200 text-slate-700 px-1 py-0.2 rounded flex-shrink-0">
+                                {prod.product_code}
+                              </span>
+                            )}
+                            <span className="truncate">{prod.name}</span>
+                          </h4>
                           <p className="text-[9.5px] text-slate-500 font-semibold leading-none mt-0.5">{prod.pack_size || 'Standard'}</p>
                           <div className="flex items-center gap-1.5 mt-1">
                             <span className="text-xs font-black text-crimson-600">₹{sellingPrice}</span>

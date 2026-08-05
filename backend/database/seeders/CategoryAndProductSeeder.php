@@ -227,6 +227,15 @@ class CategoryAndProductSeeder extends Seeder
 
         $discountPercent = Setting::get('discount_percent', 60);
 
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('products', 'product_code')) {
+            try {
+                \Illuminate\Support\Facades\Schema::table('products', function ($table) {
+                    $table->string('product_code')->nullable();
+                });
+            } catch (\Exception $e) {}
+        }
+
+        $codeCounter = 1;
         foreach ($inventory as $catName => $catDetails) {
             // Create Category
             $category = Category::updateOrCreate(
@@ -243,12 +252,15 @@ class CategoryAndProductSeeder extends Seeder
                 // Selling price is calculated based on the general discount percent (e.g. 60% off printed MRP)
                 $sellingPrice = $prod['mrp'] * (1 - ($discountPercent / 100));
 
+                $existingProd = Product::where('category_id', $category->id)->where('name', $prod['name'])->first();
+
                 Product::updateOrCreate(
                     [
                         'category_id' => $category->id,
                         'name' => $prod['name']
                     ],
                     [
+                        'product_code' => ($existingProd && !empty($existingProd->product_code)) ? $existingProd->product_code : (string) $codeCounter,
                         'pack_size' => $prod['pack_size'],
                         'mrp' => $prod['mrp'],
                         'selling_price' => $sellingPrice,
@@ -256,7 +268,14 @@ class CategoryAndProductSeeder extends Seeder
                         'status' => 'active'
                     ]
                 );
+                $codeCounter++;
             }
+        }
+
+        // Auto-assign product codes to any existing products missing a code
+        $missingCodeProds = Product::whereNull('product_code')->orWhere('product_code', '')->get();
+        foreach ($missingCodeProds as $mProd) {
+            $mProd->update(['product_code' => (string) $codeCounter++]);
         }
     }
 }

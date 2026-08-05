@@ -189,7 +189,7 @@ export default function PriceList() {
                   <i className="fa-solid fa-phone text-[10px]"></i>
                 </div>
                 <span className="font-bold text-slate-800">
-                  {[settings.store_phone, settings.store_phone_2, settings.store_whatsapp].filter(Boolean).join(', ') || '+91 9998887776'}
+                  {[settings.store_phone, settings.store_phone_2, settings.store_whatsapp].filter(Boolean).map(num => '+' + String(num).replace(/^\++/g, '')).join(', ') || '+91 9998887776'}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -219,7 +219,7 @@ export default function PriceList() {
           <table className="hidden md:table w-full text-left text-xs border-collapse print:table">
             <thead>
               <tr className="bg-gradient-to-r from-crimson-700 via-crimson-600 to-crimson-800 border-b border-crimson-900 text-white font-extrabold uppercase tracking-wider text-[9.5px]">
-                <th className="py-3 px-3 sm:px-4 w-12 text-center">S.No</th>
+                <th className="py-3 px-3 sm:px-4 w-16 text-center">Code</th>
                 <th className="py-3 px-4">Product Details</th>
                 <th className="py-3 px-4 w-32 text-center">Pack / Box size</th>
                 <th className="py-3 px-4 w-24 text-right">MRP (₹)</th>
@@ -239,29 +239,36 @@ export default function PriceList() {
                   </tr>
 
                   {/* Product Rows */}
-                  {category.products.map((product) => {
-                    const currentSno = snoDesktop++;
-                    return (
-                      <tr key={product.id} className="hover:bg-slate-50/40 transition-colors">
-                        <td className="py-3 px-3 sm:px-4 text-center font-mono font-bold text-slate-400">
-                          {currentSno}
-                        </td>
-                        <td className="py-3 px-4 font-bold text-slate-800">{product.name}</td>
-                        <td className="py-3 px-4 text-center font-mono text-slate-500 font-bold">
-                          {product.pack_size}
-                        </td>
-                        <td className="py-3 px-4 text-right line-through text-slate-400 font-mono">
-                          {settings.show_mrp !== 'no' ? `₹${formatCurrency(product.mrp)}` : '—'}
-                        </td>
-                        <td className="py-3 px-4 text-right text-emerald-600 font-mono">
-                          ₹{formatCurrency(product.mrp * (settings.discount_percent / 100))}
-                        </td>
-                        <td className="py-3 px-4 text-right pr-6 font-extrabold text-crimson-600 font-mono">
-                          ₹{formatCurrency(product.selling_price)}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {(() => {
+                    const sortedProducts = [...category.products].sort((a, b) => {
+                      const codeA = (!isNaN(a.product_code) && parseInt(a.product_code, 10) > 0) ? parseInt(a.product_code, 10) : 99999;
+                      const codeB = (!isNaN(b.product_code) && parseInt(b.product_code, 10) > 0) ? parseInt(b.product_code, 10) : 99999;
+                      return codeA - codeB;
+                    });
+                    return sortedProducts.map((product) => {
+                      const currentSno = snoDesktop++;
+                      return (
+                        <tr key={product.id} className="hover:bg-slate-50/40 transition-colors">
+                          <td className="py-3 px-3 sm:px-4 text-center font-mono font-bold text-slate-800 bg-slate-50/50">
+                            {product.product_code || currentSno}
+                          </td>
+                          <td className="py-3 px-4 font-bold text-slate-800">{product.name}</td>
+                          <td className="py-3 px-4 text-center font-mono text-slate-500 font-bold">
+                            {product.pack_size}
+                          </td>
+                          <td className="py-3 px-4 text-right line-through text-slate-400 font-mono">
+                            {settings.show_mrp !== 'no' ? `₹${formatCurrency(product.mrp)}` : '—'}
+                          </td>
+                          <td className="py-3 px-4 text-right text-emerald-600 font-mono">
+                            ₹{formatCurrency(product.mrp * (settings.discount_percent / 100))}
+                          </td>
+                          <td className="py-3 px-4 text-right pr-6 font-extrabold text-crimson-600 font-mono">
+                            ₹{formatCurrency(product.selling_price)}
+                          </td>
+                        </tr>
+                      );
+                    });
+                  })()}
                 </React.Fragment>
               ))}
             </tbody>
@@ -278,41 +285,48 @@ export default function PriceList() {
                 </div>
 
                 {/* Product Blocks */}
-                {category.products.map((product) => {
-                  const currentSno = snoMobile++;
-                  return (
-                    <div key={product.id} className="py-3.5 px-4 flex flex-col gap-1.5 hover:bg-slate-50/30 transition-colors">
-                      <div className="flex justify-between items-start gap-3">
-                        <div className="text-xs font-bold text-slate-800">
-                          <span className="font-mono text-slate-400 font-bold mr-1.5">{currentSno}.</span>
-                          {product.name}
+                {(() => {
+                  const sortedProducts = [...category.products].sort((a, b) => {
+                    const codeA = (!isNaN(a.product_code) && parseInt(a.product_code, 10) > 0) ? parseInt(a.product_code, 10) : 99999;
+                    const codeB = (!isNaN(b.product_code) && parseInt(b.product_code, 10) > 0) ? parseInt(b.product_code, 10) : 99999;
+                    return codeA - codeB;
+                  });
+                  return sortedProducts.map((product) => {
+                    const currentSno = snoMobile++;
+                    return (
+                      <div key={product.id} className="py-3.5 px-4 flex flex-col gap-1.5 hover:bg-slate-50/30 transition-colors">
+                        <div className="flex justify-between items-start gap-3">
+                          <div className="text-xs font-bold text-slate-800 flex items-center flex-wrap gap-1">
+                            <span className="font-mono text-slate-700 bg-slate-100 border border-slate-200 px-1.5 py-0.2 rounded text-[10px] font-bold">{product.product_code || currentSno}</span>
+                            <span>{product.name}</span>
+                          </div>
+                          <span className="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-lg flex-shrink-0">
+                            {product.pack_size}
+                          </span>
                         </div>
-                        <span className="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-lg flex-shrink-0">
-                          {product.pack_size}
-                        </span>
-                      </div>
 
-                      <div className="flex justify-between items-center mt-1">
-                        <div className="flex items-center gap-2">
-                          {settings.show_mrp !== 'no' && (
-                            <span className="line-through text-[11px] text-slate-400 font-mono">
-                              ₹{formatCurrency(product.mrp)}
+                        <div className="flex justify-between items-center mt-1">
+                          <div className="flex items-center gap-2">
+                            {settings.show_mrp !== 'no' && (
+                              <span className="line-through text-[11px] text-slate-400 font-mono">
+                                ₹{formatCurrency(product.mrp)}
+                              </span>
+                            )}
+                            <span className="text-[9px] text-emerald-600 bg-emerald-50 font-bold px-1.5 py-0.5 rounded-md">
+                              {settings.discount_percent}% OFF
                             </span>
-                          )}
-                          <span className="text-[9px] text-emerald-600 bg-emerald-50 font-bold px-1.5 py-0.5 rounded-md">
-                            {settings.discount_percent}% OFF
-                          </span>
-                        </div>
-                        <div className="text-right flex items-center gap-1.5">
-                          <span className="text-[10px] text-slate-450">Net:</span>
-                          <span className="text-xs font-black text-crimson-600 font-mono">
-                            ₹{formatCurrency(product.selling_price)}
-                          </span>
+                          </div>
+                          <div className="text-right flex items-center gap-1.5">
+                            <span className="text-[10px] text-slate-450">Net:</span>
+                            <span className="text-xs font-black text-crimson-600 font-mono">
+                              ₹{formatCurrency(product.selling_price)}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  });
+                })()}
               </React.Fragment>
             ))}
           </div>

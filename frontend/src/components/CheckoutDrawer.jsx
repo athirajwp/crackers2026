@@ -38,7 +38,10 @@ export default function CheckoutDrawer({ isOpen, onClose }) {
   const [submitting, setSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (name === 'phone' || name === 'whatsapp') {
+      value = value.replace(/[^0-9]/g, '').slice(0, 10);
+    }
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -52,6 +55,31 @@ export default function CheckoutDrawer({ isOpen, onClose }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const cleanPhone = form.phone.replace(/[^0-9]/g, '');
+    if (cleanPhone.length !== 10) {
+      window.Swal.fire({
+        title: 'Validation Error',
+        text: 'Mobile number must be exactly 10 digits.',
+        icon: 'warning',
+        confirmButtonColor: '#e51d1d',
+      });
+      return;
+    }
+
+    if (form.whatsapp && form.whatsapp.trim() !== '') {
+      const cleanWhatsapp = form.whatsapp.replace(/[^0-9]/g, '');
+      if (cleanWhatsapp.length !== 10) {
+        window.Swal.fire({
+          title: 'Validation Error',
+          text: 'WhatsApp number must be exactly 10 digits.',
+          icon: 'warning',
+          confirmButtonColor: '#e51d1d',
+        });
+        return;
+      }
+    }
+
     setSubmitting(true);
 
     const orderItems = Object.values(cart)
@@ -76,17 +104,16 @@ export default function CheckoutDrawer({ isOpen, onClose }) {
       body: JSON.stringify(payload),
     })
       .then(async (res) => {
-        const contentType = res.headers.get('content-type');
         let data = {};
-        if (contentType && contentType.includes('application/json')) {
-          data = await res.json();
-        } else {
-          const text = await res.text();
-          throw new Error(text || `Server error (${res.status})`);
+        const text = await res.text();
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch (e) {
+          data = {};
         }
 
         if (!res.ok) {
-          throw new Error(data.error || data.message || 'Failed to place order.');
+          throw new Error(data.error || data.message || `Server error (${res.status})`);
         }
 
         return data;
@@ -178,7 +205,9 @@ export default function CheckoutDrawer({ isOpen, onClose }) {
                       type="tel"
                       name="phone"
                       required
-                      placeholder="Active Mobile Number"
+                      maxLength={10}
+                      pattern="[0-9]{10}"
+                      placeholder="10-Digit Mobile Number"
                       value={form.phone}
                       onChange={handleInputChange}
                       className="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all font-mono"
@@ -191,7 +220,9 @@ export default function CheckoutDrawer({ isOpen, onClose }) {
                     <input
                       type="tel"
                       name="whatsapp"
-                      placeholder="WhatsApp Number (Optional)"
+                      maxLength={10}
+                      pattern="[0-9]{10}"
+                      placeholder="10-Digit WhatsApp (Optional)"
                       value={form.whatsapp}
                       onChange={handleInputChange}
                       className="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all font-mono"

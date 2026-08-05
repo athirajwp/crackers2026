@@ -408,7 +408,7 @@ export default function AdminSettings() {
                     </div>
                     <div className="space-y-1.5 sm:col-span-2">
                       <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block flex items-center gap-1.5">
-                        <i className="fa-brands fa-x-twitter text-slate-800"></i> Twitter / X Link
+                        <i className="fa-brands fa-x-twitter fa-twitter text-slate-800"></i> Twitter / X Link
                       </label>
                       <input
                         type="text"

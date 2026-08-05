@@ -16,10 +16,22 @@ class HomeController extends Controller
     {
         $categories = Category::active()
             ->with(['products' => function ($query) {
-                $query->active()->orderBy('name', 'asc');
+                $query->active();
             }])
             ->orderBy('sort_order', 'asc')
             ->get();
+
+        foreach ($categories as $cat) {
+            $sortedProducts = $cat->products->sort(function ($a, $b) {
+                $codeA = (is_numeric($a->product_code) && intval($a->product_code) > 0) ? intval($a->product_code) : 99999;
+                $codeB = (is_numeric($b->product_code) && intval($b->product_code) > 0) ? intval($b->product_code) : 99999;
+                if ($codeA === $codeB) {
+                    return strcmp($a->name, $b->name);
+                }
+                return $codeA <=> $codeB;
+            })->values();
+            $cat->setRelation('products', $sortedProducts);
+        }
 
         // Load specific configuration settings
         $settings = [
@@ -60,10 +72,22 @@ class HomeController extends Controller
     {
         $categories = Category::active()
             ->with(['products' => function ($query) {
-                $query->active()->orderBy('name', 'asc');
+                $query->active();
             }])
             ->orderBy('sort_order', 'asc')
             ->get();
+
+        foreach ($categories as $cat) {
+            $sortedProducts = $cat->products->sort(function ($a, $b) {
+                $codeA = (is_numeric($a->product_code) && intval($a->product_code) > 0) ? intval($a->product_code) : 99999;
+                $codeB = (is_numeric($b->product_code) && intval($b->product_code) > 0) ? intval($b->product_code) : 99999;
+                if ($codeA === $codeB) {
+                    return strcmp($a->name, $b->name);
+                }
+                return $codeA <=> $codeB;
+            })->values();
+            $cat->setRelation('products', $sortedProducts);
+        }
 
         $settings = [
             'discount_percent' => Setting::get('discount_percent', 60),

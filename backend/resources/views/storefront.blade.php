@@ -154,11 +154,11 @@
                 </h3>
                 
                 <div class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-1 pb-2 lg:pb-0 scrollbar-none">
-                    <button @click="activeCategory = 'all'" :class="activeCategory === 'all' ? 'bg-crimson-600 text-white font-extrabold shadow' : 'text-slate-650 hover:bg-slate-100'" class="w-auto lg:w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200">
+                    <button @click="selectCategory('all')" :class="activeCategory === 'all' ? 'bg-crimson-600 text-white font-extrabold shadow' : 'text-slate-650 hover:bg-slate-100'" class="w-auto lg:w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer">
                         <i class="fa-solid fa-boxes-stacked text-[11px] opacity-80"></i> All Products
                     </button>
                     @foreach($categories as $category)
-                    <button @click="activeCategory = '{{ $category->slug }}'" :class="activeCategory === '{{ $category->slug }}' ? 'bg-crimson-600 text-white font-extrabold shadow' : 'text-slate-650 hover:bg-slate-100'" class="w-auto lg:w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200">
+                    <button @click="selectCategory('{{ $category->slug }}')" :class="activeCategory === '{{ $category->slug }}' ? 'bg-crimson-600 text-white font-extrabold shadow' : 'text-slate-650 hover:bg-slate-100'" class="w-auto lg:w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer">
                         <i class="fa-solid fa-fire-flame-curved text-[11px] opacity-80"></i> {{ $category->name }}
                     </button>
                     @endforeach
@@ -218,7 +218,7 @@
                             
                             <!-- Loop Categories and products -->
                             @foreach($categories as $category)
-                            <tr x-show="shouldShowCategory('{{ $category->slug }}')" @click="toggleCategory('{{ $category->slug }}')" class="bg-slate-50 font-bold text-slate-700 border-b border-slate-200/80 select-none cursor-pointer hover:bg-slate-100 transition-colors">
+                            <tr id="category-row-{{ $category->slug }}" x-show="shouldShowCategory('{{ $category->slug }}')" @click="toggleCategory('{{ $category->slug }}')" class="bg-slate-50 font-bold text-slate-700 border-b border-slate-200/80 select-none cursor-pointer hover:bg-slate-100 transition-colors">
                                 <td colspan="6" class="py-3 px-3 sm:px-4 flex items-center justify-between text-crimson-650 tracking-wider">
                                     <div class="flex items-center gap-2">
                                         <i class="fa-solid fa-fire text-[10px] text-crimson-500"></i>
@@ -241,7 +241,12 @@
                                         @endif
                                     </div>
                                     <div class="space-y-1">
-                                        <h4 class="font-extrabold text-slate-800 text-xs leading-normal">{{ $product->name }}</h4>
+                                        <h4 class="font-extrabold text-slate-800 text-xs leading-normal flex items-center gap-1.5">
+                                            @if($product->product_code)
+                                                <span class="text-[9px] font-mono font-bold text-slate-700 bg-slate-100 border border-slate-200 px-1.5 py-0.2 rounded">{{ $product->product_code }}</span>
+                                            @endif
+                                            <span>{{ $product->name }}</span>
+                                        </h4>
                                         <div class="flex flex-wrap items-center gap-1.5">
                                             <span class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $category->name }}</span>
                                             <!-- Responsive Inline Pack size badge on mobile -->
@@ -404,11 +409,11 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5"><i class="fa-solid fa-phone mr-1 text-crimson-500/80"></i>Mobile Number <span class="text-crimson-500">*</span></label>
-                                    <input x-model="form.phone" type="tel" required placeholder="Active Mobile Number" class="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all font-mono">
+                                    <input x-model="form.phone" @input="form.phone = form.phone.replace(/[^0-9]/g, '').slice(0, 10)" type="tel" maxlength="10" pattern="[0-9]{10}" required placeholder="10-Digit Mobile Number" class="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all font-mono">
                                 </div>
                                 <div>
                                     <label class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5"><i class="fa-brands fa-whatsapp mr-1 text-crimson-500/80"></i>WhatsApp Number</label>
-                                    <input x-model="form.whatsapp" type="tel" placeholder="WhatsApp Number" class="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all font-mono">
+                                    <input x-model="form.whatsapp" @input="form.whatsapp = form.whatsapp.replace(/[^0-9]/g, '').slice(0, 10)" type="tel" maxlength="10" pattern="[0-9]{10}" placeholder="10-Digit WhatsApp (Optional)" class="w-full bg-slate-50 border border-slate-200 focus:border-slate-350 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none transition-all font-mono">
                                 </div>
                             </div>
 
@@ -785,6 +790,21 @@
                 return `Add ₹${needed.toFixed(2)} more`;
             },
 
+            selectCategory(slug) {
+                this.activeCategory = slug;
+                if (this.collapsedCategories.has(slug)) {
+                    this.collapsedCategories.delete(slug);
+                    this.collapsedCategories = new Set(this.collapsedCategories);
+                }
+                const targetId = slug === 'all' ? 'quick-order' : 'category-row-' + slug;
+                const el = document.getElementById(targetId);
+                if (el) {
+                    const yOffset = -90;
+                    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+            },
+
             toggleCategory(slug) {
                 if (this.collapsedCategories.has(slug)) {
                     this.collapsedCategories.delete(slug);
@@ -796,18 +816,11 @@
             },
 
             shouldShowCategory(slug) {
-                if (this.activeCategory !== 'all' && this.activeCategory !== slug) {
-                    return false;
-                }
                 return true;
             },
 
             shouldShowProduct(categorySlug, name) {
-                if (this.activeCategory !== 'all' && this.activeCategory !== categorySlug) {
-                    return false;
-                }
-
-                // Hide if category is collapsed
+                // Hide if category is collapsed by clicking the accordion header
                 if (this.collapsedCategories.has(categorySlug)) {
                     return false;
                 }
@@ -842,6 +855,30 @@
             },
 
             submitOrder() {
+                const cleanPhone = (this.form.phone || '').replace(/[^0-9]/g, '');
+                if (cleanPhone.length !== 10) {
+                    Swal.fire({
+                        title: 'Validation Error',
+                        text: 'Mobile number must be exactly 10 digits.',
+                        icon: 'warning',
+                        confirmButtonColor: '#e51d1d'
+                    });
+                    return;
+                }
+
+                if (this.form.whatsapp && this.form.whatsapp.trim() !== '') {
+                    const cleanWhatsapp = this.form.whatsapp.replace(/[^0-9]/g, '');
+                    if (cleanWhatsapp.length !== 10) {
+                        Swal.fire({
+                            title: 'Validation Error',
+                            text: 'WhatsApp number must be exactly 10 digits.',
+                            icon: 'warning',
+                            confirmButtonColor: '#e51d1d'
+                        });
+                        return;
+                    }
+                }
+
                 this.submitting = true;
                 
                 const orderItems = [];

@@ -125,7 +125,7 @@
     </script>
     
     <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -165,7 +165,7 @@
         100% { transform: translateX(-100%); }
       }
     </style>
-    <script type="module" crossorigin src="/build/assets/index-B0JOxCBA.js"></script>
+    <script type="module" crossorigin src="/build/assets/index-DhHo5PLI.js"></script>
     <link rel="stylesheet" crossorigin href="/build/assets/index-Dwp_K-xG.css">
   </head>
   <body class="bg-slate-50 text-slate-800 font-sans">

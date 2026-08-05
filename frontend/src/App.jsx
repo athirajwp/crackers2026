@@ -108,7 +108,7 @@ function PublicLayout() {
 
           {/* WhatsApp Button */}
           <a
-            href={`https://wa.me/${settings.store_whatsapp || '919998887776'}`}
+            href={`https://wa.me/${(settings.store_whatsapp || '919998887776').replace(/[^0-9]/g, '')}`}
             target="_blank"
             rel="noreferrer"
             className="group flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-lg shadow-emerald-900/30 hover:scale-110 active:scale-95 transition-all duration-300"

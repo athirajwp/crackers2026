@@ -23,6 +23,7 @@ export default function AdminProducts() {
   
   const [formData, setFormData] = useState({
     category_id: '',
+    product_code: '',
     name: '',
     pack_size: '',
     mrp: 0,
@@ -58,6 +59,7 @@ export default function AdminProducts() {
     setEditingProduct(null);
     setFormData({
       category_id: categories[0]?.id || '',
+      product_code: '',
       name: '',
       pack_size: '',
       mrp: 0,
@@ -74,6 +76,7 @@ export default function AdminProducts() {
     setEditingProduct(product);
     setFormData({
       category_id: product.category_id,
+      product_code: product.product_code || '',
       name: product.name,
       pack_size: product.pack_size,
       mrp: product.mrp,
@@ -128,6 +131,9 @@ export default function AdminProducts() {
 
     const postData = new FormData();
     postData.append('category_id', formData.category_id);
+    if (formData.product_code) {
+      postData.append('product_code', formData.product_code);
+    }
     postData.append('name', formData.name);
     postData.append('pack_size', formData.pack_size);
     postData.append('mrp', formData.mrp);
@@ -438,6 +444,7 @@ export default function AdminProducts() {
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold text-[9px] uppercase tracking-wider select-none">
                     <th className="py-3 px-4 w-16">Image</th>
+                    <th className="py-3 px-3 text-center w-20">Code</th>
                     <th className="py-3 px-4">Product Details</th>
                     <th className="py-3 px-4">Category</th>
                     <th className="py-3 px-4 text-center">Most Sold</th>
@@ -462,6 +469,11 @@ export default function AdminProducts() {
                             <i className="fa-solid fa-image text-slate-400"></i>
                           )}
                         </div>
+                      </td>
+                      <td className="py-3 px-3 text-center">
+                        <span className="bg-slate-100 border border-slate-200 text-slate-800 font-mono text-[11px] font-bold px-2 py-0.5 rounded-md">
+                          {product.product_code || product.id}
+                        </span>
                       </td>
                       <td className="py-3 px-4">
                         <div className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
@@ -559,7 +571,7 @@ export default function AdminProducts() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
                       Category Link
@@ -567,7 +579,7 @@ export default function AdminProducts() {
                     <select
                       value={formData.category_id}
                       onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-bold outline-none transition-all"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2.5 text-xs font-bold outline-none transition-all"
                     >
                       {categories.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -575,6 +587,19 @@ export default function AdminProducts() {
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Product Code
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.product_code}
+                      onChange={(e) => setFormData({ ...formData, product_code: e.target.value })}
+                      placeholder="e.g. 101"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2.5 text-xs font-bold outline-none transition-all font-mono"
+                    />
                   </div>
 
                   <div className="space-y-1.5">
@@ -587,7 +612,7 @@ export default function AdminProducts() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. 10cm Sparklers Green"
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all"
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2.5 text-xs font-semibold outline-none transition-all"
                     />
                   </div>
                 </div>

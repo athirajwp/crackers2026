@@ -17,10 +17,18 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
+        $phone = preg_replace('/[^0-9]/', '', $request->input('phone', ''));
+        $whatsapp = preg_replace('/[^0-9]/', '', $request->input('whatsapp', ''));
+        
+        $request->merge([
+            'phone' => $phone,
+            'whatsapp' => $whatsapp ?: null,
+        ]);
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'whatsapp' => 'nullable|string|max:20',
+            'phone' => 'required|digits:10',
+            'whatsapp' => 'nullable|digits:10',
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string',
             'landmark' => 'nullable|string|max:255',
@@ -32,6 +40,10 @@ class CheckoutController extends Controller
             'items.*.qty' => 'required|integer|min:0',
             'notes' => 'nullable|string',
             'promo_code' => 'nullable|string|max:50',
+        ], [
+            'phone.required' => 'Mobile number is required.',
+            'phone.digits' => 'Mobile number must be exactly 10 digits.',
+            'whatsapp.digits' => 'WhatsApp number must be exactly 10 digits.',
         ]);
 
         $cartItems = $request->input('items');
@@ -179,45 +191,13 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            $jsonResponse = response()->json([
+            // Launch background email sending process (takes <10ms, non-blocking)
+            self::dispatchOrderEmailsAsync($order->id);
+
+            return response()->json([
                 'success' => true,
                 'redirect' => route('checkout.success', ['order_number' => $order->order_number])
             ]);
-
-            // Flush HTTP response to user's browser immediately (Instant <200ms checkout!)
-            @ignore_user_abort(true);
-            while (@ob_get_level() > 0) {
-                @ob_end_flush();
-            }
-            @flush();
-
-            if (\function_exists('fastcgi_finish_request')) {
-                $jsonResponse->send();
-                \fastcgi_finish_request();
-            } else {
-                header('Connection: close');
-                header('Content-Encoding: none');
-                header('Content-Length: ' . strlen($jsonResponse->getContent()));
-                $jsonResponse->send();
-                @flush();
-            }
-
-            // Send emails after user connection is closed so customer never waits for SMTP/PDF generation
-            try {
-                $adminEmail = \App\Models\Setting::get('store_email', config('mail.from.address'));
-                $order->load('items');
-
-                if (!empty($adminEmail)) {
-                    \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
-                }
-                if (!empty($order->email)) {
-                    \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\CustomerOrderMail($order));
-                }
-            } catch (\Throwable $e) {
-                Log::error('Order email dispatch failed: ' . $e->getMessage());
-            }
-
-            return $jsonResponse;
 
         } catch (\Throwable $exception) {
             try {
@@ -259,7 +239,7 @@ class CheckoutController extends Controller
             'holder' => Setting::get('bank_holder', 'Cracker Demo'),
         ];
 
-        $whatsappNum = Setting::get('store_whatsapp', '919998887776');
+        $whatsappNum = preg_replace('/[^0-9]/', '', Setting::get('store_whatsapp', '919998887776'));
 
         // Formulate pre-filled WhatsApp verification text
         $waMessage = "Hello " . $storeName . ", I have placed an order!\n\n"
@@ -309,5 +289,27 @@ class CheckoutController extends Controller
         ]);
 
         return $pdf->stream('invoice-' . $order->order_number . '.pdf');
+    }
+
+    /**
+     * Dispatch background email task for an order asynchronously (non-blocking).
+     */
+    public static function dispatchOrderEmailsAsync($orderId)
+    {
+        try {
+            $toolsPhp = base_path('.tools/php/php.exe');
+            $phpExecutable = file_exists($toolsPhp) ? $toolsPhp : (PHP_BINARY ?: 'php');
+            $artisan = base_path('artisan');
+
+            if (str_starts_with(strtoupper(PHP_OS), 'WIN')) {
+                $cmd = sprintf('start /B "" "%s" "%s" order:send-emails %d > NUL 2>&1', $phpExecutable, $artisan, (int)$orderId);
+                pclose(popen($cmd, "r"));
+            } else {
+                $cmd = sprintf('"%s" "%s" order:send-emails %d > /dev/null 2>&1 &', $phpExecutable, $artisan, (int)$orderId);
+                exec($cmd);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to trigger background email process for order {$orderId}: " . $e->getMessage());
+        }
     }
 }

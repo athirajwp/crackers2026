@@ -180,7 +180,7 @@
                 Our support team is active and ready to assist you with order bookings, bulk discounts, and transport logistics details.
             </p>
             <div class="pt-4 flex flex-wrap justify-center gap-4">
-                <a href="https://wa.me/{{ App\Models\Setting::get('store_whatsapp', '919998887776') }}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-full text-xs font-extrabold flex items-center gap-2 shadow shadow-emerald-950/20 transform active:scale-95 transition-all">
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', App\Models\Setting::get('store_whatsapp', '919998887776')) }}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-full text-xs font-extrabold flex items-center gap-2 shadow shadow-emerald-950/20 transform active:scale-95 transition-all">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                     <span>Contact WhatsApp Support</span>
                 </a>
@@ -357,7 +357,7 @@
                     </a>
 
                     <!-- WhatsApp Card -->
-                    <a href="https://wa.me/{{ App\Models\Setting::get('store_whatsapp', '919998887776') }}" target="_blank" class="bg-emerald-50/50 border border-emerald-100 hover:border-emerald-200 p-4 rounded-2xl shadow-sm flex items-start gap-4 hover:scale-[1.01] transition-transform">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', App\Models\Setting::get('store_whatsapp', '919998887776')) }}" target="_blank" class="bg-emerald-50/50 border border-emerald-100 hover:border-emerald-200 p-4 rounded-2xl shadow-sm flex items-start gap-4 hover:scale-[1.01] transition-transform">
                         <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
                             <i class="fa-brands fa-whatsapp text-lg"></i>
                         </div>

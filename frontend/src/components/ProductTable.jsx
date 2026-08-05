@@ -52,15 +52,32 @@ export default function ProductTable() {
     setCollapsedCategories(newCollapsed);
   };
 
-  const shouldShowCategory = (slug) => {
-    if (activeCategory !== 'all' && activeCategory !== slug) {
-      return false;
+  const handleCategorySelect = (slug) => {
+    setActiveCategory(slug);
+    setMobileCategoryOpen(false);
+    
+    // Uncollapse if collapsed
+    if (collapsedCategories.has(slug)) {
+      const newCollapsed = new Set(collapsedCategories);
+      newCollapsed.delete(slug);
+      setCollapsedCategories(newCollapsed);
     }
+
+    const targetId = slug === 'all' ? 'quick-order' : `category-row-${slug}`;
+    const el = document.getElementById(targetId);
+    if (el) {
+      const yOffset = -90;
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  const shouldShowCategory = (slug) => {
     return true;
   };
 
   const shouldShowProduct = (categorySlug, product) => {
-    if (activeCategory !== 'all' && activeCategory !== categorySlug) {
+    if (collapsedCategories.has(categorySlug)) {
       return false;
     }
     if (searchQuery.trim() !== '') {
@@ -130,10 +147,7 @@ export default function ProductTable() {
             <div className="pt-1.5 space-y-1">
               <button
                 type="button"
-                onClick={() => {
-                  setActiveCategory('all');
-                  setMobileCategoryOpen(false);
-                }}
+                onClick={() => handleCategorySelect('all')}
                 className={`w-full text-left px-3.5 py-3 rounded-xl text-xs flex items-center justify-between transition-all ${
                   activeCategory === 'all'
                     ? 'bg-crimson-600 text-white font-black shadow-sm'
@@ -155,10 +169,7 @@ export default function ProductTable() {
                   <button
                     key={cat.id}
                     type="button"
-                    onClick={() => {
-                      setActiveCategory(cat.slug);
-                      setMobileCategoryOpen(false);
-                    }}
+                    onClick={() => handleCategorySelect(cat.slug)}
                     className={`w-full text-left px-3.5 py-3 rounded-xl text-xs flex items-center justify-between transition-all ${
                       isActive
                         ? 'bg-crimson-600 text-white font-black shadow-sm'
@@ -189,11 +200,11 @@ export default function ProductTable() {
           </h3>
           <div className="flex flex-col gap-1">
             <button
-              onClick={() => setActiveCategory('all')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
+              onClick={() => handleCategorySelect('all')}
+              className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer ${
                 activeCategory === 'all'
                   ? 'bg-crimson-600 text-white font-extrabold shadow'
-                  : 'text-slate-650 hover:bg-crimson-50 hover:text-crimson-700'
+                  : 'text-slate-655 hover:bg-crimson-50 hover:text-crimson-700'
               }`}
             >
               <i className="fa-solid fa-boxes-stacked text-[11px] opacity-80"></i> All Products
@@ -201,8 +212,8 @@ export default function ProductTable() {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.slug)}
-                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
+                onClick={() => handleCategorySelect(cat.slug)}
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   activeCategory === cat.slug
                     ? 'bg-crimson-600 text-white font-extrabold shadow'
                     : 'text-slate-655 hover:bg-crimson-50 hover:text-crimson-700'
@@ -244,6 +255,7 @@ export default function ProductTable() {
                       <React.Fragment key={cat.id}>
                         {/* Category Header Row */}
                         <tr
+                          id={`category-row-${cat.slug}`}
                           onClick={() => toggleCategoryCollapse(cat.slug)}
                           className="bg-crimson-50/90 font-black text-crimson-900 border-y border-crimson-200/60 select-none cursor-pointer hover:bg-crimson-100/90 transition-colors"
                         >

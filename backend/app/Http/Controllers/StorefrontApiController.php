@@ -16,10 +16,22 @@ class StorefrontApiController extends Controller
     {
         $categories = Category::active()
             ->with(['products' => function ($query) {
-                $query->active()->orderBy('name', 'asc');
+                $query->active();
             }])
             ->orderBy('sort_order', 'asc')
             ->get();
+
+        foreach ($categories as $cat) {
+            $sortedProducts = $cat->products->sort(function ($a, $b) {
+                $codeA = (is_numeric($a->product_code) && intval($a->product_code) > 0) ? intval($a->product_code) : 99999;
+                $codeB = (is_numeric($b->product_code) && intval($b->product_code) > 0) ? intval($b->product_code) : 99999;
+                if ($codeA === $codeB) {
+                    return strcmp($a->name, $b->name);
+                }
+                return $codeA <=> $codeB;
+            })->values();
+            $cat->setRelation('products', $sortedProducts);
+        }
 
         $company = view()->shared('currentCompany');
 
@@ -248,7 +260,7 @@ class StorefrontApiController extends Controller
             'upi_id' => Setting::get('store_upi_id', 'crackerdemo@okaxis'),
         ];
 
-        $whatsappNum = Setting::get('store_whatsapp', '919998887776');
+        $whatsappNum = preg_replace('/[^0-9]/', '', Setting::get('store_whatsapp', '919998887776'));
 
         $waMessage = "Hello " . $storeName . ", I have placed an order!\n\n"
                    . "*Order Number:* {$order->order_number}\n"
