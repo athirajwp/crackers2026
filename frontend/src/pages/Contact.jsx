@@ -29,7 +29,7 @@ export default function Contact() {
             <span className="inline-flex items-center gap-2 bg-gold-50 border border-gold-300 text-gold-900 text-xs font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-sm">
               <i className="fa-solid fa-envelope text-gold-600"></i> Get In Touch
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-cinzel text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
               We Are Here To Help You
             </h2>
             <p className="text-xs md:text-sm text-slate-500 leading-relaxed font-semibold">
@@ -182,7 +182,7 @@ export default function Contact() {
             <div className="border-t border-slate-200/60 pt-8 space-y-5">
               <div className="text-center space-y-1">
                 <span className="text-[11px] font-black text-crimson-600 uppercase tracking-widest block">Follow Us</span>
-                <h4 className="text-base font-black font-cinzel text-slate-900 tracking-tight">Connect With Us On Social Media</h4>
+                <h4 className="text-base font-black text-slate-900 tracking-tight">Connect With Us On Social Media</h4>
               </div>
               <div className="flex flex-wrap justify-center gap-4">
                 {settings.facebook_link && (

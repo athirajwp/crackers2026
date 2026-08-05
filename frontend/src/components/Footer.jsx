@@ -24,7 +24,7 @@ export default function Footer() {
 
           {/* COLUMN 1: Store Title & Tagline */}
           <div>
-            <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+            <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight font-cinzel">
               {storeName}
             </h3>
             <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-medium mt-2">

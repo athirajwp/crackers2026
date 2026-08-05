@@ -7,7 +7,7 @@
     <title>Sivakasi Online Fireworks Booking Shop</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- AOS (Animate On Scroll) CSS -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
@@ -112,7 +112,7 @@
             extend: {
               fontFamily: {
                 sans: ['Outfit', 'Poppins', 'sans-serif'],
-                cinzel: ['Cinzel', 'serif'],
+                cinzel: ['Cinzel Decorative', 'Cinzel', 'serif'],
               },
               colors: {
                 gold: selectedThemeColors.gold,
@@ -131,8 +131,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-      .font-cinzel {
-        font-family: 'Cinzel', serif !important;
+      .font-company-name, .font-cinzel, .company-brand-font {
+        font-family: 'Cinzel Decorative', 'Cinzel', serif !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.04em !important;
       }
       html {
         scroll-behavior: smooth;
@@ -165,7 +167,7 @@
         100% { transform: translateX(-100%); }
       }
     </style>
-    <script type="module" crossorigin src="/build/assets/index-DhHo5PLI.js"></script>
+    <script type="module" crossorigin src="/build/assets/index-8wDIJyi5.js"></script>
     <link rel="stylesheet" crossorigin href="/build/assets/index-Dwp_K-xG.css">
   </head>
   <body class="bg-slate-50 text-slate-800 font-sans">

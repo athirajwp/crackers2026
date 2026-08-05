@@ -180,7 +180,7 @@ export default function About() {
               <span className="text-[11px] font-black text-crimson-600 uppercase tracking-widest block">
                 Why Choose Us
               </span>
-              <h3 className="text-xl md:text-2xl font-black font-cinzel text-slate-900 tracking-tight">
+              <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
                 Our Commitment to Excellence
               </h3>
             </div>
@@ -232,7 +232,7 @@ export default function About() {
               <span className="inline-flex items-center gap-2 bg-gold-50 border border-gold-200 text-gold-900 text-[11px] font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-sm">
                 <i className="fa-solid fa-camera-retro text-gold-600 text-xs"></i> Photo Gallery
               </span>
-              <h3 className="text-2xl md:text-3xl font-black font-cinzel text-slate-900 tracking-tight">
+              <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
                 Our Facilities & Celebrations
               </h3>
               <p className="text-xs md:text-sm text-slate-500 max-w-xl mx-auto font-semibold leading-relaxed">
