@@ -300,12 +300,24 @@ class CheckoutController extends Controller
             $toolsPhp = base_path('.tools/php/php.exe');
             $phpExecutable = file_exists($toolsPhp) ? $toolsPhp : (PHP_BINARY ?: 'php');
             $artisan = base_path('artisan');
+            $logFile = storage_path('logs/email_background.log');
 
             if (str_starts_with(strtoupper(PHP_OS), 'WIN')) {
-                $cmd = sprintf('start /B "" "%s" "%s" order:send-emails %d > NUL 2>&1', $phpExecutable, $artisan, (int)$orderId);
-                pclose(popen($cmd, "r"));
+                $phpExecutable = str_replace('/', '\\', $phpExecutable);
+                $artisan = str_replace('/', '\\', $artisan);
+                $logFile = str_replace('/', '\\', $logFile);
+                $cmd = sprintf('"%s" "%s" order:send-emails %d', $phpExecutable, $artisan, (int)$orderId);
+                $descriptorspec = [
+                    0 => ["pipe", "r"],
+                    1 => ["file", $logFile, "a"],
+                    2 => ["file", $logFile, "a"]
+                ];
+                $process = proc_open($cmd, $descriptorspec, $pipes, base_path(), null, ['bypass_shell' => true]);
+                if (is_resource($process)) {
+                    fclose($pipes[0]);
+                }
             } else {
-                $cmd = sprintf('"%s" "%s" order:send-emails %d > /dev/null 2>&1 &', $phpExecutable, $artisan, (int)$orderId);
+                $cmd = sprintf('"%s" "%s" order:send-emails %d >> "%s" 2>&1 &', $phpExecutable, $artisan, (int)$orderId, $logFile);
                 exec($cmd);
             }
         } catch (\Throwable $e) {

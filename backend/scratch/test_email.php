@@ -10,12 +10,7 @@ use App\Mail\AdminInvoiceMail;
 use App\Mail\CustomerOrderMail;
 
 try {
-    // Switch connection to crackers2_crackersdemo
-    $defaultConn = config('database.default');
-    config(["database.connections.{$defaultConn}.database" => 'crackers2_crackersdemo']);
-    \Illuminate\Support\Facades\DB::purge($defaultConn);
-    \Illuminate\Support\Facades\DB::reconnect($defaultConn);
-
+// Using default database connection from .env / config
     $order = Order::orderBy('id', 'desc')->first();
     if (!$order) {
         echo "No orders found in crackers2_crackersdemo database.\n";
