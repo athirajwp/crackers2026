@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->integer('sort_order')->default(999);
-        });
+        if (!Schema::hasColumn('products', 'sort_order')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->integer('sort_order')->default(999);
+            });
+        }
     }
 
     /**
