@@ -302,6 +302,8 @@ class CheckoutController extends Controller
             $artisan = base_path('artisan');
             $logFile = storage_path('logs/email_background.log');
 
+            $triggered = false;
+
             if (str_starts_with(strtoupper(PHP_OS), 'WIN')) {
                 $phpExecutable = str_replace('/', '\\', $phpExecutable);
                 $artisan = str_replace('/', '\\', $artisan);
@@ -312,16 +314,30 @@ class CheckoutController extends Controller
                     1 => ["file", $logFile, "a"],
                     2 => ["file", $logFile, "a"]
                 ];
-                $process = proc_open($cmd, $descriptorspec, $pipes, base_path(), null, ['bypass_shell' => true]);
-                if (is_resource($process)) {
-                    fclose($pipes[0]);
+                if (function_exists('proc_open')) {
+                    $process = @proc_open($cmd, $descriptorspec, $pipes, base_path(), null, ['bypass_shell' => true]);
+                    if (is_resource($process)) {
+                        fclose($pipes[0]);
+                        $triggered = true;
+                    }
                 }
             } else {
-                $cmd = sprintf('"%s" "%s" order:send-emails %d >> "%s" 2>&1 &', $phpExecutable, $artisan, (int)$orderId, $logFile);
-                exec($cmd);
+                if (function_exists('exec')) {
+                    $cmd = sprintf('"%s" "%s" order:send-emails %d >> "%s" 2>&1 &', $phpExecutable, $artisan, (int)$orderId, $logFile);
+                    @exec($cmd);
+                    $triggered = true;
+                }
+            }
+
+            // Fallback for Hostinger or environments where exec/proc_open is restricted
+            if (!$triggered) {
+                \Illuminate\Support\Facades\Artisan::call('order:send-emails', ['order_id' => $orderId]);
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error("Failed to trigger background email process for order {$orderId}: " . $e->getMessage());
+            try {
+                \Illuminate\Support\Facades\Artisan::call('order:send-emails', ['order_id' => $orderId]);
+            } catch (\Throwable $ex) {}
         }
     }
 }
