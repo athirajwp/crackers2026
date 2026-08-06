@@ -68,6 +68,9 @@ export default function AdminProducts() {
       sort_order: '',
       status: 'active',
       is_bestseller: false,
+      stock_quantity: 100,
+      min_stock_alert: 10,
+      manage_stock: 'yes',
     });
     setImageFile(null);
     setModalOpen(true);
@@ -90,6 +93,9 @@ export default function AdminProducts() {
       sort_order: product.sort_order ?? '',
       status: product.status,
       is_bestseller: Boolean(product.is_bestseller),
+      stock_quantity: product.stock_quantity ?? 100,
+      min_stock_alert: product.min_stock_alert ?? 10,
+      manage_stock: product.manage_stock || 'yes',
     });
     setImageFile(null);
     setModalOpen(true);
@@ -128,6 +134,51 @@ export default function AdminProducts() {
     }
   };
 
+  const handleToggleStatus = async (product) => {
+    const newStatus = product.status === 'active' ? 'inactive' : 'active';
+    try {
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? { ...p, status: newStatus } : p))
+      );
+
+      const postData = new FormData();
+      postData.append('category_id', product.category_id);
+      postData.append('name', product.name);
+      postData.append('pack_size', product.pack_size);
+      postData.append('mrp', product.mrp);
+      postData.append('selling_price', product.selling_price);
+      postData.append('status', newStatus);
+      if (product.product_code) postData.append('product_code', product.product_code);
+      if (product.is_bestseller) postData.append('is_bestseller', '1');
+
+      const res = await fetch(`/api/admin/products/${product.id}/update`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: postData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        fetchData();
+        Swal.fire({ icon: 'error', title: 'Error', text: data.message || 'Failed to update product status.' });
+      } else {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1800,
+          timerProgressBar: true,
+        });
+        Toast.fire({
+          icon: 'success',
+          title: newStatus === 'active' ? 'Product set to Active!' : 'Product set to Hidden!',
+        });
+      }
+    } catch (err) {
+      fetchData();
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Network error.' });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -149,6 +200,9 @@ export default function AdminProducts() {
     }
     postData.append('status', formData.status);
     postData.append('is_bestseller', formData.is_bestseller ? '1' : '0');
+    postData.append('stock_quantity', formData.stock_quantity ?? 100);
+    postData.append('min_stock_alert', formData.min_stock_alert ?? 10);
+    postData.append('manage_stock', formData.manage_stock || 'yes');
     if (imageFile) {
       postData.append('image', imageFile);
     }
@@ -521,15 +575,21 @@ export default function AdminProducts() {
                         ₹{parseFloat(product.selling_price).toFixed(2)}
                       </td>
                       <td className="py-3 px-4 text-center">
-                        <span
-                          className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border ${
+                        <button
+                          type="button"
+                          onClick={() => handleToggleStatus(product)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border cursor-pointer shadow-xs hover:scale-105 active:scale-95 group/statbtn ${
                             product.status === 'active'
-                              ? 'bg-emerald-50 border-emerald-200 text-emerald-600'
-                              : 'bg-rose-50 border-rose-200 text-rose-600'
+                              ? 'bg-emerald-50 hover:bg-rose-50 border-emerald-300 hover:border-rose-300 text-emerald-700 hover:text-rose-700'
+                              : 'bg-rose-50 hover:bg-emerald-50 border-rose-300 hover:border-emerald-300 text-rose-700 hover:text-emerald-700'
                           }`}
+                          title={product.status === 'active' ? 'Click to Hide Product from Store' : 'Click to Activate Product'}
                         >
-                          {product.status}
-                        </span>
+                          <span className={`w-2 h-2 rounded-full ${
+                            product.status === 'active' ? 'bg-emerald-500 group-hover/statbtn:bg-rose-500' : 'bg-rose-500 group-hover/statbtn:bg-emerald-500'
+                          }`}></span>
+                          <span>{product.status === 'active' ? 'Active' : 'Hidden'}</span>
+                        </button>
                       </td>
                       <td className="py-3 px-4 text-right space-x-2">
                         <button

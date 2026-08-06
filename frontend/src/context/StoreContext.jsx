@@ -155,7 +155,27 @@ export const StoreProvider = ({ children }) => {
     localStorage.setItem('athi_cart', JSON.stringify(newCart));
   };
 
+  const isProductOutOfStock = (product) => {
+    if (!product) return false;
+    if (product.stock_status === 'out_of_stock') return true;
+    if ((product.manage_stock ?? 'yes') !== 'no' && product.stock_quantity !== null && product.stock_quantity !== undefined) {
+      return parseInt(product.stock_quantity) <= 0;
+    }
+    return false;
+  };
+
   const increaseQty = (product) => {
+    if (isProductOutOfStock(product)) {
+      if (window.Swal) {
+        window.Swal.fire({
+          icon: 'warning',
+          title: 'Out of Stock',
+          text: `Sorry, ${product.name} is currently out of stock.`,
+          confirmButtonColor: '#e51d1d',
+        });
+      }
+      return;
+    }
     const newCart = { ...cart };
     if (!newCart[product.id]) {
       newCart[product.id] = {
@@ -186,6 +206,17 @@ export const StoreProvider = ({ children }) => {
   const updateQty = (product, qty) => {
     const newCart = { ...cart };
     const parsedQty = parseInt(qty);
+    if (parsedQty > 0 && isProductOutOfStock(product)) {
+      if (window.Swal) {
+        window.Swal.fire({
+          icon: 'warning',
+          title: 'Out of Stock',
+          text: `Sorry, ${product.name} is currently out of stock.`,
+          confirmButtonColor: '#e51d1d',
+        });
+      }
+      return;
+    }
     if (isNaN(parsedQty) || parsedQty <= 0) {
       if (newCart[product.id]) {
         delete newCart[product.id];

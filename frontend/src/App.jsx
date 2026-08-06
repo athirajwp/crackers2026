@@ -24,6 +24,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminProducts from './pages/admin/AdminProducts';
+import AdminInventory from './pages/admin/AdminInventory';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminOrderDetails from './pages/admin/AdminOrderDetails';
 import AdminOrderEditItems from './pages/admin/AdminOrderEditItems';
@@ -159,6 +160,7 @@ function App() {
           <Route path="/admin/orders/:id" element={<AdminOrderDetails />} />
           <Route path="/admin/orders/:id/edit-items" element={<AdminOrderEditItems />} />
           <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/inventory" element={<AdminInventory />} />
           <Route path="/admin/categories" element={<AdminCategories />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
           <Route path="/admin/branding" element={<AdminBranding />} />

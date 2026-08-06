@@ -325,9 +325,117 @@ class AdminApiController extends Controller
             $updateData['is_bestseller'] = filter_var($request->is_bestseller, FILTER_VALIDATE_BOOLEAN);
         }
 
+        if ($request->has('stock_quantity')) {
+            $updateData['stock_quantity'] = (int) $request->stock_quantity;
+        }
+        if ($request->has('min_stock_alert')) {
+            $updateData['min_stock_alert'] = (int) $request->min_stock_alert;
+        }
+        if ($request->has('manage_stock')) {
+            $updateData['manage_stock'] = $request->manage_stock;
+        }
+
         $product->update($updateData);
+        $product->updateStockStatus();
+        $product->save();
 
         return response()->json(['success' => true, 'product' => $product]);
+    }
+
+    public function inventory(Request $request)
+    {
+        if (!Schema::hasColumn('products', 'stock_quantity')) {
+            try {
+                Schema::table('products', function ($table) {
+                    $table->integer('stock_quantity')->default(100);
+                    $table->integer('min_stock_alert')->default(10);
+                    $table->string('manage_stock')->default('yes');
+                    $table->string('stock_status')->default('in_stock');
+                });
+            } catch (\Exception $e) {}
+        }
+
+        $query = Product::with('category');
+
+        if ($request->filled('category_id') && $request->category_id !== 'all') {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('product_code', 'like', "%{$search}%");
+            });
+        }
+
+        $allProducts = (clone $query)->get();
+
+        foreach ($allProducts as $p) {
+            $oldStatus = $p->stock_status;
+            $p->updateStockStatus();
+            if ($oldStatus !== $p->stock_status) {
+                $p->save();
+            }
+        }
+
+        $totalProducts = $allProducts->count();
+        $inStockCount = $allProducts->where('stock_status', 'in_stock')->count();
+        $lowStockCount = $allProducts->where('stock_status', 'low_stock')->count();
+        $outOfStockCount = $allProducts->where('stock_status', 'out_of_stock')->count();
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('stock_status', $request->status);
+        }
+
+        $products = $query->orderBy('category_id', 'asc')
+                          ->orderBy('sort_order', 'asc')
+                          ->get();
+
+        $categories = Category::orderBy('sort_order', 'asc')->get();
+
+        return response()->json([
+            'success' => true,
+            'statistics' => [
+                'total_products' => $totalProducts,
+                'in_stock_count' => $inStockCount,
+                'low_stock_count' => $lowStockCount,
+                'out_of_stock_count' => $outOfStockCount,
+            ],
+            'products' => $products,
+            'categories' => $categories,
+        ]);
+    }
+
+    public function updateInventory(Request $request)
+    {
+        $request->validate([
+            'updates' => 'required|array',
+            'updates.*.id' => 'required|exists:products,id',
+            'updates.*.stock_quantity' => 'required|integer|min:0',
+            'updates.*.min_stock_alert' => 'nullable|integer|min:0',
+            'updates.*.manage_stock' => 'nullable|in:yes,no',
+        ]);
+
+        foreach ($request->updates as $item) {
+            $product = Product::find($item['id']);
+            if ($product) {
+                $product->stock_quantity = (int) $item['stock_quantity'];
+                if (isset($item['min_stock_alert'])) {
+                    $product->min_stock_alert = (int) $item['min_stock_alert'];
+                }
+                if (isset($item['manage_stock'])) {
+                    $product->manage_stock = $item['manage_stock'];
+                }
+                $product->updateStockStatus();
+                $product->save();
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Inventory stock levels updated successfully!'
+        ]);
     }
 
     public function toggleBestsellerProduct(Request $request, $id)

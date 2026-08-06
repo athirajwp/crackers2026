@@ -172,7 +172,11 @@ export default function BestSellersSlider({ onPreviewProduct }) {
 
                   {/* Quick Add / Quantity Controls */}
                   <div className="flex justify-center">
-                    {qty === 0 ? (
+                    {prod.stock_status === 'out_of_stock' || ((prod.manage_stock ?? 'yes') !== 'no' && parseInt(prod.stock_quantity ?? 100) <= 0) ? (
+                      <span className="bg-rose-50 border border-rose-200 text-rose-700 font-extrabold text-[7.5px] sm:text-[9px] py-0.5 px-2 rounded-full uppercase tracking-wider text-center block">
+                        Out of Stock
+                      </span>
+                    ) : qty === 0 ? (
                       <button
                         type="button"
                         onClick={(e) => {

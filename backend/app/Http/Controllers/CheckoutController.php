@@ -189,6 +189,16 @@ class CheckoutController extends Controller
             }
             OrderItem::insert($orderItemsToInsert);
 
+            // Deduct stock quantity for ordered products
+            foreach ($validatedItems as $vItem) {
+                $prodModel = $vItem['product'];
+                if ($prodModel && ($prodModel->manage_stock ?? 'yes') !== 'no') {
+                    $prodModel->stock_quantity = max(0, (int) $prodModel->stock_quantity - (int) $vItem['qty']);
+                    $prodModel->updateStockStatus();
+                    $prodModel->save();
+                }
+            }
+
             DB::commit();
 
             // Launch background email sending process (takes <10ms, non-blocking)

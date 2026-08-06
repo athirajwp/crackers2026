@@ -18,6 +18,15 @@ export default function ProductTable() {
     highlightedProductId,
   } = useStore();
 
+  const isOutOfStock = (prod) => {
+    if (!prod) return false;
+    if (prod.stock_status === 'out_of_stock') return true;
+    if ((prod.manage_stock ?? 'yes') !== 'no' && prod.stock_quantity !== null && prod.stock_quantity !== undefined) {
+      return parseInt(prod.stock_quantity) <= 0;
+    }
+    return false;
+  };
+
   const [popProduct, setPopProduct] = useState(null);
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
@@ -346,35 +355,41 @@ export default function ProductTable() {
 
                               {/* Qty selectors */}
                               <td className="py-3.5 px-3 sm:px-4 text-center">
-                                <div className={`inline-flex items-center rounded-xl p-0.5 sm:p-1 select-none border transition-all duration-200 ${
-                                  qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90 hover:border-crimson-300/60'
-                                }`}>
-                                  <button
-                                    onClick={() => decreaseQty(prod.id)}
-                                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
-                                      qty > 0
-                                        ? 'bg-crimson-200 text-crimson-950 hover:bg-crimson-600 hover:text-white border border-crimson-300'
-                                        : 'bg-crimson-100/90 text-crimson-800 hover:bg-crimson-600 hover:text-white border border-crimson-200/90'
-                                    }`}
-                                  >
-                                    <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
-                                  </button>
-                                  <input
-                                    type="number"
-                                    value={qty || ''}
-                                    onChange={(e) => updateQty(prod, e.target.value)}
-                                    placeholder="0"
-                                    className={`w-8 sm:w-12 text-center bg-transparent border-0 text-xs font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                                      qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
-                                    }`}
-                                  />
-                                  <button
-                                    onClick={() => increaseQty(prod)}
-                                    className="w-6 h-6 sm:w-7 sm:h-7 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
-                                  >
-                                    <i className="fa-solid fa-plus text-[8px] sm:text-[9px]"></i>
-                                  </button>
-                                </div>
+                                {isOutOfStock(prod) ? (
+                                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider bg-rose-50 border border-rose-200 text-rose-700 shadow-2xs select-none">
+                                    <i className="fa-solid fa-ban text-[9px]"></i> Out of Stock
+                                  </span>
+                                ) : (
+                                  <div className={`inline-flex items-center rounded-xl p-0.5 sm:p-1 select-none border transition-all duration-200 ${
+                                    qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90 hover:border-crimson-300/60'
+                                  }`}>
+                                    <button
+                                      onClick={() => decreaseQty(prod.id)}
+                                      className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
+                                        qty > 0
+                                          ? 'bg-crimson-200 text-crimson-950 hover:bg-crimson-600 hover:text-white border border-crimson-300'
+                                          : 'bg-crimson-100/90 text-crimson-800 hover:bg-crimson-600 hover:text-white border border-crimson-200/90'
+                                      }`}
+                                    >
+                                      <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
+                                    </button>
+                                    <input
+                                      type="number"
+                                      value={qty || ''}
+                                      onChange={(e) => updateQty(prod, e.target.value)}
+                                      placeholder="0"
+                                      className={`w-8 sm:w-12 text-center bg-transparent border-0 text-xs font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                        qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
+                                      }`}
+                                    />
+                                    <button
+                                      onClick={() => increaseQty(prod)}
+                                      className="w-6 h-6 sm:w-7 sm:h-7 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
+                                    >
+                                      <i className="fa-solid fa-plus text-[8px] sm:text-[9px]"></i>
+                                    </button>
+                                  </div>
+                                )}
                               </td>
 
                               {/* Row Total (Desktop only) */}
@@ -486,35 +501,41 @@ export default function ProductTable() {
                             </div>
 
                             {/* Qty selectors */}
-                            <div className={`inline-flex items-center rounded-xl p-0.5 select-none flex-shrink-0 border transition-all duration-200 ${
-                              qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90'
-                            }`}>
-                              <button
-                                onClick={() => decreaseQty(prod.id)}
-                                className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
-                                  qty > 0
-                                    ? 'bg-crimson-200 text-crimson-950 hover:bg-crimson-600 hover:text-white border border-crimson-300'
-                                    : 'bg-crimson-100/90 text-crimson-800 hover:bg-crimson-600 hover:text-white border border-crimson-200/90'
-                                }`}
-                              >
-                                <i className="fa-solid fa-minus text-[8px]"></i>
-                              </button>
-                              <input
-                                type="number"
-                                value={qty || ''}
-                                onChange={(e) => updateQty(prod, e.target.value)}
-                                placeholder="0"
-                                className={`w-7 text-center bg-transparent border-0 text-[11px] font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                                  qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
-                                }`}
-                              />
-                              <button
-                                onClick={() => increaseQty(prod)}
-                                className="w-6 h-6 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
-                              >
-                                <i className="fa-solid fa-plus text-[8px]"></i>
-                              </button>
-                            </div>
+                            {isOutOfStock(prod) ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-xl text-[9px] font-black uppercase tracking-wider bg-rose-50 border border-rose-200 text-rose-700 flex-shrink-0 select-none">
+                                <i className="fa-solid fa-ban text-[8px]"></i> Out of Stock
+                              </span>
+                            ) : (
+                              <div className={`inline-flex items-center rounded-xl p-0.5 select-none flex-shrink-0 border transition-all duration-200 ${
+                                qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90'
+                              }`}>
+                                <button
+                                  onClick={() => decreaseQty(prod.id)}
+                                  className={`w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
+                                    qty > 0
+                                      ? 'bg-crimson-200 text-crimson-950 hover:bg-crimson-600 hover:text-white border border-crimson-300'
+                                      : 'bg-crimson-100/90 text-crimson-800 hover:bg-crimson-600 hover:text-white border border-crimson-200/90'
+                                  }`}
+                                >
+                                  <i className="fa-solid fa-minus text-[8px]"></i>
+                                </button>
+                                <input
+                                  type="number"
+                                  value={qty || ''}
+                                  onChange={(e) => updateQty(prod, e.target.value)}
+                                  placeholder="0"
+                                  className={`w-7 text-center bg-transparent border-0 text-[11px] font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                    qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
+                                  }`}
+                                />
+                                <button
+                                  onClick={() => increaseQty(prod)}
+                                  className="w-6 h-6 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
+                                >
+                                  <i className="fa-solid fa-plus text-[8px]"></i>
+                                </button>
+                              </div>
+                            )}
 
                             {/* Row total */}
                             <div className="text-right flex-shrink-0 min-w-[3.5rem]">
@@ -613,6 +634,15 @@ export default function ProductTable() {
                                     <span className="absolute top-1.5 right-1.5 text-[7px] sm:text-[8.5px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200 px-1.5 py-0.5 rounded-lg font-mono">
                                       {prod.pack_size}
                                     </span>
+
+                                    {/* Out of Stock Overlay Badge */}
+                                    {isOutOfStock(prod) && (
+                                      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] flex items-center justify-center">
+                                        <span className="bg-rose-600 text-white font-black text-[9px] sm:text-xs px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                                          Out of Stock
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
                                 );
                               })()}
@@ -640,37 +670,43 @@ export default function ProductTable() {
 
                               {/* Qty Selector */}
                               <div className="flex items-center justify-between gap-1 pt-0.5">
-                                <div className={`inline-flex items-center rounded-xl p-0.5 select-none w-full justify-between border transition-all duration-200 ${
-                                  qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90'
-                                }`}>
-                                  <button
-                                    type="button"
-                                    onClick={() => decreaseQty(prod.id)}
-                                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
-                                      qty > 0
-                                        ? 'bg-crimson-200 text-crimson-950 hover:bg-crimson-600 hover:text-white border border-crimson-300'
-                                        : 'bg-crimson-100/90 text-crimson-800 hover:bg-crimson-600 hover:text-white border border-crimson-200/90'
-                                    }`}
-                                  >
-                                    <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
-                                  </button>
-                                  <input
-                                    type="number"
-                                    value={qty || ''}
-                                    onChange={(e) => updateQty(prod, e.target.value)}
-                                    placeholder="0"
-                                    className={`w-7 sm:w-10 text-center bg-transparent border-0 text-[11px] sm:text-xs font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
-                                      qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
-                                    }`}
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={() => increaseQty(prod)}
-                                    className="w-6 h-6 sm:w-7 sm:h-7 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
-                                  >
-                                    <i className="fa-solid fa-plus text-[8px] sm:text-[9px]"></i>
-                                  </button>
-                                </div>
+                                {isOutOfStock(prod) ? (
+                                  <div className="w-full py-1.5 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider bg-rose-50 border border-rose-200 text-rose-700 text-center select-none shadow-2xs">
+                                    Out of Stock
+                                  </div>
+                                ) : (
+                                  <div className={`inline-flex items-center rounded-xl p-0.5 select-none w-full justify-between border transition-all duration-200 ${
+                                    qty > 0 ? 'bg-crimson-500/10 border-crimson-300 shadow-sm' : 'bg-slate-100/90 border-slate-200/90'
+                                  }`}>
+                                    <button
+                                      type="button"
+                                      onClick={() => decreaseQty(prod.id)}
+                                      className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm ${
+                                        qty > 0
+                                          ? 'bg-crimson-200 text-crimson-950 hover:bg-crimson-600 hover:text-white border border-crimson-300'
+                                          : 'bg-crimson-100/90 text-crimson-800 hover:bg-crimson-600 hover:text-white border border-crimson-200/90'
+                                      }`}
+                                    >
+                                      <i className="fa-solid fa-minus text-[8px] sm:text-[9px]"></i>
+                                    </button>
+                                    <input
+                                      type="number"
+                                      value={qty || ''}
+                                      onChange={(e) => updateQty(prod, e.target.value)}
+                                      placeholder="0"
+                                      className={`w-7 sm:w-10 text-center bg-transparent border-0 text-[11px] sm:text-xs font-black placeholder-slate-400 focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                                        qty > 0 ? 'text-crimson-900 font-extrabold' : 'text-slate-700'
+                                      }`}
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => increaseQty(prod)}
+                                      className="w-6 h-6 sm:w-7 sm:h-7 bg-crimson-600 text-white hover:bg-crimson-700 rounded-lg flex items-center justify-center font-bold text-xs transition-all active:scale-95 shadow-sm"
+                                    >
+                                      <i className="fa-solid fa-plus text-[8px] sm:text-[9px]"></i>
+                                    </button>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>

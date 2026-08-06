@@ -308,19 +308,14 @@ export default function PriceList() {
                         <div className="flex justify-between items-center mt-1">
                           <div className="flex items-center gap-2">
                             {settings.show_mrp !== 'no' && (
-                              <span className="line-through text-[11px] text-slate-400 font-mono">
-                                ₹{formatCurrency(product.mrp)}
-                              </span>
+                              <span className="text-slate-400 text-xs line-through">₹{formatCurrency(product.mrp)}</span>
                             )}
                             <span className="text-[9px] text-emerald-600 bg-emerald-50 font-bold px-1.5 py-0.5 rounded-md">
                               {settings.discount_percent}% OFF
                             </span>
                           </div>
-                          <div className="text-right flex items-center gap-1.5">
-                            <span className="text-[10px] text-slate-450">Net:</span>
-                            <span className="text-xs font-black text-crimson-600 font-mono">
-                              ₹{formatCurrency(product.selling_price)}
-                            </span>
+                          <div className="font-mono">
+                            <span className="font-black text-crimson-700 text-sm">₹{formatCurrency(product.selling_price)}</span>
                           </div>
                         </div>
                       </div>

@@ -232,8 +232,9 @@ Route::prefix('api/admin')->group(function () {
         Route::post('/products/{id}/toggle-bestseller', [AdminApiController::class, 'toggleBestsellerProduct']);
         Route::delete('/products/{id}/destroy', [AdminApiController::class, 'destroyProduct']);
         Route::post('/products/import', [AdminApiController::class, 'importProducts']);
-        Route::get('/products/export', [AdminApiController::class, 'exportProductTemplate']);
-        
+        Route::get('/inventory', [AdminApiController::class, 'inventory']);
+        Route::post('/inventory/update', [AdminApiController::class, 'updateInventory']);
+
         Route::get('/orders', [AdminApiController::class, 'orders']);
         Route::post('/orders/create-billing', [AdminApiController::class, 'createBillingOrder']);
         Route::get('/orders/{id}', [AdminApiController::class, 'order']);

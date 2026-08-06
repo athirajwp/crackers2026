@@ -45,6 +45,7 @@ export default function AdminLayout({ children }) {
     { path: '/admin/orders', label: 'Orders', icon: 'fa-cart-shopping' },
     { path: '/admin/billing', label: 'POS Billing', icon: 'fa-receipt' },
     { path: '/admin/products', label: 'Products', icon: 'fa-box-open' },
+    { path: '/admin/inventory', label: 'Inventory', icon: 'fa-boxes-stacked' },
     { path: '/admin/categories', label: 'Categories', icon: 'fa-tags' },
     { path: '/admin/settings', label: 'General Settings', icon: 'fa-sliders' },
     { path: '/admin/branding', label: 'Branding & Themes', icon: 'fa-palette' },
