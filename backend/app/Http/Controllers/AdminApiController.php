@@ -984,7 +984,22 @@ class AdminApiController extends Controller
 
         Setting::set('store_name', $request->store_name, 'text');
         Setting::set('min_order_value', $request->min_order_value, 'number');
-        Setting::set('discount_percent', $request->discount_percent, 'number');
+
+        $newDiscountPercent = (float) $request->discount_percent;
+        $oldDiscountPercent = (float) Setting::get('discount_percent', 60);
+        Setting::set('discount_percent', $newDiscountPercent, 'number');
+
+        // Automatically update all product prices if catalog discount percentage changed or was submitted
+        if ($newDiscountPercent !== $oldDiscountPercent || $request->has('discount_percent')) {
+            $products = Product::all();
+            foreach ($products as $prod) {
+                if ($prod->mrp > 0) {
+                    $prod->selling_price = round($prod->mrp * (1 - ($newDiscountPercent / 100)), 2);
+                    $prod->save();
+                }
+            }
+        }
+
         Setting::set('store_whatsapp', $request->store_whatsapp, 'text');
         Setting::set('store_phone', $request->store_phone, 'text');
         Setting::set('store_phone_2', $request->store_phone_2 ?? '', 'text');

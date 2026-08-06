@@ -296,16 +296,52 @@ class CheckoutController extends Controller
      */
     public static function dispatchOrderEmailsAsync($orderId)
     {
-        register_shutdown_function(function () use ($orderId) {
-            if (function_exists('fastcgi_finish_request')) {
-                @fastcgi_finish_request();
+        try {
+            $orderIdEsc = (int) $orderId;
+            $phpBinary = PHP_BINARY;
+
+            if (str_contains(strtolower($phpBinary), 'php-cgi')) {
+                $phpBinary = str_replace(['php-cgi.exe', 'php-cgi'], ['php.exe', 'php'], strtolower($phpBinary));
             }
 
-            try {
-                \Illuminate\Support\Facades\Artisan::call('order:send-emails', ['order_id' => (int)$orderId]);
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::error("Failed to send background email process for order {$orderId}: " . $e->getMessage());
+            if (!file_exists($phpBinary)) {
+                $phpBinary = 'php';
             }
-        });
+
+            $php = escapeshellarg($phpBinary);
+            $artisan = escapeshellarg(base_path('artisan'));
+
+            if (PHP_OS_FAMILY === 'Windows') {
+                // Windows detached non-blocking background process
+                $cmd = "start /B {$php} {$artisan} order:send-emails {$orderIdEsc} > NUL 2>&1";
+                if (function_exists('pclose') && function_exists('popen')) {
+                    pclose(popen($cmd, "r"));
+                } else if (function_exists('exec')) {
+                    exec($cmd);
+                } else {
+                    system($cmd);
+                }
+            } else {
+                // Linux/Unix detached non-blocking background process
+                $cmd = "{$php} {$artisan} order:send-emails {$orderIdEsc} > /dev/null 2>&1 &";
+                if (function_exists('exec')) {
+                    exec($cmd);
+                } else {
+                    system($cmd);
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::error("Failed to spawn async email process for order {$orderId}: " . $e->getMessage());
+
+            // Fallback to register_shutdown_function if process spawning fails
+            register_shutdown_function(function () use ($orderId) {
+                if (function_exists('fastcgi_finish_request')) {
+                    @fastcgi_finish_request();
+                }
+                try {
+                    \Illuminate\Support\Facades\Artisan::call('order:send-emails', ['order_id' => (int)$orderId]);
+                } catch (\Throwable $ex) {}
+            });
+        }
     }
 }

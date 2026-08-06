@@ -63,6 +63,7 @@ export default function AdminProducts() {
       name: '',
       pack_size: '',
       mrp: 0,
+      discount_percent: 60,
       selling_price: 0,
       sort_order: '',
       status: 'active',
@@ -74,12 +75,17 @@ export default function AdminProducts() {
 
   const handleOpenEditModal = (product) => {
     setEditingProduct(product);
+    const mrp = parseFloat(product.mrp) || 0;
+    const sellingPrice = parseFloat(product.selling_price) || 0;
+    const discountPercent = mrp > 0 ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 60;
+
     setFormData({
       category_id: product.category_id,
       product_code: product.product_code || '',
       name: product.name,
       pack_size: product.pack_size,
       mrp: product.mrp,
+      discount_percent: discountPercent,
       selling_price: product.selling_price,
       sort_order: product.sort_order ?? '',
       status: product.status,
@@ -631,39 +637,74 @@ export default function AdminProducts() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Printed MRP Price (₹)
+                      Printed MRP (₹)
                     </label>
                     <input
                       type="number"
                       step="0.01"
                       required
                       value={formData.mrp}
-                      onChange={(e) =>
-                        setFormData({ ...formData, mrp: parseFloat(e.target.value) || 0 })
-                      }
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all font-mono"
+                      onChange={(e) => {
+                        const newMrp = parseFloat(e.target.value) || 0;
+                        const disc = parseFloat(formData.discount_percent) || 0;
+                        const computedSelling = newMrp > 0 ? Math.max(0, Math.round((newMrp * (1 - disc / 100)) * 100) / 100) : 0;
+                        setFormData({
+                          ...formData,
+                          mrp: newMrp,
+                          selling_price: computedSelling,
+                        });
+                      }}
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all font-mono"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
-                      Offer Price / Wholesales (₹)
+                      Discount (%)
+                    </label>
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      max="100"
+                      value={formData.discount_percent}
+                      onChange={(e) => {
+                        const newDisc = Math.max(0, Math.min(100, parseFloat(e.target.value) || 0));
+                        const mrp = parseFloat(formData.mrp) || 0;
+                        const computedSelling = mrp > 0 ? Math.max(0, Math.round((mrp * (1 - newDisc / 100)) * 100) / 100) : 0;
+                        setFormData({
+                          ...formData,
+                          discount_percent: newDisc,
+                          selling_price: computedSelling,
+                        });
+                      }}
+                      className="w-full bg-emerald-50 border border-emerald-200 focus:border-emerald-500 text-emerald-800 rounded-xl px-3 py-2 text-xs font-bold outline-none transition-all font-mono"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Offer Price (₹)
                     </label>
                     <input
                       type="number"
                       step="0.01"
                       required
                       value={formData.selling_price}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const newSelling = parseFloat(e.target.value) || 0;
+                        const mrp = parseFloat(formData.mrp) || 0;
+                        const computedDisc = mrp > 0 ? Math.max(0, Math.min(100, Math.round(((mrp - newSelling) / mrp) * 100))) : 0;
                         setFormData({
                           ...formData,
-                          selling_price: parseFloat(e.target.value) || 0,
-                        })
-                      }
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all font-mono"
+                          selling_price: newSelling,
+                          discount_percent: computedDisc,
+                        });
+                      }}
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-3 py-2 text-xs font-semibold outline-none transition-all font-mono"
                     />
                   </div>
                 </div>

@@ -472,6 +472,10 @@ export default function AdminSettings() {
                       onChange={handleChange}
                       className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-semibold outline-none transition-all font-mono"
                     />
+                    <p className="text-[9.5px] text-emerald-600 font-bold">
+                      <i className="fa-solid fa-arrows-rotate mr-1"></i>
+                      Saving will automatically update product selling prices across inventory.
+                    </p>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
