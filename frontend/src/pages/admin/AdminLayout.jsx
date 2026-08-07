@@ -89,7 +89,7 @@ export default function AdminLayout({ children }) {
 
       {/* Sidebar navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 lg:z-auto w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl select-none transform transition-transform duration-300 lg:translate-x-0 lg:static lg:flex-shrink-0 ${
+        className={`fixed inset-y-0 left-0 z-50 lg:z-auto w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl select-none transform transition-transform duration-300 lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:self-start lg:flex-shrink-0 ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

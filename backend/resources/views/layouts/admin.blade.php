@@ -417,7 +417,7 @@
     </div>
 
     <!-- 2. Desktop Sidebar Navigation (Premium Dark Sidebar) -->
-    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between flex-shrink-0 select-none hidden md:flex text-slate-100">
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between flex-shrink-0 select-none hidden md:flex text-slate-100 sticky top-0 h-screen self-start">
         
         <div class="space-y-6 py-6">
             <!-- Header Brand -->
