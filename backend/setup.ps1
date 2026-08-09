@@ -176,8 +176,12 @@ LOG_CHANNEL=stack
 LOG_DEPRECATIONS_CHANNEL=null
 LOG_LEVEL=debug
 
-DB_CONNECTION=sqlite
-# DB_DATABASE will be auto-set or created in database/database.sqlite
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=crackers2
+DB_USERNAME=root
+DB_PASSWORD=tiger
 
 SESSION_DRIVER=file
 SESSION_LIFETIME=120
@@ -190,17 +194,6 @@ QUEUE_CONNECTION=database
 "@
         Set-Content -Path (Join-Path $PSScriptRoot ".env") -Value $envContent
     }
-}
-
-# 7. Create SQLite database if it doesn't exist
-$dbDir = Join-Path $PSScriptRoot "database"
-if (-not (Test-Path $dbDir)) {
-    New-Item -ItemType Directory -Path $dbDir | Out-Null
-}
-$sqliteDbPath = Join-Path $dbDir "database.sqlite"
-if (-not (Test-Path $sqliteDbPath)) {
-    New-Item -ItemType File -Path $sqliteDbPath | Out-Null
-    Write-Host "SQLite database initialized." -ForegroundColor Green
 }
 
 # 8. Generate Application Key if not set
