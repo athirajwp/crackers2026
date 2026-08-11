@@ -7,7 +7,7 @@
     <title>Enquiry Invoice - {{ $order->order_number }}</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace, Arial, sans-serif;
+            font-family: 'DejaVu Sans', 'Helvetica Neue', Arial, sans-serif;
             background: #ffffff;
             color: #000000;
             margin: 0;
@@ -148,8 +148,18 @@
                         if ($storeLogo) {
                             if (\Illuminate\Support\Str::startsWith($storeLogo, ['http', 'data:'])) {
                                 $logoSrc = $storeLogo;
-                            } elseif (isset($is_pdf_render) && $is_pdf_render && file_exists(public_path($storeLogo))) {
-                                $logoSrc = public_path($storeLogo);
+                            } elseif (isset($is_pdf_render) && $is_pdf_render) {
+                                if (file_exists(public_path($storeLogo))) {
+                                    try {
+                                        $imageData = base64_encode(file_get_contents(public_path($storeLogo)));
+                                        $mime = mime_content_type(public_path($storeLogo)) ?: 'image/png';
+                                        $logoSrc = "data:{$mime};base64,{$imageData}";
+                                    } catch (\Throwable $e) {
+                                        $logoSrc = asset($storeLogo);
+                                    }
+                                } else {
+                                    $logoSrc = asset($storeLogo);
+                                }
                             } else {
                                 $logoSrc = asset($storeLogo);
                             }
@@ -202,9 +212,9 @@
                     <th>S.No</th>
                     <th>Item Details</th>
                     <th class="text-center">Pack</th>
-                    <th class="text-right">Price (₹)</th>
+                    <th class="text-right">Price (INR)</th>
                     <th class="text-center">Qty</th>
-                    <th class="text-right">Sub Total (₹)</th>
+                    <th class="text-right">Sub Total (INR)</th>
                 </tr>
             </thead>
             <tbody>
