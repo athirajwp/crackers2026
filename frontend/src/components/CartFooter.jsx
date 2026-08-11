@@ -8,7 +8,6 @@ export default function CartFooter({ onCheckoutClick }) {
     totalMrp,
     totalNet,
     totalUniqueProducts,
-    totalDiscount,
     clearCart,
     setCheckoutOpen,
   } = useStore();
@@ -28,39 +27,53 @@ export default function CartFooter({ onCheckoutClick }) {
   };
 
   const formatCurrency = (val) => {
-    return parseFloat(val).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    return parseFloat(val || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   };
 
-  const handleClearCart = () => {
-    window.Swal.fire({
-      title: 'Clear Cart?',
-      text: 'Are you sure you want to remove all items from your cart?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#e51d1d',
-      cancelButtonColor: '#64748b',
-      confirmButtonText: 'Yes, clear it!',
-      cancelButtonText: 'No, keep it',
-    }).then((result) => {
-      if (result.isConfirmed) {
+  const handleClearCart = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (window.Swal) {
+      window.Swal.fire({
+        title: 'Clear Cart?',
+        text: 'Are you sure you want to remove all items from your cart?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e51d1d',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, clear it!',
+        cancelButtonText: 'No, keep it',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          clearCart();
+          window.Swal.fire({
+            title: 'Cleared!',
+            text: 'Your cart has been cleared successfully.',
+            icon: 'success',
+            confirmButtonColor: '#e51d1d',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        }
+      });
+    } else {
+      if (window.confirm('Are you sure you want to clear your cart?')) {
         clearCart();
-        window.Swal.fire({
-          title: 'Cleared!',
-          text: 'Your cart has been cleared successfully.',
-          icon: 'success',
-          confirmButtonColor: '#e51d1d',
-          timer: 1500,
-          showConfirmButton: false,
-        });
       }
-    });
+    }
   };
 
   if (totalQty === 0) return null;
 
   const isCheckoutDisabled = enableMinOrder && totalNet < minOrderValue;
 
-  const handleCheckoutBtnClick = () => {
+  const handleCheckoutBtnClick = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (isCheckoutDisabled) {
       const needed = minOrderValue - totalNet;
       if (window.Swal) {
@@ -76,7 +89,8 @@ export default function CartFooter({ onCheckoutClick }) {
       }
       return;
     }
-    if (onCheckoutClick) {
+
+    if (typeof onCheckoutClick === 'function') {
       onCheckoutClick();
     } else {
       setCheckoutOpen(true);
@@ -84,67 +98,70 @@ export default function CartFooter({ onCheckoutClick }) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200/80 shadow-2xl py-2.5 backdrop-blur-md px-4 select-none print:hidden">
-      <div className="container mx-auto max-w-5xl flex flex-col lg:flex-row gap-3 items-center justify-between">
-        
-        {/* Cart details totals summary */}
-        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-2 text-xs text-slate-500 w-full lg:w-auto font-medium">
-          {/* Total Items */}
-          <div className="flex items-center gap-1.5 text-slate-800">
-            <span className="text-[9px] text-slate-400 uppercase tracking-wider font-extrabold">Total Items:</span>
-            <strong className="text-sm font-black text-crimson-600">{totalQty}</strong>
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200/90 shadow-[0_-5px_25px_rgba(0,0,0,0.18)] py-2.5 sm:py-3 px-3 sm:px-6 select-none print:hidden pointer-events-auto">
+      {/* Top slim progress bar for min order limit */}
+      {enableMinOrder && totalNet < minOrderValue && (
+        <div className="w-full bg-slate-100 h-1 absolute top-0 left-0 right-0 overflow-hidden">
+          <div
+            className="bg-gradient-to-r from-crimson-600 to-amber-500 h-full transition-all duration-300"
+            style={{ width: `${minOrderProgressPercent()}%` }}
+          ></div>
+        </div>
+      )}
+
+      <div className="container mx-auto max-w-6xl flex items-center justify-between gap-2 sm:gap-4">
+
+        {/* Left: Totals Summary */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-4 text-slate-800">
+          <div className="flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 font-bold whitespace-nowrap">
+            <span className="uppercase tracking-wider text-[9px] sm:text-[10px] text-slate-400">Total:</span>
+            <strong className="text-crimson-600 font-black text-xs sm:text-sm">{totalQty}</strong>
             <span className="text-slate-300">/</span>
-            <strong className="text-slate-700 font-bold">{totalUniqueProducts}</strong>{' '}
-            <span className="text-[9px] text-slate-400 uppercase font-extrabold">Products</span>
+            <strong className="text-slate-700">{totalUniqueProducts}</strong>
+            <span className="text-[9px] text-slate-400 uppercase hidden xs:inline">Items</span>
           </div>
 
-          <span className="hidden sm:inline text-slate-350">|</span>
+          <span className="hidden sm:inline text-slate-300">|</span>
 
-          {/* Net Payable Amount */}
-          <div className="flex items-center gap-1.5 text-slate-800">
-            <span className="text-[9px] text-slate-400 uppercase tracking-wider font-extrabold">Net Payable:</span>
-            <strong className="text-base font-black text-crimson-600">₹{formatCurrency(totalNet)}</strong>
+          <div className="flex items-center gap-1 whitespace-nowrap">
+            <span className="uppercase tracking-wider text-[9px] sm:text-[10px] text-slate-400 font-extrabold">Net:</span>
+            <strong className="text-sm sm:text-lg font-black text-crimson-600">₹{formatCurrency(totalNet)}</strong>
           </div>
         </div>
 
-        {/* Checkout controls & meter progress */}
-        <div className="flex flex-col sm:flex-row gap-2.5 w-full lg:w-auto items-center justify-center lg:justify-end">
-          
-          {/* Minimum Order Value Progress bar */}
-          {enableMinOrder && totalNet < minOrderValue && (
-            <div className="w-full sm:w-44 text-center space-y-1">
-              <div className="flex justify-between text-[9px] text-slate-500 font-bold uppercase px-0.5">
-                <span>Min Order check</span>
-                <span className="text-crimson-655">{minOrderProgressText()}</span>
-              </div>
-              <div className="w-full bg-slate-200 rounded-full h-1.5 border border-slate-300 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-crimson-600 to-crimson-500 h-full rounded-full transition-all duration-300"
-                  style={{ width: `${minOrderProgressPercent()}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
+        {/* Center: Min Order Status Message (Desktop only) */}
+        {enableMinOrder && totalNet < minOrderValue && (
+          <div className="hidden lg:flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full text-[10px] text-amber-800 font-bold">
+            <i className="fa-solid fa-circle-info text-amber-600"></i>
+            <span>Min order check: <strong className="text-crimson-600">{minOrderProgressText()}</strong></span>
+          </div>
+        )}
 
-          {/* Clear All Button */}
+        {/* Right: Action Buttons */}
+        <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+          
+          {/* Clear Cart Button */}
           <button
+            type="button"
             onClick={handleClearCart}
-            className="w-full sm:w-auto px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-700 hover:border-slate-300 shadow-sm"
+            className="px-2.5 py-2 sm:px-4 sm:py-2 rounded-xl text-[10px] sm:text-xs font-extrabold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-1 bg-slate-100 border border-slate-200 text-slate-600 hover:bg-slate-200 hover:text-slate-900 active:scale-95 shadow-sm cursor-pointer"
+            title="Clear all cart items"
           >
-            <i className="fa-solid fa-trash text-crimson-600"></i>
-            <span>Clear All</span>
+            <i className="fa-solid fa-trash-can text-crimson-600 text-xs sm:text-sm"></i>
+            <span className="hidden xs:inline">Clear</span>
           </button>
 
-          {/* Checkout Action Button */}
+          {/* Checkout Now Button */}
           <button
+            type="button"
             onClick={handleCheckoutBtnClick}
-            className={`w-full sm:w-auto px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
+            className={`px-3.5 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${
               !isCheckoutDisabled
-                ? 'bg-gradient-to-r from-crimson-600 to-crimson-500 hover:from-crimson-700 hover:to-crimson-600 text-white shadow-md shadow-crimson-100 hover:scale-105 active:scale-95'
-                : 'bg-slate-300 border border-slate-400 text-slate-700 hover:bg-slate-400/30'
+                ? 'bg-gradient-to-r from-crimson-600 to-crimson-500 hover:from-crimson-700 hover:to-crimson-600 text-white shadow-lg shadow-crimson-600/30 hover:scale-105 active:scale-95'
+                : 'bg-slate-300 border border-slate-400 text-slate-700 hover:bg-slate-400/40'
             }`}
           >
-            <i className="fa-solid fa-basket-shopping"></i>
+            <i className="fa-solid fa-basket-shopping text-xs sm:text-base"></i>
             <span>Checkout Now</span>
           </button>
 
@@ -153,3 +170,5 @@ export default function CartFooter({ onCheckoutClick }) {
     </div>
   );
 }
+
+

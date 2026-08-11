@@ -134,12 +134,6 @@ export default function QuickOrder() {
       <div className="pt-0">
         <ProductTable />
       </div>
-
-      {/* Cart Summary Sticky Footer Bar */}
-      <CartFooter />
-
-      {/* Sliding Checkout Drawer */}
-      <CheckoutDrawer isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 }

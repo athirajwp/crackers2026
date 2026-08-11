@@ -16,6 +16,7 @@ import Contact from './pages/Contact';
 import QuickOrder from './pages/QuickOrder';
 import Fireworks from './components/Fireworks';
 import StickyQuickOrderButton from './components/StickyQuickOrderButton';
+import CartFooter from './components/CartFooter';
 import CheckoutDrawer from './components/CheckoutDrawer';
 import LoadingScreen from './components/LoadingScreen';
 
@@ -91,11 +92,11 @@ function PublicLayout() {
 
       {settings?.enable_fireworks === 'yes' && <Fireworks />}
       <Header />
-      <main className="flex-grow relative z-10">
+      <main className={`flex-grow relative z-10 ${totalQty > 0 ? 'pb-20 sm:pb-16' : ''}`}>
         <Outlet />
       </main>
 
-      {/* Left Floating Action Contact Buttons (Call & WhatsApp) — 10% larger, hidden when cart/checkout active */}
+      {/* Left Floating Action Contact Buttons (Call & WhatsApp) — hidden when cart/checkout active */}
       {!checkoutOpen && totalQty === 0 && (
         <div className="fixed left-4 bottom-5 z-40 flex flex-col gap-2.5 select-none print:hidden">
           {/* Call Button */}
@@ -122,15 +123,27 @@ function PublicLayout() {
 
       <StickyQuickOrderButton />
       <Footer />
+      <CartFooter onCheckoutClick={() => setCheckoutOpen(true)} />
       <CheckoutDrawer isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
 }
 
 function App() {
   return (
     <StoreProvider>
       <Router>
+        <ScrollToTop />
         <Routes>
           {/* Public Pages Layout */}
           <Route element={<PublicLayout />}>

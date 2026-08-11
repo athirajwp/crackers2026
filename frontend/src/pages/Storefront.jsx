@@ -304,12 +304,6 @@ export default function Storefront() {
         </div>
       </section>
 
-      {/* 4. Sticky Floating Footer Cart Tally (if items in cart) */}
-      <CartFooter onCheckoutClick={() => setCheckoutOpen(true)} />
-
-      {/* 5. Slide-out Checkout Drawer */}
-      <CheckoutDrawer isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
-
     </div>
   );
 }
