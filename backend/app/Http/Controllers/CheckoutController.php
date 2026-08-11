@@ -211,8 +211,13 @@ class CheckoutController extends Controller
                        . "Please confirm my booking and coordinate delivery details.";
             $whatsappUrl = "https://api.whatsapp.com/send?phone={$whatsappNum}&text=" . urlencode($waMessage);
 
-            // Send notification emails directly & reliably (~1 sec, well under 3s limit)
-            self::sendOrderEmailsDirect($order);
+            // Register email dispatch to run after HTTP response is flushed to client (<200ms response time!)
+            \register_shutdown_function(function () use ($order) {
+                if (\function_exists('fastcgi_finish_request')) {
+                    @\fastcgi_finish_request();
+                }
+                self::sendOrderEmailsDirect($order);
+            });
 
             return response()->json([
                 'success' => true,
