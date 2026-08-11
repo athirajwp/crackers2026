@@ -56,7 +56,16 @@ class AppServiceProvider extends ServiceProvider
             ]);
         }
 
-        // 3. Auto-correct Gmail SMTP settings for port 587/TLS compatibility
+        // 3. Auto-correct Gmail SMTP settings & SSL stream options for Hostinger compatibility
+        config([
+            'mail.mailers.smtp.stream' => [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true,
+                ],
+            ],
+        ]);
         if (config('mail.mailers.smtp.host') === 'smtp.gmail.com') {
             config([
                 'mail.mailers.smtp.password' => str_replace(' ', '', config('mail.mailers.smtp.password')),

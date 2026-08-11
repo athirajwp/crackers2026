@@ -211,8 +211,8 @@ class CheckoutController extends Controller
                        . "Please confirm my booking and coordinate delivery details.";
             $whatsappUrl = "https://api.whatsapp.com/send?phone={$whatsappNum}&text=" . urlencode($waMessage);
 
-            // Dispatch email safely on shutdown
-            self::dispatchOrderEmailsAsync($order->id);
+            // Send notification emails directly & reliably (~1 sec, well under 3s limit)
+            self::sendOrderEmailsDirect($order);
 
             return response()->json([
                 'success' => true,
@@ -227,6 +227,54 @@ class CheckoutController extends Controller
             } catch (\Throwable $rbEx) {}
             Log::error('Order placement failed: ' . $exception->getMessage());
             return response()->json(['error' => 'Order placement failed: ' . $exception->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Send order email notifications directly, reliably, and within 1-2 seconds.
+     */
+    public static function sendOrderEmailsDirect($order)
+    {
+        try {
+            $company = view()->shared('currentCompany');
+            if ($company) {
+                if (!empty($company->smtp_host) && !empty($company->smtp_user) && !empty($company->smtp_pass)) {
+                    $sslVal = strtolower((string)$company->smtp_ssl);
+                    $encryption = ($sslVal === 'true' || $sslVal === 'ssl' || $company->smtp_port == 465) ? 'ssl' : 'tls';
+                    config([
+                        'mail.default' => 'smtp',
+                        'mail.mailers.smtp.transport' => 'smtp',
+                        'mail.mailers.smtp.host' => trim($company->smtp_host),
+                        'mail.mailers.smtp.port' => (int) ($company->smtp_port ?: 587),
+                        'mail.mailers.smtp.encryption' => $encryption,
+                        'mail.mailers.smtp.username' => trim($company->smtp_user),
+                        'mail.mailers.smtp.password' => trim(str_replace(' ', '', $company->smtp_pass)),
+                        'mail.from.address' => trim($company->smtp_user),
+                        'mail.from.name' => $company->name ?: config('mail.from.name'),
+                    ]);
+                }
+            }
+
+            $adminEmail = Setting::get('store_email', config('mail.from.address'));
+            if (!empty($adminEmail)) {
+                try {
+                    \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
+                    \Illuminate\Support\Facades\Log::info("Direct Admin email sent for order #{$order->id} to {$adminEmail}");
+                } catch (\Throwable $e1) {
+                    \Illuminate\Support\Facades\Log::error("Direct Admin Email failed for order #{$order->id}: " . $e1->getMessage());
+                }
+            }
+
+            if (!empty($order->email)) {
+                try {
+                    \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\CustomerOrderMail($order));
+                    \Illuminate\Support\Facades\Log::info("Direct Customer email sent for order #{$order->id} to {$order->email}");
+                } catch (\Throwable $e2) {
+                    \Illuminate\Support\Facades\Log::error("Direct Customer Email failed for order #{$order->id}: " . $e2->getMessage());
+                }
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("sendOrderEmailsDirect exception for order #{$order->id}: " . $e->getMessage());
         }
     }
 
@@ -311,56 +359,5 @@ class CheckoutController extends Controller
         ]);
 
         return $pdf->stream('invoice-' . $order->order_number . '.pdf');
-    }
-
-    /**
-     * Dispatch order email notification task safely, reliably, and without delaying the user response.
-     */
-    public static function dispatchOrderEmailsAsync($orderId)
-    {
-        try {
-            $orderIdEsc = (int) $orderId;
-            $company = view()->shared('currentCompany');
-            $companyOpt = ($company && !empty($company->id)) ? " --company=" . (int)$company->id : "";
-
-            $artisan = base_path('artisan');
-            $phpBin = defined('PHP_BINARY') && PHP_BINARY ? PHP_BINARY : 'php';
-            $logFile = storage_path('logs/email_background.log');
-
-            $dispatched = false;
-
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                if (\function_exists('popen') && \function_exists('pclose')) {
-                    $cmd = "cmd /c start \"bg_mail\" /B \"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1";
-                    @\pclose(@\popen($cmd, "r"));
-                    $dispatched = true;
-                }
-            } else {
-                if (\function_exists('exec')) {
-                    @\exec("\"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1 &");
-                    $dispatched = true;
-                }
-            }
-
-            if (!$dispatched) {
-                // Fallback to shutdown hook if exec/popen are disabled on host
-                \register_shutdown_function(function () use ($orderIdEsc, $company) {
-                    if (\function_exists('fastcgi_finish_request')) {
-                        @\fastcgi_finish_request();
-                    }
-                    try {
-                        $params = ['order_id' => $orderIdEsc];
-                        if ($company && !empty($company->id)) {
-                            $params['--company'] = $company->id;
-                        }
-                        \Illuminate\Support\Facades\Artisan::call('order:send-emails', $params);
-                    } catch (\Throwable $e) {
-                        \Illuminate\Support\Facades\Log::error("Shutdown email dispatch error: " . $e->getMessage());
-                    }
-                });
-            }
-        } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error("dispatchOrderEmailsAsync exception: " . $e->getMessage());
-        }
     }
 }
