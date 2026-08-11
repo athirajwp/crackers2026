@@ -58,6 +58,10 @@ class AppServiceProvider extends ServiceProvider
 
         // 3. Auto-correct Gmail SMTP settings & SSL stream options for Hostinger compatibility
         config([
+            'mail.mailers.sendmail' => [
+                'transport' => 'sendmail',
+                'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
+            ],
             'mail.mailers.smtp.stream' => [
                 'ssl' => [
                     'verify_peer' => false,

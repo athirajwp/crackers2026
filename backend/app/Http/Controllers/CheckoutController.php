@@ -261,7 +261,14 @@ class CheckoutController extends Controller
                     \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
                     \Illuminate\Support\Facades\Log::info("Direct Admin email sent for order #{$order->id} to {$adminEmail}");
                 } catch (\Throwable $e1) {
-                    \Illuminate\Support\Facades\Log::error("Direct Admin Email failed for order #{$order->id}: " . $e1->getMessage());
+                    \Illuminate\Support\Facades\Log::error("Direct Admin Email SMTP failed for order #{$order->id}: " . $e1->getMessage() . " - Retrying via sendmail...");
+                    try {
+                        config(['mail.default' => 'sendmail']);
+                        \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminInvoiceMail($order));
+                        \Illuminate\Support\Facades\Log::info("Sendmail fallback Admin email sent for order #{$order->id} to {$adminEmail}");
+                    } catch (\Throwable $e1Fb) {
+                        \Illuminate\Support\Facades\Log::error("Sendmail fallback Admin Email failed for order #{$order->id}: " . $e1Fb->getMessage());
+                    }
                 }
             }
 
@@ -270,7 +277,14 @@ class CheckoutController extends Controller
                     \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\CustomerOrderMail($order));
                     \Illuminate\Support\Facades\Log::info("Direct Customer email sent for order #{$order->id} to {$order->email}");
                 } catch (\Throwable $e2) {
-                    \Illuminate\Support\Facades\Log::error("Direct Customer Email failed for order #{$order->id}: " . $e2->getMessage());
+                    \Illuminate\Support\Facades\Log::error("Direct Customer Email SMTP failed for order #{$order->id}: " . $e2->getMessage() . " - Retrying via sendmail...");
+                    try {
+                        config(['mail.default' => 'sendmail']);
+                        \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\CustomerOrderMail($order));
+                        \Illuminate\Support\Facades\Log::info("Sendmail fallback Customer email sent for order #{$order->id} to {$order->email}");
+                    } catch (\Throwable $e2Fb) {
+                        \Illuminate\Support\Facades\Log::error("Sendmail fallback Customer Email failed for order #{$order->id}: " . $e2Fb->getMessage());
+                    }
                 }
             }
         } catch (\Throwable $e) {

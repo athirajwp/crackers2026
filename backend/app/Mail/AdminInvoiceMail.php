@@ -29,7 +29,7 @@ class AdminInvoiceMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Order Received - Invoice #' . $this->order->order_number,
+            subject: 'New Enquiry Received - #' . $this->order->order_number,
         );
     }
 
@@ -42,6 +42,7 @@ class AdminInvoiceMail extends Mailable
             view: 'admin.orders.invoice',
             with: [
                 'is_email_or_pdf' => true,
+                'is_pdf_render' => false,
             ]
         );
     }
@@ -55,6 +56,7 @@ class AdminInvoiceMail extends Mailable
             $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.orders.invoice', [
                 'order' => $this->order,
                 'is_email_or_pdf' => true,
+                'is_pdf_render' => true,
             ])->setPaper('a4', 'portrait')->setOptions([
                 'isRemoteEnabled' => false,
                 'isHtml5ParserEnabled' => false,
@@ -63,7 +65,7 @@ class AdminInvoiceMail extends Mailable
             ]);
 
             return [
-                \Illuminate\Mail\Mailables\Attachment::fromData(fn () => $pdf->output(), 'invoice-' . $this->order->order_number . '.pdf')
+                \Illuminate\Mail\Mailables\Attachment::fromData(fn () => $pdf->output(), 'enquiry-' . $this->order->order_number . '.pdf')
                     ->withMime('application/pdf'),
             ];
         } catch (\Throwable $e) {

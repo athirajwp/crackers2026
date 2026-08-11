@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - {{ $order->order_number }}</title>
+    <title>Enquiry Invoice - {{ $order->order_number }}</title>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace, Arial, sans-serif;
             background: #ffffff;
             color: #000000;
             margin: 0;
-            padding: 30px;
+            padding: 20px;
             font-size: 12px;
             line-height: 1.4;
         }
@@ -68,7 +68,7 @@
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .items-table th {
@@ -87,10 +87,9 @@
         }
 
         .items-table tr.total-row td {
-            border-top: 2px solid #000000;
-            border-bottom: 2px solid #000000;
+            border-top: 1px solid #000000;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .text-right {
@@ -101,17 +100,9 @@
             text-align: center !important;
         }
 
-        .footer-note {
-            border-top: 1px solid #000000;
-            padding-top: 15px;
-            font-size: 10px;
-            line-height: 1.5;
-            color: #444444;
-        }
-
         .sign-row {
-            margin-top: 50px;
-            margin-bottom: 20px;
+            margin-top: 35px;
+            margin-bottom: 15px;
             width: 100%;
         }
 
@@ -157,7 +148,7 @@
                         if ($storeLogo) {
                             if (\Illuminate\Support\Str::startsWith($storeLogo, ['http', 'data:'])) {
                                 $logoSrc = $storeLogo;
-                            } elseif (file_exists(public_path($storeLogo))) {
+                            } elseif (isset($is_pdf_render) && $is_pdf_render && file_exists(public_path($storeLogo))) {
                                 $logoSrc = public_path($storeLogo);
                             } else {
                                 $logoSrc = asset($storeLogo);
@@ -169,10 +160,10 @@
                     @endif
                 </td>
                 <td class="header-details" style="width: 30%; vertical-align: middle; text-align: right;">
-                    <div style="font-size: 14px; font-weight: bold;">ESTIMATE INVOICE</div>
+                    <div style="font-size: 13px; font-weight: bold;">ENQUIRY ESTIMATE</div>
                     <div style="margin-top: 5px;">
-                        <strong>Invoice No:</strong> {{ $order->order_number }}<br>
-                        <strong>Date:</strong> {{ $order->created_at->format('d/m/Y h:i A') }}<br>
+                        <strong>Enquiry No:</strong> {{ $order->order_number }}<br>
+                        <strong>Enquiry Date:</strong> {{ $order->created_at->format('d/m/Y h:i A') }}<br>
                         <strong>Status:</strong> {{ strtoupper($order->order_status) }}
                     </div>
                 </td>
@@ -193,14 +184,12 @@
                     Phone: {{ $order->phone }}
                 </td>
                 <td class="info-col" style="padding-left: 20px;">
-                    <div class="info-title">Booking Details</div>
-                    <strong>Payment Mode:</strong> Offline Payment<br>
-                    <strong>Payment Status:</strong> {{ strtoupper($order->payment_status) }}<br>
+                    <div class="info-title">Enquiry Information</div>
+                    <strong>Contact Mobile:</strong> {{ $order->phone }}<br>
+                    <strong>WhatsApp:</strong> {{ $order->whatsapp ?: $order->phone }}<br>
+                    <strong>Enquiry Date:</strong> {{ $order->created_at->format('d M Y, h:i a') }}<br>
                     @if($order->transport_name)
                         <strong>Transport Lorry:</strong> {{ $order->transport_name }}<br>
-                    @endif
-                    @if($order->lr_number)
-                        <strong>LR Number:</strong> {{ $order->lr_number }}<br>
                     @endif
                 </td>
             </tr>
@@ -211,40 +200,56 @@
             <thead>
                 <tr>
                     <th>S.No</th>
-                    <th>Product Description</th>
-                    <th class="text-center">Qty</th>
+                    <th>Item Details</th>
                     <th class="text-center">Pack</th>
-                    <th class="text-right">Price (INR)</th>
-                    <th class="text-right">Total (INR)</th>
+                    <th class="text-right">Price (₹)</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-right">Sub Total (₹)</th>
                 </tr>
             </thead>
             <tbody>
-                @php $sno = 1; @endphp
+                @php 
+                    $sno = 1; 
+                    $mrpSum = $order->subtotal > 0 ? $order->subtotal : ($order->net_amount + $order->discount_amount);
+                @endphp
                 @foreach($order->items as $item)
                 <tr>
                     <td style="width: 5%;">{{ $sno++ }}</td>
-                    <td style="width: 45%;">{{ $item->product_name }}</td>
-                    <td class="text-center" style="width: 8%;">{{ $item->quantity }}</td>
+                    <td style="width: 40%;"><strong>{{ $item->product_name }}</strong></td>
                     <td class="text-center" style="width: 15%;">{{ $item->pack_size }}</td>
-                    <td class="text-right" style="width: 12%;">{{ number_format($item->price, 2) }}</td>
-                    <td class="text-right" style="width: 15%;">{{ number_format($item->total_price, 2) }}</td>
+                    <td class="text-right" style="width: 13%;">{{ number_format($item->price, 2) }}</td>
+                    <td class="text-center" style="width: 8%;">{{ $item->quantity }}</td>
+                    <td class="text-right" style="width: 19%;">{{ number_format($item->total_price, 2) }}</td>
                 </tr>
                 @endforeach
 
-                <!-- Totals rows -->
+                <!-- Summary Breakdown rows -->
+                @if($mrpSum > 0 && $mrpSum != $order->net_amount)
                 <tr class="total-row">
                     <td colspan="4" style="border: none;"></td>
-                    <td class="text-right" style="padding-top: 15px;">Net Paid:</td>
-                    <td class="text-right" style="padding-top: 15px;"><span class="rupee">&#8377;</span>{{ number_format($order->net_amount, 2) }}</td>
+                    <td class="text-right" style="padding-top: 10px; color: #555555;">Subtotal printed MRP sum:</td>
+                    <td class="text-right" style="padding-top: 10px; color: #555555; text-decoration: line-through;"><span class="rupee">&#8377;</span>{{ number_format($mrpSum, 2) }}</td>
+                </tr>
+                @endif
+                @if($order->discount_amount > 0)
+                <tr class="total-row">
+                    <td colspan="4" style="border: none;"></td>
+                    <td class="text-right" style="color: #2e7d32;">Discount Savings:</td>
+                    <td class="text-right" style="color: #2e7d32;">-<span class="rupee">&#8377;</span>{{ number_format($order->discount_amount, 2) }}</td>
+                </tr>
+                @endif
+                <tr class="total-row" style="font-size: 13px;">
+                    <td colspan="4" style="border: none;"></td>
+                    <td class="text-right" style="padding-top: 8px; border-top: 2px solid #000000; border-bottom: 2px solid #000000;">Net Amount:</td>
+                    <td class="text-right" style="padding-top: 8px; border-top: 2px solid #000000; border-bottom: 2px solid #000000;"><span class="rupee">&#8377;</span>{{ number_format($order->net_amount, 2) }}</td>
                 </tr>
             </tbody>
         </table>
 
-        <!-- Direct payment instructions & footer details -->
-        <div style="font-size: 10px; margin-bottom: 20px; background: #f9f9f9; padding: 10px; border: 1px solid #dddddd;">
-            <strong>Instructions:</strong> Please contact support via WhatsApp to confirm the offline payment options and coordinate delivery logistics.
+        <!-- Statutory Legal Notice Banner -->
+        <div style="font-size: 10px; margin-top: 15px; margin-bottom: 15px; background: #fffbe6; padding: 10px 12px; border: 1px solid #ffe58f; color: #873800; border-radius: 4px; line-height: 1.5;">
+            <strong>Statutory Legal Notice:</strong> This website is for product information and enquiry purposes only and does not accept online firecracker orders or online payments. All purchases are fulfilled through authorised and licensed channels in accordance with applicable laws and local regulations.
         </div>
-
 
         <!-- Signature Lines -->
         <table class="sign-row">
@@ -263,7 +268,7 @@
     <!-- Print triggers -->
     @if(!isset($is_email_or_pdf) || !$is_email_or_pdf)
     <div class="no-print" style="margin-top: 20px; text-align: center;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 14px; font-weight: bold; background: #000000; color: #ffffff; cursor: pointer; border: none;">PRINT INVOICE RECEIPT</button>
+        <button onclick="window.print()" style="padding: 10px 20px; font-size: 14px; font-weight: bold; background: #000000; color: #ffffff; cursor: pointer; border: none;">PRINT ENQUIRY ESTIMATE</button>
     </div>
     @endif
 
