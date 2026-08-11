@@ -370,8 +370,14 @@ class CheckoutController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.orders.invoice', [
             'order' => $order,
             'is_email_or_pdf' => true,
+            'is_pdf_render' => true,
+        ])->setPaper('a4', 'portrait')->setOptions([
+            'isRemoteEnabled' => false,
+            'isHtml5ParserEnabled' => false,
+            'isFontSubsettingEnabled' => false,
+            'defaultFont' => 'sans-serif',
         ]);
 
-        return $pdf->stream('invoice-' . $order->order_number . '.pdf');
+        return $pdf->stream('enquiry-' . $order->order_number . '.pdf');
     }
 }
