@@ -17,7 +17,7 @@ class SendOrderEmails extends Command
      *
      * @var string
      */
-    protected $signature = 'order:send-emails {order_id}';
+    protected $signature = 'order:send-emails {order_id} {--company=}';
 
     /**
      * The console command description.
@@ -31,6 +31,35 @@ class SendOrderEmails extends Command
      */
     public function handle()
     {
+        $companyId = $this->option('company');
+        if ($companyId) {
+            $company = \App\Models\Company::find($companyId);
+            if ($company) {
+                $tenantDb = 'crackers2_' . strtolower(preg_replace('/[^a-zA-Z0-9_]/', '', $company->code));
+                $defaultConn = config('database.default', 'mysql');
+                config(["database.connections.{$defaultConn}.database" => $tenantDb]);
+                \Illuminate\Support\Facades\DB::purge($defaultConn);
+                \Illuminate\Support\Facades\DB::reconnect($defaultConn);
+                view()->share('currentCompany', $company);
+
+                if (!empty($company->smtp_host) && !empty($company->smtp_user) && !empty($company->smtp_pass)) {
+                    $sslVal = strtolower((string)$company->smtp_ssl);
+                    $encryption = ($sslVal === 'true' || $sslVal === 'ssl' || $company->smtp_port == 465) ? 'ssl' : 'tls';
+                    config([
+                        'mail.default' => 'smtp',
+                        'mail.mailers.smtp.transport' => 'smtp',
+                        'mail.mailers.smtp.host' => trim($company->smtp_host),
+                        'mail.mailers.smtp.port' => (int) ($company->smtp_port ?: 587),
+                        'mail.mailers.smtp.encryption' => $encryption,
+                        'mail.mailers.smtp.username' => trim($company->smtp_user),
+                        'mail.mailers.smtp.password' => trim(str_replace(' ', '', $company->smtp_pass)),
+                        'mail.from.address' => trim($company->smtp_user),
+                        'mail.from.name' => $company->name ?: config('mail.from.name'),
+                    ]);
+                }
+            }
+        }
+
         $orderId = $this->argument('order_id');
         $order = Order::with('items')->find($orderId);
 

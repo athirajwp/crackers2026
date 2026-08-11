@@ -51,18 +51,6 @@ class AdminInvoiceMail extends Mailable
      */
     public function attachments(): array
     {
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.orders.invoice', [
-            'order' => $this->order,
-            'is_email_or_pdf' => true,
-        ])->setPaper('a4', 'portrait')->setOptions([
-            'isRemoteEnabled' => false,
-            'isHtml5ParserEnabled' => true,
-            'isFontSubsettingEnabled' => true,
-        ]);
-
-        return [
-            \Illuminate\Mail\Mailables\Attachment::fromData(fn () => $pdf->output(), 'invoice-' . $this->order->order_number . '.pdf')
-                ->withMime('application/pdf'),
-        ];
+        return [];
     }
 }

@@ -201,11 +201,23 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Launch background email sending process (takes <10ms, non-blocking)
+            // Compute whatsappUrl for fast frontend handoff
+            $whatsappNum = preg_replace('/[^0-9]/', '', Setting::get('store_whatsapp', '919998887776'));
+            $storeName = Setting::get('store_name', 'Cracker Demo');
+            $waMessage = "Hello " . $storeName . ", I have placed an order!\n\n"
+                       . "*Order Number:* {$order->order_number}\n"
+                       . "*Customer Name:* {$order->name}\n"
+                       . "*Total Amount:* ₹" . number_format($order->net_amount, 2) . "\n\n"
+                       . "Please confirm my booking and coordinate delivery details.";
+            $whatsappUrl = "https://api.whatsapp.com/send?phone={$whatsappNum}&text=" . urlencode($waMessage);
+
+            // Dispatch email safely on shutdown
             self::dispatchOrderEmailsAsync($order->id);
 
             return response()->json([
                 'success' => true,
+                'order' => $order->load('items'),
+                'whatsappUrl' => $whatsappUrl,
                 'redirect' => route('checkout.success', ['order_number' => $order->order_number])
             ]);
 
@@ -302,56 +314,23 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Dispatch background email task for an order asynchronously (non-blocking).
+     * Dispatch order email notification task safely, reliably, and without delaying the user response.
      */
     public static function dispatchOrderEmailsAsync($orderId)
     {
-        try {
-            $orderIdEsc = (int) $orderId;
-            $phpBinary = PHP_BINARY;
+        $orderIdEsc = (int) $orderId;
+        $company = view()->shared('currentCompany');
+        $companyOpt = ($company && !empty($company->id)) ? " --company=" . (int)$company->id : "";
 
-            if (str_contains(strtolower($phpBinary), 'php-cgi')) {
-                $phpBinary = str_replace(['php-cgi.exe', 'php-cgi'], ['php.exe', 'php'], strtolower($phpBinary));
-            }
+        $artisan = base_path('artisan');
+        $phpBin = defined('PHP_BINARY') && PHP_BINARY ? PHP_BINARY : 'php';
+        $logFile = storage_path('logs/email_background.log');
 
-            if (!file_exists($phpBinary)) {
-                $phpBinary = 'php';
-            }
-
-            $php = escapeshellarg($phpBinary);
-            $artisan = escapeshellarg(base_path('artisan'));
-
-            if (PHP_OS_FAMILY === 'Windows') {
-                // Windows detached non-blocking background process
-                $cmd = "start /B {$php} {$artisan} order:send-emails {$orderIdEsc} > NUL 2>&1";
-                if (function_exists('pclose') && function_exists('popen')) {
-                    pclose(popen($cmd, "r"));
-                } else if (function_exists('exec')) {
-                    exec($cmd);
-                } else {
-                    system($cmd);
-                }
-            } else {
-                // Linux/Unix detached non-blocking background process
-                $cmd = "{$php} {$artisan} order:send-emails {$orderIdEsc} > /dev/null 2>&1 &";
-                if (function_exists('exec')) {
-                    exec($cmd);
-                } else {
-                    system($cmd);
-                }
-            }
-        } catch (\Throwable $e) {
-            Log::error("Failed to spawn async email process for order {$orderId}: " . $e->getMessage());
-
-            // Fallback to register_shutdown_function if process spawning fails
-            register_shutdown_function(function () use ($orderId) {
-                if (function_exists('fastcgi_finish_request')) {
-                    @fastcgi_finish_request();
-                }
-                try {
-                    \Illuminate\Support\Facades\Artisan::call('order:send-emails', ['order_id' => (int)$orderId]);
-                } catch (\Throwable $ex) {}
-            });
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $cmd = "cmd /c start \"bg_mail\" /B \"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1";
+            @pclose(@popen($cmd, "r"));
+        } else {
+            @exec("\"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1 &");
         }
     }
 }

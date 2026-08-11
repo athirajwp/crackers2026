@@ -20,6 +20,7 @@ export const StoreProvider = ({ children }) => {
     enable_min_order: 'yes',
     enable_promo_codes: 'yes',
     enable_tax_delivery: 'no',
+    enable_legal_notice: 'yes',
     enable_fireworks: 'yes',
     show_mrp: 'yes',
     card_bg_color: '#FFFFFF',

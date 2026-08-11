@@ -37,6 +37,7 @@ export default function AdminSettings() {
     enable_min_order: 'yes',
     enable_promo_codes: 'yes',
     enable_tax_delivery: 'no',
+    enable_legal_notice: 'yes',
     enable_fireworks: 'yes',
     enable_aos: 'yes',
     enable_most_sold: 'yes',
@@ -489,6 +490,20 @@ export default function AdminSettings() {
                     >
                       <option value="yes">Yes</option>
                       <option value="no">No</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">
+                      Statutory Legal Compliance Popup
+                    </label>
+                    <select
+                      name="enable_legal_notice"
+                      value={formData.enable_legal_notice}
+                      onChange={handleChange}
+                      className="w-full bg-slate-50 border border-slate-200 focus:border-crimson-400 rounded-xl px-4 py-2.5 text-xs font-bold outline-none transition-all"
+                    >
+                      <option value="yes">Yes (Show Popup)</option>
+                      <option value="no">No (Hide Popup)</option>
                     </select>
                   </div>
                 </div>

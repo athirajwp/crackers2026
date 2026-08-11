@@ -170,7 +170,7 @@
                             }
                         }
                     @endphp
-                    @if($logoSrc)
+                    @if($logoSrc && extension_loaded('gd'))
                         <img src="{{ $logoSrc }}" style="max-height: 90px; max-width: 250px; object-fit: contain; margin: 0 auto; display: block;" alt="Logo">
                     @endif
                 </td>

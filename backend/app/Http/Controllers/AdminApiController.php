@@ -1030,6 +1030,7 @@ class AdminApiController extends Controller
             'enable_min_order' => Setting::get('enable_min_order', 'yes'),
             'enable_promo_codes' => Setting::get('enable_promo_codes', 'yes'),
             'enable_tax_delivery' => Setting::get('enable_tax_delivery', 'no'),
+            'enable_legal_notice' => Setting::get('enable_legal_notice', 'yes'),
             'enable_fireworks' => Setting::get('enable_fireworks', 'yes'),
             'enable_aos' => Setting::get('enable_aos', 'yes'),
             'enable_most_sold' => Setting::get('enable_most_sold', 'yes'),
@@ -1076,6 +1077,7 @@ class AdminApiController extends Controller
             'enable_min_order' => 'required|in:yes,no',
             'enable_promo_codes' => 'required|in:yes,no',
             'enable_tax_delivery' => 'required|in:yes,no',
+            'enable_legal_notice' => 'nullable|in:yes,no',
             'enable_fireworks' => 'required|in:yes,no',
             'enable_aos' => 'nullable|in:yes,no',
             'enable_most_sold' => 'nullable|in:yes,no',
@@ -1135,6 +1137,7 @@ class AdminApiController extends Controller
         Setting::set('enable_min_order', $request->enable_min_order, 'text');
         Setting::set('enable_promo_codes', $request->enable_promo_codes, 'text');
         Setting::set('enable_tax_delivery', $request->enable_tax_delivery, 'text');
+        Setting::set('enable_legal_notice', $request->enable_legal_notice ?? 'yes', 'text');
         Setting::set('enable_fireworks', $request->enable_fireworks, 'text');
         Setting::set('enable_aos', $request->enable_aos ?? 'yes', 'text');
         Setting::set('enable_most_sold', $request->enable_most_sold ?? 'yes', 'text');

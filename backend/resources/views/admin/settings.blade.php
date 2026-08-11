@@ -91,7 +91,7 @@
                     <i class="fa-solid fa-toggle-on text-{{ $currentTheme['accent'] }}"></i> Cart & Checkout Features
                 </h4>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="space-y-1.5">
                         <label class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1 px-0.5">Enforce Min Order Value</label>
                         <select name="enable_min_order" class="w-full bg-slate-50 border border-slate-200 focus:border-{{ $currentTheme['accent'] }} focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none transition-all">
@@ -104,6 +104,13 @@
                         <select name="enable_promo_codes" class="w-full bg-slate-50 border border-slate-200 focus:border-{{ $currentTheme['accent'] }} focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none transition-all">
                             <option value="yes" {{ ($settings['enable_promo_codes'] ?? 'yes') === 'yes' ? 'selected' : '' }}>Yes (Show Coupons)</option>
                             <option value="no" {{ ($settings['enable_promo_codes'] ?? 'yes') === 'no' ? 'selected' : '' }}>No (Hide Coupons)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1 px-0.5">Statutory Legal Popup</label>
+                        <select name="enable_legal_notice" class="w-full bg-slate-50 border border-slate-200 focus:border-{{ $currentTheme['accent'] }} focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none transition-all">
+                            <option value="yes" {{ ($settings['enable_legal_notice'] ?? 'yes') === 'yes' ? 'selected' : '' }}>Yes (Show Popup)</option>
+                            <option value="no" {{ ($settings['enable_legal_notice'] ?? 'yes') === 'no' ? 'selected' : '' }}>No (Hide Popup)</option>
                         </select>
                     </div>
                 </div>

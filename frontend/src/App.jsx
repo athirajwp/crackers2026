@@ -18,6 +18,7 @@ import Fireworks from './components/Fireworks';
 import StickyQuickOrderButton from './components/StickyQuickOrderButton';
 import CartFooter from './components/CartFooter';
 import CheckoutDrawer from './components/CheckoutDrawer';
+import LegalNoticeModal from './components/LegalNoticeModal';
 import LoadingScreen from './components/LoadingScreen';
 
 // Admin imports
@@ -125,6 +126,7 @@ function PublicLayout() {
       <Footer />
       <CartFooter onCheckoutClick={() => setCheckoutOpen(true)} />
       <CheckoutDrawer isOpen={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+      <LegalNoticeModal />
     </div>
   );
 }

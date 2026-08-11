@@ -127,7 +127,9 @@ export default function CheckoutDrawer({ isOpen, onClose }) {
           const orderNumber = urlParts[urlParts.length - 1];
 
           onClose();
-          navigate(`/checkout/success/${orderNumber}`);
+          navigate(`/checkout/success/${orderNumber}`, {
+            state: { order: data.order, whatsappUrl: data.whatsappUrl },
+          });
         } else {
           window.Swal.fire({
             title: 'Error!',
