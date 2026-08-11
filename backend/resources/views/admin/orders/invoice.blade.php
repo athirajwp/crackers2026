@@ -157,6 +157,8 @@
                         if ($storeLogo) {
                             if (\Illuminate\Support\Str::startsWith($storeLogo, ['http', 'data:'])) {
                                 $logoSrc = $storeLogo;
+                            } elseif (file_exists(public_path($storeLogo))) {
+                                $logoSrc = public_path($storeLogo);
                             } else {
                                 $logoSrc = asset($storeLogo);
                             }
