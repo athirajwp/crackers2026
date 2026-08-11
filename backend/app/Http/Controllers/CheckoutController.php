@@ -318,19 +318,49 @@ class CheckoutController extends Controller
      */
     public static function dispatchOrderEmailsAsync($orderId)
     {
-        $orderIdEsc = (int) $orderId;
-        $company = view()->shared('currentCompany');
-        $companyOpt = ($company && !empty($company->id)) ? " --company=" . (int)$company->id : "";
+        try {
+            $orderIdEsc = (int) $orderId;
+            $company = view()->shared('currentCompany');
+            $companyOpt = ($company && !empty($company->id)) ? " --company=" . (int)$company->id : "";
 
-        $artisan = base_path('artisan');
-        $phpBin = defined('PHP_BINARY') && PHP_BINARY ? PHP_BINARY : 'php';
-        $logFile = storage_path('logs/email_background.log');
+            $artisan = base_path('artisan');
+            $phpBin = defined('PHP_BINARY') && PHP_BINARY ? PHP_BINARY : 'php';
+            $logFile = storage_path('logs/email_background.log');
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $cmd = "cmd /c start \"bg_mail\" /B \"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1";
-            @pclose(@popen($cmd, "r"));
-        } else {
-            @exec("\"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1 &");
+            $dispatched = false;
+
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                if (\function_exists('popen') && \function_exists('pclose')) {
+                    $cmd = "cmd /c start \"bg_mail\" /B \"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1";
+                    @\pclose(@\popen($cmd, "r"));
+                    $dispatched = true;
+                }
+            } else {
+                if (\function_exists('exec')) {
+                    @\exec("\"{$phpBin}\" \"{$artisan}\" order:send-emails {$orderIdEsc}{$companyOpt} >> \"{$logFile}\" 2>&1 &");
+                    $dispatched = true;
+                }
+            }
+
+            if (!$dispatched) {
+                // Fallback to shutdown hook if exec/popen are disabled on host
+                \register_shutdown_function(function () use ($orderIdEsc, $company) {
+                    if (\function_exists('fastcgi_finish_request')) {
+                        @\fastcgi_finish_request();
+                    }
+                    try {
+                        $params = ['order_id' => $orderIdEsc];
+                        if ($company && !empty($company->id)) {
+                            $params['--company'] = $company->id;
+                        }
+                        \Illuminate\Support\Facades\Artisan::call('order:send-emails', $params);
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::error("Shutdown email dispatch error: " . $e->getMessage());
+                    }
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("dispatchOrderEmailsAsync exception: " . $e->getMessage());
         }
     }
 }
