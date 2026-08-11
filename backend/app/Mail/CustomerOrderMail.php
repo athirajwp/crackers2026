@@ -51,6 +51,24 @@ class CustomerOrderMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        try {
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.orders.invoice', [
+                'order' => $this->order,
+                'is_email_or_pdf' => true,
+            ])->setPaper('a4', 'portrait')->setOptions([
+                'isRemoteEnabled' => false,
+                'isHtml5ParserEnabled' => false,
+                'isFontSubsettingEnabled' => false,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+            return [
+                \Illuminate\Mail\Mailables\Attachment::fromData(fn () => $pdf->output(), 'invoice-' . $this->order->order_number . '.pdf')
+                    ->withMime('application/pdf'),
+            ];
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to create PDF attachment for order #' . $this->order->id . ': ' . $e->getMessage());
+            return [];
+        }
     }
 }
